@@ -3,41 +3,43 @@ import { DataGrid } from "@material-ui/data-grid";
 import { DeleteOutline } from "@material-ui/icons";
 import { userRows } from "../../dummyData";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getUsers } from "../../redux/apiCalls";
 
 export default function UserList() {
   const [data, setData] = useState(userRows);
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.users.users);
+  // const admin = useSelector((state) => state.user.currentUser?.isAdmin);
+
+  console.log(users);
+  useEffect(() => {
+    getUsers(dispatch);
+  }, [dispatch]);
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
   };
+
+  
   
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "No.", headerName: "No.", width: 90 },
     {
       field: "user",
       headerName: "User",
-      width: 200,
+      width: 350,
       renderCell: (params) => {
         return (
           <div className="userListUser">
-            <img className="userListImg" src={params.row.avatar} alt="" />
+            <img className="userListImg" src={params.row.img} alt="" />
             {params.row.username}
           </div>
         );
       },
     },
-    { field: "email", headerName: "Email", width: 200 },
-    {
-      field: "status",
-      headerName: "Status",
-      width: 120,
-    },
-    {
-      field: "transaction",
-      headerName: "Transaction Volume",
-      width: 160,
-    },
+    { field: "email", headerName: "Email", width: 250 },
     {
       field: "action",
       headerName: "Action",
@@ -57,15 +59,24 @@ export default function UserList() {
       },
     },
   ];
+  const rows = users.map((p, i)=> ({ 'No.': i + 1, ...p }))
 
   return (
     <div className="userList">
       <DataGrid
-        rows={data}
+        rows={rows}
         disableSelectionOnClick
         columns={columns}
-        pageSize={8}
+        getRowId={(row) => row._id}
+        pageSize={15}
         checkboxSelection
+
+        // rows={rows}
+        // disableSelectionOnClick
+        // columns={columns}
+        // getRowId={(row) => row._id}
+        // pageSize={15}
+        // checkboxSelection
       />
     </div>
   );

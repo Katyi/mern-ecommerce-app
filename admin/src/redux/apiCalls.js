@@ -1,4 +1,9 @@
 import { loginFailure, loginStart, loginSuccess } from "./userRedux";
+import { 
+  getUsersStart,
+  getUsersSuccess,
+  getUsersFailure,
+} from "./usersRedux";
 import { publicRequest, userRequest } from "../requestMethods";
 import {
   getProductFailure,
@@ -25,6 +30,18 @@ export const login = async (dispatch, user) => {
   }
 };
 
+//---------------------- USERS --------------------------------------------
+export const getUsers = async (dispatch) => {
+  dispatch(getUsersStart());
+  try {
+    const res = await userRequest.get("/users");
+    dispatch(getUsersSuccess(res.data));
+  } catch (err) {
+    dispatch(getUsersFailure());
+  }
+};
+
+//---------------------- PRODUCTS -----------------------------------------
 export const getProducts = async (dispatch) => {
   dispatch(getProductStart());
   try {

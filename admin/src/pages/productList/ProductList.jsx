@@ -10,6 +10,8 @@ export default function ProductList() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product.products);
 
+  console.log(products)
+
   useEffect(() => {
     getProducts(dispatch);
   }, [dispatch]);
@@ -19,7 +21,7 @@ export default function ProductList() {
   };
 
   const columns = [
-    { field: "_id", headerName: "ID", width: 220 },
+    { field: "No.", headerName: "No.", width: 100 },
     {
       field: "product",
       headerName: "Product",
@@ -58,15 +60,17 @@ export default function ProductList() {
       },
     },
   ];
+  const rows = products.map((p, i)=> ({ 'No.': i + 1, ...p }))
+
 
   return (
     <div className="productList">
       <DataGrid
-        rows={products}
+        rows={rows}
         disableSelectionOnClick
         columns={columns}
         getRowId={(row) => row._id}
-        pageSize={8}
+        pageSize={15}
         checkboxSelection
       />
     </div>

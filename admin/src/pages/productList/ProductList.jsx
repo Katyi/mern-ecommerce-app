@@ -60,13 +60,13 @@ export default function ProductList() {
       },
     },
   ];
-  const rows = products.map((p, i)=> ({ 'No.': i + 1, ...p }))
+  // const rows = products.map((p, i)=> ({ 'No.': i + 1, ...p }))
 
 
   return (
     <div className="productList">
       <DataGrid
-        rows={rows}
+        rows={products}
         disableSelectionOnClick
         columns={columns}
         getRowId={(row) => row._id}

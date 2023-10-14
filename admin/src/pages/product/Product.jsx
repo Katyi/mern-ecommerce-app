@@ -6,11 +6,14 @@ import { Publish } from "@material-ui/icons";
 import { useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { userRequest } from "../../requestMethods";
+import UpdateProduct from "./updateProduct/UpdateProduct";
+import ModalTemplate from '../../UI/modal/ModalTemplate';
 
 export default function Product() {
   const location = useLocation();
   const productId = location.pathname.split("/")[2];
   const [pStats, setPStats] = useState([]);
+  const [modalSelectTypeOpen, setModalSelectTypeOpen] = useState(false);
 
   const product = useSelector((state) =>
     state.product.products.find((product) => product._id === productId)
@@ -53,6 +56,7 @@ export default function Product() {
     };
     getStats();
   }, [productId, MONTHS]);
+
 
   return (
     <div className="product">
@@ -110,9 +114,22 @@ export default function Product() {
               </label>
               <input type="file" id="file" style={{ display: "none" }} />
             </div>
-            <button className="productButton">Update</button>
+
+            {/* <Link to="/newproduct"> */}
+              <button 
+                type="button" 
+                className="productButton" 
+                onClick={() => setModalSelectTypeOpen(true)}
+              >
+                Update
+              </button>
+            {/* </Link> */}
           </div>
         </form>
+        
+        <ModalTemplate active={modalSelectTypeOpen} setActive={setModalSelectTypeOpen}>
+          <UpdateProduct modalSelectTypeOpen={modalSelectTypeOpen} setModalSelectTypeOpen={setModalSelectTypeOpen}/>
+        </ModalTemplate>
       </div>
     </div>
   );

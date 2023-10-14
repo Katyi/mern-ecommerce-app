@@ -1,0 +1,38 @@
+/* ------------- Общее модальное окно ------------- */
+.modal {
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: opacity 0.4s, visibility 0.4s;
+  transition-delay: 0.15s;
+  z-index: 1;
+}
+.actived {
+  transition: opacity 0.4s;
+  opacity: 1;
+  visibility: visible;
+}
+.modal__template-content {
+  padding: 26px 33px 54px 33px;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%) translateY(50%);
+  bottom: -500px;
+  width: 546px;
+  transition: 0.4s;
+  background-color: whitesmoke;
+  border-radius: 10px;
+  z-index: 10;
+  transition-duration: 1.5s;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+.content__active {
+  bottom: 50%;
+  transition-duration: 1.5s;
+}

@@ -50,7 +50,12 @@ export default function Product() {
 
   const handleClick = (e) => {
     e.preventDefault();
-    const fileName = new Date().getTime() + file.name;
+    let fileName = product.img;
+    console.log(fileName)
+    if (file !== null) {
+      fileName = new Date().getTime() + file.name;
+    
+    
     const storage = getStorage();
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
@@ -83,6 +88,10 @@ export default function Product() {
         });
       }
     );
+  } else {
+    setProduct(product)
+    updateProduct(productId, product, dispatch);
+  }
   };
 
   return (
@@ -154,7 +163,7 @@ export default function Product() {
           <div className="productFormRight">
             <div className="productUpload">
               <img src={product.img} alt="" className="productUploadImg" />
-              <label for="file">
+              <label htmlFor="file">
                 <Publish />
               </label>
               <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])}/>

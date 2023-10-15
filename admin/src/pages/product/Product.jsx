@@ -1,56 +1,26 @@
 import { Link, useLocation } from "react-router-dom";
 import "./product.css";
 import Chart from "../../components/chart/Chart"
-import { productData } from "../../dummyData"
 import { Publish } from "@material-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
-import { userRequest, publicRequest } from "../../requestMethods";
-// import UpdateProduct from "./updateProduct/UpdateProduct";
-import ModalTemplate from '../../UI/modal/ModalTemplate';
-import { 
-  getStorage, 
-  ref, 
-  uploadBytesResumable, 
-  getDownloadURL 
-} from "firebase/storage";
+import { userRequest } from "../../requestMethods";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { updateProduct } from "../../redux/apiCalls";
-
 
 export default function Product() {
   const location = useLocation();
   const productId = location.pathname.split("/")[2];
   const [pStats, setPStats] = useState([]);
-  // const [modalSelectTypeOpen, setModalSelectTypeOpen] = useState(false);
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState([]);
   const dispatch = useDispatch();
-
-
-  const product = useSelector((state) =>
+  let currentProduct = useSelector((state) =>
     state.product.products.find((product) => product._id === productId)
   );
-  
-  const [inputs, setInputs] = useState(product);
-  console.log(inputs)
+  const [product, setProduct] = useState(currentProduct);
 
-  const MONTHS = useMemo(
-    () => [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Agu",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    []
-  );
+  const MONTHS = useMemo(() => ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Agu", "Sep", "Oct", "Nov", "Dec", ], []);
 
   useEffect(() => {
     const getStats = async () => {
@@ -72,18 +42,8 @@ export default function Product() {
     getStats();
   }, [productId, MONTHS]);
 
-  useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const res = await publicRequest.get("/products/find/" + productId);
-        setInputs(res.data);
-      } catch (err) {}
-    };
-    getProduct();
-  }, [productId]);
-
   const handleChange = (e) => {
-    setInputs((prev) => {
+    setProduct((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
   };
@@ -95,15 +55,9 @@ export default function Product() {
     const storageRef = ref(storage, fileName);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
-    // Register three observers:
-    // 1. 'state_changed' observer, called any time the state changes
-    // 2. Error observer, called on failure
-    // 3. Completion observer, called on successful completion
     uploadTask.on(
       'state_changed', 
       (snapshot) => {
-        // Observe state change events such as progress, pause, and resume
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         const progress = 
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log('Upload is ' + progress + '% done');
@@ -121,19 +75,15 @@ export default function Product() {
         // Handle unsuccessful uploads
       }, 
       () => {
-        // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          const newproduct = { ...inputs, img: downloadURL };
-          console.log(newproduct)
+          let newproduct = { ...product, img: downloadURL };
+          setProduct(newproduct)
+          console.log(product)
           updateProduct(productId, newproduct, dispatch);
         });
       }
     );
-    // setModalSelectTypeOpen(false);
-    console.log('submit!')
-  }
-
+  };
 
   return (
     <div className="product">
@@ -176,7 +126,7 @@ export default function Product() {
               name="title"
               type="text" 
               placeholder="title"
-              value={inputs.title} 
+              value={product.title} 
               onChange={handleChange}
             />
             <label>Product Description</label>
@@ -184,7 +134,7 @@ export default function Product() {
               name="desc"
               type="text"
               placeholder="description..."
-              value={inputs.desc}
+              value={product.desc}
               onChange={handleChange}
             />
             <label>Price</label>
@@ -192,7 +142,7 @@ export default function Product() {
               name="price"
               type="number"
               placeholder="price"
-              value={inputs.price}
+              value={product.price}
               onChange={handleChange}
             />
             <label>In Stock</label>
@@ -203,23 +153,19 @@ export default function Product() {
           </div>
           <div className="productFormRight">
             <div className="productUpload">
-              <img src={inputs.img} alt="" className="productUploadImg" />
+              <img src={product.img} alt="" className="productUploadImg" />
               <label for="file">
                 <Publish />
               </label>
               <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])}/>
             </div>
-
-
-            {/* <Link to="/newproduct"> */}
-              <button 
-                type="submit" 
-                className="productButton" 
-                // onClick={() => setModalSelectTypeOpen(true)}
-              >
-                Update
-              </button>
-            {/* </Link> */}
+            
+            <button 
+              type="submit" 
+              className="productButton" 
+            >
+              Update
+            </button>
           </div>
         </form>
         

@@ -1,0 +1,52 @@
+.productList {
+  flex: 4;
+  height: calc(100vh - 80px - 10px);
+}
+
+.button_wrapper {
+  display: flex;
+  justify-content: end;
+}
+
+.productAddButton {
+  width: auto;
+  border: none;
+  padding: 5px 8px;
+  background-color: teal;
+  color: white;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin: 5px 20px 20px 0px;
+}
+
+.productListItem {
+  display: flex;
+  align-items: center;
+}
+
+.productListImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.productListEdit {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #3bb077;
+  color: white;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.productListDelete {
+  color: red;
+  cursor: pointer;
+}
+.productListGrid {
+  height: calc(100vh - 80px - 10px - 54px);
+}

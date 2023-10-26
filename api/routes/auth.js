@@ -8,6 +8,11 @@ router.post("/register", async (req, res) => {
   const newUser = new User({
     username: req.body.username,
     email: req.body.email,
+    // fullname: req.fullname,
+    // phone: req.phone,
+    // address: req.address,
+    // img: req.img,
+    // occupation: req.occupation,
     password: CryptoJS.AES.encrypt(
       req.body.password, 
       process.env.PASS_SEC
@@ -23,30 +28,23 @@ router.post("/register", async (req, res) => {
 });
 
 //LOGIN
-
 router.post('/login', async (req, res) => {
   try{
-    const user = await User.findOne(
-      {
-        username: req.body.username
-      }
-    );
-
+    const user = await User.findOne({ username: req.body.username });
+    
     if (!user) { res.status(401).json("Wrong User Name!"); return }
-     
+
     const hashedPassword = CryptoJS.AES.decrypt(
-      user.password, 
+      user.password,
+      // 'U2FsdGVkX19Um1lgAAJll1CNmUlGsxiHIONsxb1EW8Y=',
       process.env.PASS_SEC
     );
-
-
+    
     const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
-
     const inputPassword = req.body.password;
-
-
+    
     if (originalPassword != inputPassword) { res.status(401).json("Wrong Password!"); return}
-
+    
       const accessToken = jwt.sign(
         {
           id: user._id,
@@ -55,7 +53,8 @@ router.post('/login', async (req, res) => {
         process.env.JWT_SEC,
         {expiresIn: "3d"}
       );
-
+      
+      
       const { password, ...others } = user._doc;
       res.status(200).json({...others, accessToken});
 

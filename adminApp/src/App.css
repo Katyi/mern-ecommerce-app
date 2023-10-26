@@ -1,0 +1,9 @@
+.wrapper {
+  width: 100vw;
+}
+.container{
+  display: flex;
+  margin-top: 10px;
+  height: auto;
+  overflow-y: hidden;
+}

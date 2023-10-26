@@ -7,6 +7,20 @@ const {
 
 const router = require("express").Router();
 
+const CryptoJS = require("crypto-js");
+
+//CREATE
+router.post("/", verifyTokenAndAdmin, async(req, res)=>{
+  const newUser = new User(req.body);
+
+  try {
+    const savedUser = await newUser.save();
+    res.status(200).json(savedUser);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //UPDATE
 router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
   if(req.body.password) {
@@ -65,7 +79,6 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
 });
 
 // GET USER STATS
-
 router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
   const date = new Date();
   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));

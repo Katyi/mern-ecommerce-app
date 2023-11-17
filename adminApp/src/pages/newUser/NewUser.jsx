@@ -42,7 +42,6 @@ export default function NewUser() {
   const handleClick = (e) => {
     e.preventDefault();
     let fileName = inputs.img;
-
     if (file !== null) {
       fileName = new Date().getTime() + file.name;
       const storage = getStorage();
@@ -140,7 +139,7 @@ export default function NewUser() {
               onChange={handleChange}
             />
           </div>
-          <div className="newUserItem">
+          {/* <div className="newUserItem">
             <label>Password</label>
             <input 
               name="password"
@@ -148,7 +147,7 @@ export default function NewUser() {
               placeholder="password"
               onChange={handleChange}
             />
-          </div>
+          </div> */}
           <div className="newUserItem">
             <label>Phone</label>
             <input 

@@ -14,7 +14,7 @@ import { deleteCart, getCart, updateCart } from "../redux/apiCalls";
 
 const KEY = import.meta.env.VITE_STRIPE;
 
-const Container = styled.div``
+const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 20px;

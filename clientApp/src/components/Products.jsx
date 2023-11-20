@@ -5,8 +5,8 @@ import Product from "./Product";
 import axios from "axios";
 
 const Container = styled.div`
-  /* width: calc(100vw - 1.5vw); */
-  padding: 5px 20px;
+  width: 100%;
+  padding: 10px 0px;
   display: flex;
   justify-content: start;
   flex-wrap: wrap;

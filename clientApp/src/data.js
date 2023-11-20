@@ -1,9 +1,9 @@
 import image_0 from "../src/img/photo_0.png";
 import image_1 from "../src/img/photo_1.png";
 import image_2 from "../src/img/photo_2.png";
-import category_photo_1 from "../src/img/category_photo_1.jpg";
-import category_photo_2 from "../src/img/category_photo_2.jpg";
-import category_photo_3 from "../src/img/category_photo_3.jpg";
+import category_photo_1 from "../src/assets/accessories.jpeg";
+import category_photo_2 from "../src/assets/women.jpeg";
+import category_photo_3 from "../src/assets/men.jpeg";
 import product_photo_1 from "../src/img/productPhoto_1.png";
 import product_photo_2 from "../src/img/productPhoto_2.png";
 import product_photo_3 from "../src/img/productPhoto_3.png";
@@ -42,8 +42,8 @@ export const categories = [
   {
     id: 1,
     img: category_photo_1,
-    title: "SHIRT STYLE",
-    cat: 'shirt'
+    title: "ACCESSORIES",
+    cat: 'accessories'
   },
   {
     id: 2,

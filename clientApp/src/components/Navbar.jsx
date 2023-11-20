@@ -125,7 +125,7 @@ const Navbar = () => {
         <Right>
           {/* <MenuItem>REGISTER</MenuItem>
           <MenuItem>SIGN IN</MenuItem> */}
-          <Avatar src={user.img} alt="" />
+          <Avatar src={user?.img} alt="" onClick={()=>navigate("/account")}/>
           <UserName>{userName}</UserName>
           <MenuItem onClick={handleClick}>OUT</MenuItem>
           <Link to={'/cart'}>

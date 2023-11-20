@@ -4,9 +4,10 @@ import { mobile } from "../responsive";
 import CategoryItem from "./CategoryItem";
 
 const Container = styled.div`
-  /* width: calc(100vw - 40px); */
+  width: 100%;
   display: flex;
-  padding: 5px 20px 0px 20px;
+  padding: 5px 0px 0px 0px;
+  gap: 3px;
   justify-content: space-between;
   ${mobile({padding:"0px",flexDirection:"column" })}
 `;

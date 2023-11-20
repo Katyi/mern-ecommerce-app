@@ -213,8 +213,9 @@ const Register = () => {
             data in accordance with the <b>PRIVACY POLICY</b>
           </Agreement>
           <Button>CREATE</Button>
-          <Link onClick={()=>navigate("/")}>SIGN IN IF YOU ALREADY HAVE AN ACCOUNT</Link>
         </Form>
+        <br/>
+        <Link onClick={()=>navigate("/")}>SIGN IN IF YOU ALREADY HAVE AN ACCOUNT</Link>
       </Wrapper>
     </Container>
   )

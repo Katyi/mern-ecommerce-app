@@ -6,12 +6,8 @@ import Categories from '../components/Categories';
 import Products from '../components/Products';
 import Newsletter from '../components/Newsletter';
 import Footer from '../components/Footer';
-import { getCart } from '../redux/apiCalls';
-import { useDispatch, useSelector } from 'react-redux';
 
 const Home = () => {
-  // const dispatch = useDispatch();
-  // const user = useSelector((state) => state.user?.currentUser);
 
   return (
     <div>

@@ -23,7 +23,7 @@ const Info = styled.div`
 
 const Container = styled.div`
   min-width: 200px;
-  width: calc((100vw - 60px - 3vw)/4);
+  width: calc((100% - 3vw)/4);
   height: 350px;
   display: flex;
   align-items: center;

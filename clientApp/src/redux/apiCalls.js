@@ -6,6 +6,7 @@ import {
   addCartStart, addCartSuccess, addCartFailure,
   deleteCartStart, deleteCartSuccess, deleteCartFailure
 } from './cartsRedux';
+import { getOrderFailure, getOrderStart, getOrderSuccess } from "./ordersRedux";
 
 // ---------------------- LOGIN -------------------------------------------
 export const login = async (dispatch, user) => {
@@ -67,5 +68,16 @@ export const deleteCart = async (id, dispatch) => {
     dispatch(deleteCartSuccess(id));
   } catch (err) {
     dispatch(deleteCartFailure());
+  }
+};
+
+//---------------------- ORDER ---------------------------------------------
+export const getOrder = async (userId, dispatch) => {
+  dispatch(getOrderStart());
+  try {
+    const res = await userRequest.get('/orders/find/' + userId);
+    dispatch(getOrderSuccess(res.data));
+  } catch (err) {
+    dispatch(getOrderFailure());
   }
 };

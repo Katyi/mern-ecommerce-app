@@ -219,7 +219,7 @@ const Cart = () => {
       setProductsOfCart([])
     }
     
-  }, [dispatch, cart?.length, productsOfCart?.quantity, productsOfCart?.length]);
+  }, [dispatch, cart?.length, productsOfCart?.quantity]);
 
   // for checkout
   useEffect(() => {
@@ -242,11 +242,12 @@ const Cart = () => {
     // DESCENDONG QUANTITY
     if (type === 'dec') {
       let newArr = productsOfCart.map(item => item._id === id ? ({...item, quantity: item.quantity - 1}) : item).filter(item => item.quantity > 0);
+      setProductsOfCart(newArr);
       if (newArr.length>0) {
         let newArr1 = newArr.map(item => ({productId: item.productId, quantity: item.quantity, color: item.color, size: item.size}));
         const newCart = { userId: userId, products: newArr1};
         await updateCart(cartId, newCart, dispatch);
-        setProductsOfCart(newArr);
+        
       } else {
         await deleteUserCart();
       }

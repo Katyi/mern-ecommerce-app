@@ -7,7 +7,7 @@ import { mobile } from "../responsive";
 import { useState, useEffect } from "react";
 import { publicRequest, userRequest } from "../requestMethods";
 import {Link, useNavigate} from 'react-router-dom';
-import { deleteCart, deleteWishlist, getCart, getWishlist, updateCart } from "../redux/apiCalls";
+import { addCart, deleteCart, deleteWishlist, getCart, getWishlist, updateCart } from "../redux/apiCalls";
 
 const KEY = import.meta.env.VITE_STRIPE;
 
@@ -32,6 +32,7 @@ const Top = styled.div`
 
 const TopButton = styled.button`
   padding: 10px;
+  width: ${props=>props.type === "filled" && "132px"};
   font-weight: 300;
   cursor: pointer;
   border: ${props=>props.type === "filled" && "none"};
@@ -56,7 +57,7 @@ const Bottom = styled.div`
   ${mobile({flexDirection:"column"})}
 `;
 const Info = styled.div`
-  flex: 3;
+  /* flex: 3; */
 `;
 
 const Product = styled.div`
@@ -67,8 +68,12 @@ const Product = styled.div`
 `;
 
 const ProductDetail = styled.div`
-  flex: 2;
+  /* flex: 2; */
   display: flex;
+`;
+
+const ImagePart = styled.div`
+  width: 20vw;
 `;
 
 const Image = styled.img`
@@ -77,6 +82,7 @@ const Image = styled.img`
 
 const Details = styled.div`
   padding: 20px;
+  width: 50vw;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -127,6 +133,17 @@ const Hr = styled.hr`
   height: 1px;
 `;
 
+const ButtonsPart = styled.div`
+  width: calc(20vw);
+  /* width: auto; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  /* justify-content: space-between; */
+
+`;
+
 const Button = styled.button`
   width: 100%;
   padding: 10px;
@@ -143,9 +160,10 @@ const Wishlist = () => {
   const navigate = useNavigate();
   const userId = useSelector((state) => state.user.currentUser?._id);
   // const cartId = useSelector((state) => state.carts.currentCart?._id); 
+  const cartProducts = useSelector((state) => state.carts?.currentCart?.products);
   const wishlistId = useSelector((state) => state.wishlists.currentWishlist?._id);
   const wishlist = useSelector((state) => state.wishlists.currentWishlist?.products);
-  const cart = useSelector((state) => state.carts.currentCart?.products);
+  const cart = useSelector((state) => state.carts.currentCart);
 
   const deleteUserWishList = async() => {
     console.log('delete')
@@ -165,6 +183,28 @@ const Wishlist = () => {
       price: res.data.find(elem => elem._id === item.productId)?.price,
     }));
     setProductsOfWishlist(newArr);
+  };
+
+  const addToCart = async(id, color, size) => {
+    if (!cart) {
+      let newProdArr = {productId: id, quantity: 1, color: color, size: size};
+      const newCart = { userId: userId, products: newProdArr};
+      await addCart(newCart, dispatch)
+      await getCart(userId, dispatch)
+    } else {
+      if (cartProducts.findIndex((item)=> item.productId === id && item.color === color && item.size === size) > -1) {
+        let newProdArr = cartProducts?.map((item) => item.productId === id && item.color === color && item.size === size 
+          ? {...item, quantity: item.quantity + 1} : item);
+        const newCart = { userId: cart.userId, products: newProdArr};
+        await updateCart(cart._id, newCart, dispatch)
+        await getCart(cart.userId, dispatch)
+      } else {
+        let newProdArrAdd = [...cartProducts, {productId: id, quantity: 1, color: color, size: size}];
+        const newCart = { userId: cart.userId, products: newProdArrAdd};
+        await updateCart(cart._id, newCart, dispatch)
+        await getCart(cart.userId, dispatch)
+      }
+    }
   };
   
   // fetching products for wishlist
@@ -201,12 +241,14 @@ const Wishlist = () => {
             {productsOfWishlist?.map((product, index)=> (
              <Product key={index}>
               <ProductDetail>
-                <Image src={product?.img} 
-                  onError={({ currentTarget }) => {
-                    currentTarget.onerror = null; // prevents looping
-                    currentTarget.src="https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/462666/item/goods_69_462666.jpg";
-                  }}
-                />
+                <ImagePart>
+                  <Image src={product?.img} 
+                    onError={({ currentTarget }) => {
+                      currentTarget.onerror = null; // prevents looping
+                      currentTarget.src="https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/462666/item/goods_69_462666.jpg";
+                    }}
+                  />
+                </ImagePart>
                 <Details>
                   <ProductName><b>Product:</b> {product?.title}</ProductName>
                   <ProductName><b>Description:</b> {product?.desc}</ProductName>
@@ -214,6 +256,10 @@ const Wishlist = () => {
                   <ProductColor color={product?.color}/>
                   <ProductSize><b>Size:</b> {product?.size}</ProductSize>
                 </Details>
+                <ButtonsPart>
+                  <TopButton onClick={()=>addToCart(product.productId, product.color, product.size)} type="filled">ADD TO CART</TopButton>
+                  <TopButton type="filled" >DELETE</TopButton>
+                </ButtonsPart>
               </ProductDetail>
             </Product>
             

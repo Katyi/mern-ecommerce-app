@@ -179,7 +179,8 @@ const Cart = () => {
   };
 
   const deleteUserCart = async() => {
-    await deleteCart(cartId, dispatch).then(() => {
+    await deleteCart(cartId, dispatch)
+    .then(() => {
       getCart(userId, dispatch);
     })
     
@@ -191,8 +192,10 @@ const Cart = () => {
 
   const getProducts = async () => {
     await getCart(userId, dispatch);
-    let indArr = cart?.map(item => item.productId);
-    const res = await publicRequest.get(`/products?_id=${indArr}`)
+    let indArr = cart.map(item => item.productId);
+    console.log(indArr)
+    const res = await publicRequest.get(`/products?_id=${indArr}`);
+    console.log(res.data)
     // .then((res)=>{
       // let newArr = res.data.map(item => ({ ...item, quantity: cart.find(elem => elem.productId === item._id).quantity}));
     let newArr = cart.map(item => ({ ...item, 
@@ -216,7 +219,7 @@ const Cart = () => {
       setProductsOfCart([])
     }
     
-  }, [dispatch, productsOfCart?.quantity, productsOfCart?.length]);
+  }, [dispatch, cart?.length, productsOfCart?.quantity, productsOfCart?.length]);
 
   // for checkout
   useEffect(() => {
@@ -236,15 +239,14 @@ const Cart = () => {
 
   // handle quantity for product of cart
   const handleQuantity = async(type, id) => {
+    // DESCENDONG QUANTITY
     if (type === 'dec') {
-      // quantity > 1 && setQuantity(quantity - 1);
       let newArr = productsOfCart.map(item => item._id === id ? ({...item, quantity: item.quantity - 1}) : item).filter(item => item.quantity > 0);
-      console.log(newArr)
       if (newArr.length>0) {
-        setProductsOfCart(newArr);
-        let newArr1 = newArr.map(item => ({productId: item._id, quantity: item.quantity, color: item.color, size: item.size}));
+        let newArr1 = newArr.map(item => ({productId: item.productId, quantity: item.quantity, color: item.color, size: item.size}));
         const newCart = { userId: userId, products: newArr1};
         await updateCart(cartId, newCart, dispatch);
+        setProductsOfCart(newArr);
       } else {
         await deleteUserCart();
       }
@@ -253,7 +255,7 @@ const Cart = () => {
       let newArr = productsOfCart.map(item => item._id === id ? ({ ...item, quantity: item.quantity + 1}) : item);
       console.log(newArr)
       setProductsOfCart(newArr);
-      let newArr1 = newArr.map(item => ({productId: item._id, quantity: item.quantity, color: item.color, size: item.size}));
+      let newArr1 = newArr.map(item => ({productId: item.productId, quantity: item.quantity, color: item.color, size: item.size}));
       const newCart = { userId: userId, products: newArr1};
       await updateCart(cartId, newCart, dispatch);
     }

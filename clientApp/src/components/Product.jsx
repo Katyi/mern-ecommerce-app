@@ -1,4 +1,5 @@
-import { FavoriteBorderOutlined, SearchOutlined, ShoppingCartOutlined } from "@mui/icons-material";
+import { FavoriteBorderOutlined, SearchOutlined, ShoppingCartOutlined, Favorite } from "@mui/icons-material";
+import Tooltip from '@mui/material/Tooltip';
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link, useLocation } from "react-router-dom";
@@ -76,8 +77,6 @@ const Product = ({item}) => {
   const [color, setColor] = useState(item.color[0]);
   const [size, setSize] = useState(item.size[0]);
 
-
-
   const addToCart = async(product) => {
     if (!cart) {
       let newProdArr = {productId: product._id, quantity: 1, color: color, size: size};
@@ -130,17 +129,32 @@ const Product = ({item}) => {
         }}
       />
       <Info>
-        <Icon onClick={()=>addToCart(item)}>
-          <ShoppingCartOutlined/>
+        <Tooltip title="Add to Cart">
+          <Icon onClick={()=>addToCart(item)}>
+            <ShoppingCartOutlined/>
+          </Icon>
+        </Tooltip>
+        <Tooltip title="Open product page">
+          <Icon>
+            <Link to={`/product/${item._id}`}>
+              <SearchOutlined/>
+            </Link>
         </Icon>
-        <Icon>
-          <Link to={`/product/${item._id}`}>
-            <SearchOutlined/>
-          </Link>
-        </Icon>
-        <Icon onClick={()=>addToWishlist(item)} color="red">
-           <FavoriteBorderOutlined/>
-        </Icon>
+        </Tooltip>
+        {wishlistProducts.findIndex((elem) => elem.productId === item._id && elem.color === color && elem.size === size) === -1 &&
+        <Tooltip title="Add to wishlist">
+          <Icon onClick={()=>addToWishlist(item)}>
+            <FavoriteBorderOutlined />
+          </Icon>
+        </Tooltip>
+        }
+        {wishlistProducts.findIndex((elem) => elem.productId === item._id && elem.color === color && elem.size === size) > -1 &&
+        <Tooltip title="Already in wishlist">
+          <Icon>
+            <Favorite style={{fill: "red"}}/>
+          </Icon>
+        </Tooltip>
+        }
       </Info>
     </Container>
   )

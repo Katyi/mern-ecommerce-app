@@ -92,13 +92,14 @@ const Orders = styled.div`
 `;
 
 const Button = styled.button`
-  width: 15vw;
-  height: 45px;
-  padding: 15px;
+  /* width: 15vw; */
+  /* height: 40px; */
+  padding: 5px 15px;
   border: 2px solid teal;
   background-color: white;
   cursor: pointer;
   font-weight: 500;
+  margin: 0 10px;
   &:hover {
     background-color: #f8f4f4;
   }
@@ -241,10 +242,17 @@ const UserPage = () => {
       <Wrapper>
         <TopText onClick={()=>navigate('/cart')}>Shopping Bag ({cart?.length})</TopText>
         <TopText onClick={()=>navigate('/wishlist')}>Your Wishlist ({wishlist?.length})</TopText>
+        <Button onClick={()=> navigate('/products/all')}>CONTINUE SHOPPING</Button>
+        <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
         <br/>
         <br/>
         <Header>
-        <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
+        <div>
+        
+        <br/>
+        <br/>
+        
+        </div>
           <LeftPart>
             <Title>{user.username}</Title>
             <br/>

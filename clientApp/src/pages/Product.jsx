@@ -1,4 +1,4 @@
-import { Add, Remove } from "@mui/icons-material";
+import { Add, Remove, Favorite } from "@mui/icons-material";
 import styled from "styled-components"
 import Announcement from "../components/Announcement";
 import Navbar from "../components/Navbar";
@@ -36,8 +36,31 @@ const InfoContainer = styled.div`
   ${mobile({padding:"10px"})}
 `;
 
+const TitleContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  ${mobile({width:"100%"})}
+`;
+
 const Title = styled.h1`
   font-weight: 200;
+`;
+
+const Icon = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  transition: all 0.5s ease;
+  &:hover{
+    background-color: #e9f5f5;
+    transform: scale(1.1);
+  }
 `;
 
 const Desc = styled.p`
@@ -88,10 +111,9 @@ const FilterSize = styled.select`
 const FilterSizeOption = styled.option``;
 
 const AddContainer = styled.div`
-  width: 80%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
   ${mobile({width:"100%"})}
 `;
 
@@ -217,7 +239,14 @@ const Product = () => {
         <InfoContainer>
           <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
           <Button onClick={()=> navigate('/products/all')} style={{marginLeft:"10px"}}>CONTINUE SHOPPING</Button>
-          <Title>{product.title}</Title>
+          <TitleContainer>
+            <Title>{product.title}</Title>
+            {wishlistProducts.findIndex((elem) => elem.productId === product._id && elem.color === color && elem.size === size) > -1 &&
+            <Icon>
+              <Favorite style={{fill: "red"}}/>
+            </Icon>
+            }
+          </TitleContainer>
           <Desc>{product.desc}</Desc>
           <Price>$ {product.price}</Price>
           <FilterContainer>
@@ -247,7 +276,9 @@ const Product = () => {
               <Add onClick={() => handleQuantity("inc")} style={{cursor:'pointer'}}/>
             </AmountContainer>
             <Button onClick={addToCart}>ADD TO CART</Button>
-            <Button onClick={addToWishlist}>ADD TO WISHLIST</Button>
+            {wishlistProducts.findIndex((elem) => elem.productId === product._id && elem.color === color && elem.size === size) === -1 &&
+              <Button onClick={addToWishlist}>ADD TO WISHLIST</Button>
+            }
           </AddContainer>
         </InfoContainer>
       </Wrapper>

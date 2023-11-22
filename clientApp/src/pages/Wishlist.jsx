@@ -229,7 +229,7 @@ const Wishlist = () => {
             <TopButton type="filled" onClick={() => deleteUserWishList()}>CLEAR WISHLIST</TopButton>
           </div>
           <TopTexts>
-            <TopText onClick={()=>navigate('/cart')}>Shopping Bag ({cart?.length})</TopText>
+            <TopText onClick={()=>navigate('/cart')}>Shopping Bag ({cartProducts?.length})</TopText>
             <TopText>Your Wishlist ({wishlist?.length})</TopText>
           </TopTexts>
         </Top>

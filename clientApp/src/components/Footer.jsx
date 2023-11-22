@@ -117,7 +117,7 @@ const Footer = () => {
       </Left>
       <Center>
         <Title>Useful Links</Title>
-        {/* <List> */}
+        <List>
           <ListItem onClick={()=>navigate("/home")}>Home</ListItem>
           <ListItem onClick={()=>navigate("/cart")}>Cart</ListItem>
           <ListItem onClick={()=>navigate("/products/men")}>Man Fashion</ListItem>
@@ -125,9 +125,9 @@ const Footer = () => {
           <ListItem onClick={()=>navigate("/products/accessories")}>Accessories</ListItem>
           <ListItem onClick={()=>navigate("/account")}>My Account</ListItem>
           {/* <ListItem>Order Tracking</ListItem> */}
-          <ListItem>Wishlist</ListItem>
-          {/* <ListItem>Terms</ListItem> */}
-        {/* </List> */}
+          <ListItem onClick={()=>navigate("/wishlist")}>Wishlist</ListItem>
+          <ListItem>Terms</ListItem>
+        </List>
       </Center>
       <Right>
         <Title>Contact</Title>

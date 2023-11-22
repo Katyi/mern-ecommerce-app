@@ -171,6 +171,7 @@ const Cart = () => {
   const userId = useSelector((state) => state.user.currentUser?._id);
   const cartId = useSelector((state) => state.carts.currentCart?._id); 
   const cart = useSelector((state) => state.carts.currentCart?.products);
+  const wishlist = useSelector((state) => state.wishlists.currentWishlist?.products);
   // const [quantity, setQuantity] = useState(0);
 
   const onToken = (token) => {
@@ -183,26 +184,39 @@ const Cart = () => {
     })
     
   };
+  // total price for cart
+  const getTotal = () => {
+    return productsOfCart?.reduce((total, item) => total + item.quantity * item.price, 0);
+  }
 
+  const getProducts = async () => {
+    await getCart(userId, dispatch);
+    let indArr = cart?.map(item => item.productId);
+    const res = await publicRequest.get(`/products?_id=${indArr}`)
+    // .then((res)=>{
+      // let newArr = res.data.map(item => ({ ...item, quantity: cart.find(elem => elem.productId === item._id).quantity}));
+    let newArr = cart.map(item => ({ ...item, 
+        title: res.data.find(elem => elem._id === item.productId)?.title, 
+        desc: res.data.find(elem => elem._id === item?.productId)?.desc,
+        img: res.data.find(elem => elem._id === item.productId)?.img,
+        price: res.data.find(elem => elem._id === item.productId)?.price,
+      }));
+      setProductsOfCart(newArr);
+      console.log(productsOfCart)
+    // })
+    // .catch (err => {})
+    
+  };
+  
   // fetching products for cart
   useEffect(() => {
-    getCart(userId, dispatch);
-    let indArr;
     if (cart) {
-      indArr = cart?.map(item => item.productId);
-      const getProducts = async () => {
-        const res = await publicRequest.get(`/products?_id=${indArr}`).then((res)=>{
-          let newArr = res.data.map(item => ({ ...item, quantity: cart.find(elem => elem.productId === item._id).quantity}));
-          setProductsOfCart(newArr);
-        })
-        .catch (err => {})
-      };
       getProducts();
     } else {
-      indArr = [];
       setProductsOfCart([])
     }
-  }, [dispatch, cart?.length]);
+    
+  }, [dispatch, productsOfCart?.quantity, productsOfCart?.length]);
 
   // for checkout
   useEffect(() => {
@@ -218,30 +232,32 @@ const Cart = () => {
     stripeToken && makeRequest();
   }, [stripeToken, navigate]);
 
-  // total price for cart
-  const getTotal = () => {
-    return productsOfCart?.reduce((total, item) => total + item.quantity * item.price, 0);
-  }
+  
 
   // handle quantity for product of cart
   const handleQuantity = async(type, id) => {
     if (type === 'dec') {
       // quantity > 1 && setQuantity(quantity - 1);
       let newArr = productsOfCart.map(item => item._id === id ? ({...item, quantity: item.quantity - 1}) : item).filter(item => item.quantity > 0);
-
-      setProductsOfCart(newArr);
-      let newArr1 = newArr.map(item => ({productId: item._id, quantity: item.quantity}));
-      const newCart = { userId: userId, products: newArr1};
-      await updateCart(cartId, newCart, dispatch);
-      await getCart(userId, dispatch);
-    } else {
+      console.log(newArr)
+      if (newArr.length>0) {
+        setProductsOfCart(newArr);
+        let newArr1 = newArr.map(item => ({productId: item._id, quantity: item.quantity, color: item.color, size: item.size}));
+        const newCart = { userId: userId, products: newArr1};
+        await updateCart(cartId, newCart, dispatch);
+      } else {
+        await deleteUserCart();
+      }
+    } else if(type === 'inc') {
       // setQuantity(quantity + 1);
       let newArr = productsOfCart.map(item => item._id === id ? ({ ...item, quantity: item.quantity + 1}) : item);
+      console.log(newArr)
       setProductsOfCart(newArr);
-      let newArr1 = newArr.map(item => ({productId: item._id, quantity: item.quantity}));
+      let newArr1 = newArr.map(item => ({productId: item._id, quantity: item.quantity, color: item.color, size: item.size}));
       const newCart = { userId: userId, products: newArr1};
       await updateCart(cartId, newCart, dispatch);
     }
+    
   };
 
   return (
@@ -252,12 +268,13 @@ const Cart = () => {
         <Title>YOUR BAG</Title>
         <Top>
           <div style={{display:'flex', gap:'20px'}}>
-            <TopButton onClick={()=> navigate('/home')}>CONTINUE SHOPPING</TopButton>
+            <TopButton onClick={()=> navigate('/products/all')}>CONTINUE SHOPPING</TopButton>
+            <TopButton onClick={()=> navigate('/home')}>TO HOME PAGE</TopButton>
             <TopButton type="filled" onClick={() => deleteUserCart()}>CLEAR CART</TopButton>
           </div>
           <TopTexts>
-            <TopText>Shopping Bag ({productsOfCart?.length})</TopText>
-            <TopText>Your Wishlist (0)</TopText>
+            <TopText>Shopping Bag ({cart?.length})</TopText>
+            <TopText onClick={()=>navigate('/wishlist')}>Your Wishlist ({wishlist?.length})</TopText>
           </TopTexts>
           <StripeCheckout
             name="clientapp"
@@ -285,6 +302,7 @@ const Cart = () => {
                 />
                 <Details>
                   <ProductName><b>Product:</b> {product?.title}</ProductName>
+                  <ProductName><b>Description:</b> {product?.desc}</ProductName>
                   <ProductId><b>ID:</b> {product?._id}</ProductId>
                   <ProductColor color={product?.color}/>
                   <ProductSize><b>Size:</b> {product?.size}</ProductSize>
@@ -299,9 +317,7 @@ const Cart = () => {
                 <ProductPrice>$ {product?.price * product?.quantity}</ProductPrice>
               </PriceDetail>
             </Product>
-            
           ))}
-            <Hr/>
           </Info>
           <Summary>
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
@@ -335,6 +351,7 @@ const Cart = () => {
             </StripeCheckout>
           </Summary>
         </Bottom>
+        <Hr/>
       </Wrapper>
       <Footer/>
     </Container>

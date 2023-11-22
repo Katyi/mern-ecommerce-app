@@ -8,7 +8,7 @@ import { mobile } from "../responsive";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { publicRequest, userRequest } from "../requestMethods";
-import { addCart, getCart, updateCart } from "../redux/apiCalls";
+import { addCart, addWishlist, getCart, getWishlist, updateCart, updateWishlist } from "../redux/apiCalls";
 import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div``;
@@ -88,7 +88,7 @@ const FilterSize = styled.select`
 const FilterSizeOption = styled.option``;
 
 const AddContainer = styled.div`
-  width: 50%;
+  width: 80%;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -135,7 +135,9 @@ const Product = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const cart = useSelector((state) => state.carts.currentCart);
+  const wishlist = useSelector((state) => state.wishlists.currentWishlist);
   const cartProducts = useSelector((state) => state.carts?.currentCart?.products);
+  const wishlistProducts = useSelector((state) => state.wishlists?.currentWishlist?.products);
   const userId = useSelector((state) => state.user.currentUser?._id);
 
   useEffect(() => {
@@ -143,29 +145,50 @@ const Product = () => {
       try {
         const res = await publicRequest.get("/products/find/" + id);
         setProduct(res.data);
+        setSize(res.data.size[0]);
+        setColor(res.data.color[0]);
       } catch (err) {}
     };
     getProduct();
   }, [id]);
 
-  const handleClick = async() => {
+  const addToCart = async() => {
     if (!cart) {
-      let newProdArr = {productId: product._id, quantity: quantity};
+      let newProdArr = {productId: product._id, quantity: quantity, color: color, size: size};
       const newCart = { userId: userId, products: newProdArr};
-      await addCart(newCart, dispatch).then(
-        getCart(userId, dispatch)
-      )
+      await addCart(newCart, dispatch)
+      await getCart(userId, dispatch)
     } else {
-      if (cartProducts.findIndex((item)=> item.productId === product._id) > -1) {
-        let newProdArr = cartProducts?.map((item) => item.productId === product._id ? {...item, quantity: item.quantity + quantity} : item);
+      if (cartProducts.findIndex((item)=> item.productId === product._id && item.color === color && item.size === size) > -1) {
+        let newProdArr = cartProducts?.map((item) => item.productId === product._id && item.color === color && item.size === size 
+          ? {...item, quantity: item.quantity + quantity} : item);
         const newCart = { userId: cart.userId, products: newProdArr};
         await updateCart(cart._id, newCart, dispatch)
         await getCart(cart.userId, dispatch)
       } else {
-        let newProdArrAdd = [...cartProducts, {productId: product._id, quantity: quantity}];
+        let newProdArrAdd = [...cartProducts, {productId: product._id, quantity: quantity, color: color, size: size}];
         const newCart = { userId: cart.userId, products: newProdArrAdd};
         await updateCart(cart._id, newCart, dispatch)
         await getCart(cart.userId, dispatch)
+      }
+    }
+  };
+
+  const addToWishlist = async() => {
+    if (!wishlist) {
+      let newProdArr = {productId: product._id, color: color, size: size};
+      const newWishlist = { userId: userId, products: newProdArr};
+      await addWishlist(newWishlist, dispatch).then(
+        getWishlist(userId, dispatch)
+      )
+    } else {
+      if (wishlistProducts.findIndex((item) => item.productId === product._id && item.color === color && item.size === size) < 0) {
+        let newProdArrAdd = [...wishlistProducts, {productId: product._id, color: color, size: size}];
+        const newWishlist = { userId: wishlist.userId, products: newProdArrAdd};
+        await updateWishlist(wishlist._id, newWishlist, dispatch);
+        await getWishlist(wishlist.userId, dispatch);
+      } else {
+        console.log('уже есть в листе');
       }
     }
   };  
@@ -193,6 +216,7 @@ const Product = () => {
         </ImgContainer>
         <InfoContainer>
           <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
+          <Button onClick={()=> navigate('/products/all')} style={{marginLeft:"10px"}}>CONTINUE SHOPPING</Button>
           <Title>{product.title}</Title>
           <Desc>{product.desc}</Desc>
           <Price>$ {product.price}</Price>
@@ -207,9 +231,11 @@ const Product = () => {
             </Filter>
             <Filter>
               <FilterTitle>Size</FilterTitle>
-              <FilterSize onChange={(e) => setSize(e.target.value)}>
+              <FilterSize
+                value={size}
+                onChange={(e)=>setSize(e.target.value)}>
                 {product.size?.map((s) => (
-                  <FilterSizeOption key={s}>{s}</FilterSizeOption>
+                  <FilterSizeOption size={s} value={s} key={s}>{s}</FilterSizeOption>
                 ))}
               </FilterSize>
             </Filter>
@@ -220,7 +246,8 @@ const Product = () => {
               <Amount>{quantity}</Amount>
               <Add onClick={() => handleQuantity("inc")} style={{cursor:'pointer'}}/>
             </AmountContainer>
-            <Button onClick={handleClick}>ADD TO CART</Button>
+            <Button onClick={addToCart}>ADD TO CART</Button>
+            <Button onClick={addToWishlist}>ADD TO WISHLIST</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>

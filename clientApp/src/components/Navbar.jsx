@@ -1,11 +1,11 @@
-import { Search, ShoppingCartOutlined } from '@mui/icons-material';
+import { Search, ShoppingCartOutlined, FavoriteBorderOutlined, ExitToAppOutlined } from '@mui/icons-material';
 import { Badge } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {mobile} from '../responsive.js';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
-import { getCart } from '../redux/apiCalls.js';
+import { getCart, getWishlist } from '../redux/apiCalls.js';
 
 const Container = styled.div`
   height: 60px;
@@ -94,16 +94,17 @@ const Navbar = () => {
   const user = useSelector((state) => state.user.currentUser);
   
   const quantity = useSelector((state) => state.carts?.currentCart?.products?.length);
+  const quantityWishlist = useSelector((state) => state.wishlists?.currentWishlist?.products?.length);
   const userName = useSelector((state) => state.user?.currentUser?.username.toUpperCase());
   const navigate = useNavigate();
   
   useEffect(() => {
     getCart(userId, dispatch);
-  },[userId]);
+  },[userId, quantity]);
 
   useEffect(() => {
-    getCart(userId, dispatch);
-  },[quantity]);
+    getWishlist(userId, dispatch);
+  },[userId, quantityWishlist]);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -126,15 +127,23 @@ const Navbar = () => {
           {/* <MenuItem>REGISTER</MenuItem>
           <MenuItem>SIGN IN</MenuItem> */}
           <Avatar src={user?.img} alt="" onClick={()=>navigate("/account")}/>
-          <UserName>{userName}</UserName>
-          <MenuItem onClick={handleClick}>OUT</MenuItem>
-          <Link to={'/cart'}>
-            <MenuItem>
-            <Badge badgeContent={quantity} color="primary">
-              <ShoppingCartOutlined color="action" />
+          {/* <UserName>{userName}</UserName> */}
+          {/* <MenuItem onClick={handleClick}>OUT</MenuItem> */}
+          <MenuItem >
+            <Badge style={{marginRight:"20px"}} onClick={handleClick}>
+              <ExitToAppOutlined color="action"/>
             </Badge>
-            </MenuItem>
-          </Link>
+            <Link to={'/wishlist'}>
+              <Badge badgeContent={quantityWishlist} color="primary" style={{marginRight:"20px"}}>
+                <FavoriteBorderOutlined color='action'/>
+              </Badge>
+            </Link>
+            <Link to={'/cart'}>
+              <Badge badgeContent={quantity} color="primary">
+                <ShoppingCartOutlined color="action" />
+              </Badge>
+            </Link>
+          </MenuItem>
         </Right>
       </Wrapper>
     </Container>

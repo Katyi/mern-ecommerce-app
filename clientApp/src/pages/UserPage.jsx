@@ -8,14 +8,21 @@ import { getOrder } from '../redux/apiCalls';
 import { mobile } from "../responsive";
 import dayjs from 'dayjs';
 import { publicRequest } from '../requestMethods';
+import Footer from '../components/Footer';
 
-const Container = styled.div``;
+const Container = styled.div`
+`;
+
+const Wrapper = styled.div`
+  padding: 20px;
+  ${mobile({padding:"10px"})}
+`;
 
 const Header = styled.div`
   display: flex;
   align-items: start;
   justify-content: space-between;
-  border-bottom: 1px solid teal;
+  border-bottom: 0.5px solid lightgray;
 `;
 
 const LeftPart = styled.div`
@@ -32,7 +39,13 @@ const Title = styled.h1`
   text-align: center;
   width: auto;
   margin: 0;
-  color: teal;
+  /* color: teal; */
+`;
+
+const TopText = styled.span`
+  text-decoration: underline;
+  cursor: pointer;
+  margin: 0px 10px;
 `;
 
 const InfoPart = styled.div`
@@ -95,7 +108,10 @@ const Info = styled.div`
   padding-top: 20px;
   padding-left: 20px;
   padding-right: 20px;
-  border-top: 1px solid teal;
+  border-top: 0.6px solid lightgray;
+  &:last-child {
+    border-bottom: 0.5px solid lightgray;
+  }
 `;
 
 const OrderInfoPart = styled.div`
@@ -141,7 +157,7 @@ const ProductField = styled.span``;
 
 const Summary = styled.div`
   flex: 1;
-  border: 0.5px solid teal;
+  border: 0.5px solid lightgray;
   border-radius: 10px;
   padding: 20px;
   /* height: 50vh; */
@@ -172,6 +188,8 @@ const UserPage = () => {
   const userId = useSelector((state) => state.user.currentUser?._id);
   const orders = useSelector((state) => state.orders.currentCart);
   const ordersProducts = useSelector((state) => state.orders.currentCart?.products);
+  const cart = useSelector((state) => state.carts.currentCart?.products);
+  const wishlist = useSelector((state) => state.wishlists.currentWishlist?.products);
   const [userOrders, setUserOrders] = useState([]);
 
   // total price for cart
@@ -185,7 +203,6 @@ const UserPage = () => {
     let indArr1 = [];
     if (orders) {
       indArr = orders?.map(item => item.products).flat().map(elem => elem.productId);
-      console.log(indArr)
       for (let i = 0; i < orders.length; i++) {
         for (let j = 0; j < orders[i].products.length; j++) {
           indArr1.push({
@@ -215,109 +232,113 @@ const UserPage = () => {
       setUserOrders([])
     }
 
-  },[dispatch, orders, userOrders.length])
+  },[user, orders?.length])
 
   return (
     <Container>
       <Navbar/>
       <Announcement/>
-      <br/>
-      <Header>
-      <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
-        <LeftPart>
-          <Title>{user.username}</Title>
+      <Wrapper>
+        <TopText onClick={()=>navigate('/cart')}>Shopping Bag ({cart?.length})</TopText>
+        <TopText onClick={()=>navigate('/wishlist')}>Your Wishlist ({wishlist?.length})</TopText>
+        <br/>
+        <br/>
+        <Header>
+        <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
+          <LeftPart>
+            <Title>{user.username}</Title>
+            <br/>
+            <InfoPart>
+            <Row>
+              <Field1>Full name:</Field1>
+              <Field2>{user.fullname}</Field2>
+            </Row>
+            <Row>
+              <Field1>Gender:</Field1>
+              <Field2>{user.gender}</Field2>
+            </Row>
+            <Row>
+              <Field1>Occupation:</Field1>
+              <Field2>{user.occupation}</Field2>
+            </Row>
+            <Row>
+              <Field1>Address:</Field1>
+              <Field2>{user.address}</Field2>
+            </Row>
+            <Row>
+              <Field1>Phone:</Field1>
+              <Field2>{user.phone}</Field2>
+            </Row>
+            <Row>
+              <Field1>Email:</Field1>
+              <Field2>{user.email}</Field2>
+            </Row>
+            </InfoPart>
+          </LeftPart>
+          <RightPart>
+            <UserImage src={user.img}/>
+          </RightPart>
+        </Header>
+        <Orders>
           <br/>
-          <InfoPart>
-          <Row>
-            <Field1>Full name:</Field1>
-            <Field2>{user.fullname}</Field2>
-          </Row>
-          <Row>
-            <Field1>Gender:</Field1>
-            <Field2>{user.gender}</Field2>
-          </Row>
-          <Row>
-            <Field1>Occupation:</Field1>
-            <Field2>{user.occupation}</Field2>
-          </Row>
-          <Row>
-            <Field1>Address:</Field1>
-            <Field2>{user.address}</Field2>
-          </Row>
-          <Row>
-            <Field1>Phone:</Field1>
-            <Field2>{user.phone}</Field2>
-          </Row>
-          <Row>
-            <Field1>Email:</Field1>
-            <Field2>{user.email}</Field2>
-          </Row>
-          </InfoPart>
-        </LeftPart>
-        <RightPart>
-          <UserImage src={user.img}/>
-        </RightPart>
-      </Header>
-      
-      <Orders>
-        <br/>
-        <Title>My orders history</Title>
-        <br/>
-        {orders?.map((order, index)=>
-          <Info key={index}>
-            <OrderInfoPart>
-              <OrderField><b>{dayjs(order.createdAt).format('DD.MM.YYYY HH:mm:ss')}</b></OrderField>
-              <OrderField><b>Order ID:</b> {order._id}</OrderField>
-              <OrderField><b>Order amount:</b> ${order.amount}</OrderField>
-              <OrderField><b>Order address:</b> {order.address}</OrderField>
-              <OrderField><b>Order status:</b> {order.status}</OrderField>
-            </OrderInfoPart>
-            <div style={{display:'flex', width:'100%', alignItems:'start'}}>
-            <Order >
-              {userOrders.filter(item => item.orderId === order._id)
-              .map((product, idx)=>
-                <OrderDetail key={idx}>
-                  <Image src={product?.img} 
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null;
-                      currentTarget.src="https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/462666/item/goods_69_462666.jpg";
-                    }}
-                  />
-                  <Details>
-                    <ProductField><b>Product ID:</b> {product?.productId}</ProductField>
-                    <ProductField><b>Product:</b> {product?.title}</ProductField>
-                    <ProductField><b>Description:</b> {product?.desc}</ProductField>
-                    <ProductField><b>Price:</b> {product?.price}</ProductField>
-                    <ProductField><b>Quantity:</b> {product?.quantity}</ProductField>
-                  </Details>
-                  
-                </OrderDetail>
-              )}
-            </Order>
-            <Summary>
-              <SummaryTitle>ORDER SUMMARY</SummaryTitle>
-              <SummaryItem>
-                <SummaryItemText>Subtotal</SummaryItemText>
-                <SummaryItemPrice>$ {getTotal(userOrders.filter(item => item.orderId === order._id))}</SummaryItemPrice>
-              </SummaryItem>
-              <SummaryItem>
-                <SummaryItemText>Estimated Shipping</SummaryItemText>
-                <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-              </SummaryItem>
-              <SummaryItem>
-                <SummaryItemText>Shipping Discount</SummaryItemText>
-                <SummaryItemPrice>$ -5.90</SummaryItemPrice>
-              </SummaryItem>
-              <SummaryItem type="total">
-                <SummaryItemText>Total</SummaryItemText>
-                <SummaryItemPrice>$ {getTotal(userOrders.filter(item => item.orderId === order._id))}</SummaryItemPrice>
-              </SummaryItem>
-            </Summary>
-            </div>
-          </Info>
-          )}
-          
-      </Orders>
+            <Title>My orders history</Title>
+          <br/>
+          {orders?.map((order, index)=>
+            <Info key={index}>
+              <OrderInfoPart>
+                <OrderField><b>{dayjs(order.createdAt).format('DD.MM.YYYY HH:mm:ss')}</b></OrderField>
+                <OrderField><b>Order ID:</b> {order._id}</OrderField>
+                <OrderField><b>Order amount:</b> ${order.amount}</OrderField>
+                <OrderField><b>Order address:</b> {order.address}</OrderField>
+                <OrderField><b>Order status:</b> {order.status}</OrderField>
+              </OrderInfoPart>
+              <div style={{display:'flex', width:'100%', alignItems:'start'}}>
+              <Order >
+                {userOrders.filter(item => item.orderId === order._id)
+                .map((product, idx)=>
+                  <OrderDetail key={idx}>
+                    <Image src={product?.img} 
+                      onError={({ currentTarget }) => {
+                        currentTarget.onerror = null;
+                        currentTarget.src="https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/462666/item/goods_69_462666.jpg";
+                      }}
+                    />
+                    <Details>
+                      <ProductField><b>Product ID:</b> {product?.productId}</ProductField>
+                      <ProductField><b>Product:</b> {product?.title}</ProductField>
+                      <ProductField><b>Description:</b> {product?.desc}</ProductField>
+                      <ProductField><b>Price:</b> {product?.price}</ProductField>
+                      <ProductField><b>Quantity:</b> {product?.quantity}</ProductField>
+                    </Details>
+                    
+                  </OrderDetail>
+                )}
+              </Order>
+              <Summary>
+                <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+                <SummaryItem>
+                  <SummaryItemText>Subtotal</SummaryItemText>
+                  <SummaryItemPrice>$ {getTotal(userOrders.filter(item => item.orderId === order._id))}</SummaryItemPrice>
+                </SummaryItem>
+                <SummaryItem>
+                  <SummaryItemText>Estimated Shipping</SummaryItemText>
+                  <SummaryItemPrice>$ 5.90</SummaryItemPrice>
+                </SummaryItem>
+                <SummaryItem>
+                  <SummaryItemText>Shipping Discount</SummaryItemText>
+                  <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+                </SummaryItem>
+                <SummaryItem type="total">
+                  <SummaryItemText>Total</SummaryItemText>
+                  <SummaryItemPrice>$ {getTotal(userOrders.filter(item => item.orderId === order._id))}</SummaryItemPrice>
+                </SummaryItem>
+              </Summary>
+              </div>
+            </Info>
+            )}
+        </Orders>
+      </Wrapper>
+      <Footer/>
     </Container>
   )
 }

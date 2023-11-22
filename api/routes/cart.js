@@ -7,10 +7,9 @@ const {
 
 const router = require("express").Router();
 
-//CREATE
+//ADD NEW CART WHEN USER DON'T HAVE CART YET
 router.post("/", verifyToken, async (req, res) => {
   const newCart = new Cart(req.body);
-  
   try {
     const savedCart = await newCart.save();
     res.status(200).json(savedCart);
@@ -19,8 +18,8 @@ router.post("/", verifyToken, async (req, res) => {
   }
 });
 
-//UPDATE
-router.put("/:id", async (req, res) => {  
+//UPDATE WHOLE USER CART
+router.put("/:id", async (req, res) => {
   try {
     const updatedCart = await Cart.findByIdAndUpdate(
       req.params.id, 
@@ -35,7 +34,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-//DELETE
+//DELETE WHOLE USER CART
 router.delete("/:id", async (req, res) => {
   try{
     await Cart.findByIdAndDelete(req.params.id);
@@ -45,7 +44,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// //GET ALL
+// //GET ALL CARTS
 router.get("/", verifyTokenAndAdmin, async (req, res) => {
   try {
     const carts = await Cart.find();
@@ -55,7 +54,7 @@ router.get("/", verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-//GET USER CART
+//GET CURRENT USER CART
 router.get("/find/:userId", async (req, res) => {
   try{
     const cart = await Cart.findOne({userId: req.params.userId});

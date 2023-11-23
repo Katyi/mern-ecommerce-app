@@ -9,8 +9,7 @@ import StripeCheckout from "react-stripe-checkout";
 import { useState, useEffect } from "react";
 import { publicRequest, userRequest } from "../requestMethods";
 import {Link, useNavigate} from 'react-router-dom';
-import { deleteCart, getCart, updateCart } from "../redux/apiCalls";
-// import axios from "axios";
+import { addOrder, deleteCart, getCart, updateCart } from "../redux/apiCalls";
 
 const KEY = import.meta.env.VITE_STRIPE;
 
@@ -161,18 +160,17 @@ const Button = styled.button`
   cursor: pointer;
 `;
 
-
 const Cart = () => {
   const dispatch = useDispatch();
   const [productIdArr, setProductIdArr] = useState([]);
   const [productsOfCart, setProductsOfCart] = useState([]);
   const [stripeToken, setStripeToken ] = useState(null);
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.currentUser);
   const userId = useSelector((state) => state.user.currentUser?._id);
   const cartId = useSelector((state) => state.carts.currentCart?._id); 
   const cart = useSelector((state) => state.carts.currentCart?.products);
   const wishlist = useSelector((state) => state.wishlists.currentWishlist?.products);
-  // const [quantity, setQuantity] = useState(0);
 
   const onToken = (token) => {
     setStripeToken(token);
@@ -185,33 +183,34 @@ const Cart = () => {
     })
     
   };
-  // total price for cart
+
+  // TOTAL PRICE FOR CART
   const getTotal = () => {
     return productsOfCart?.reduce((total, item) => total + item.quantity * item.price, 0);
   }
 
+  // FETCHING PRODUCTS FOR CART
   const getProducts = async () => {
     await getCart(userId, dispatch);
     let indArr = cart.map(item => item.productId);
-    console.log(indArr)
     const res = await publicRequest.get(`/products?_id=${indArr}`);
-    console.log(res.data)
-    // .then((res)=>{
-      // let newArr = res.data.map(item => ({ ...item, quantity: cart.find(elem => elem.productId === item._id).quantity}));
     let newArr = cart.map(item => ({ ...item, 
-        title: res.data.find(elem => elem._id === item.productId)?.title, 
-        desc: res.data.find(elem => elem._id === item?.productId)?.desc,
-        img: res.data.find(elem => elem._id === item.productId)?.img,
-        price: res.data.find(elem => elem._id === item.productId)?.price,
-      }));
-      setProductsOfCart(newArr);
-      console.log(productsOfCart)
-    // })
-    // .catch (err => {})
-    
+      title: res.data.find(elem => elem._id === item.productId)?.title, 
+      desc: res.data.find(elem => elem._id === item?.productId)?.desc,
+      img: res.data.find(elem => elem._id === item.productId)?.img,
+      price: res.data.find(elem => elem._id === item.productId)?.price,
+    }));
+    setProductsOfCart(newArr);
+  };
+
+  // DELETE CART AND ADD TO ORDER AFTER PAY
+  const handleCheckout = async() => {
+    let newArr = productsOfCart.map(item => ({productId: item.productId, quantity: item.quantity, color: item.color, size: item.size, price: item.price}));
+    const newOrder = { userId: userId, amount: getTotal(), address: user.address, status: "pending", products: newArr};
+    await addOrder(newOrder, dispatch);
+    await deleteUserCart();
   };
   
-  // fetching products for cart
   useEffect(() => {
     if (cart) {
       getProducts();
@@ -221,14 +220,16 @@ const Cart = () => {
     
   }, [dispatch, cart?.length, productsOfCart?.quantity]);
 
-  // for checkout
+  // FOR CHECKOUT
   useEffect(() => {
     const makeRequest = async() =>{
       try {
         const res = await userRequest.post('/checkout/payment', {
           tokenId: stripeToken.id,
-          amount: 500,
+          amount: getTotal()*100,
         });
+        console.log(res.data)
+        handleCheckout();
         navigate('/success', { state: {data: res.data}});
       } catch {}
     };
@@ -237,9 +238,9 @@ const Cart = () => {
 
   
 
-  // handle quantity for product of cart
+  // HANDLE QUANTITY OF PRODUCT IN CART
   const handleQuantity = async(type, id) => {
-    // DESCENDONG QUANTITY
+    // DECREASING QUANTITY
     if (type === 'dec') {
       let newArr = productsOfCart.map(item => item._id === id ? ({...item, quantity: item.quantity - 1}) : item).filter(item => item.quantity > 0);
       setProductsOfCart(newArr);
@@ -252,9 +253,8 @@ const Cart = () => {
         await deleteUserCart();
       }
     } else if(type === 'inc') {
-      // setQuantity(quantity + 1);
+      // INCREASING QUANTITY
       let newArr = productsOfCart.map(item => item._id === id ? ({ ...item, quantity: item.quantity + 1}) : item);
-      console.log(newArr)
       setProductsOfCart(newArr);
       let newArr1 = newArr.map(item => ({productId: item.productId, quantity: item.quantity, color: item.color, size: item.size}));
       const newCart = { userId: userId, products: newArr1};
@@ -281,7 +281,7 @@ const Cart = () => {
           </TopTexts>
           <StripeCheckout
             name="clientapp"
-            image="https://avatars.githubusercontent.com/u/1486366?v=4"
+            // image={avatar}
             billingAddress
             shippingAddress
             description={`Your total is $${getTotal()}`}
@@ -342,7 +342,7 @@ const Cart = () => {
             </SummaryItem>
             <StripeCheckout
               name="clientapp"
-              image="https://avatars.githubusercontent.com/u/1486366?v=4"
+              // image={avatar}
               billingAddress
               shippingAddress
               description={`Your total is $${getTotal()}`}

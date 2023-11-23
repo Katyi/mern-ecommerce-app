@@ -9,7 +9,7 @@ const cartSlice = createSlice({
     total: 0,
   },
   reducers: {
-    // GET CURRENT CART 
+    // GET CURRENT USER CART 
     getCartStart: (state) => {
       state.isFetching = true;
       state.error = false;
@@ -22,7 +22,7 @@ const cartSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
-    // UPDATE CART
+    // UPDATE USER CART
     updateCartStart: (state) => {
       state.isFetching = true;
       state.error = false;
@@ -37,7 +37,7 @@ const cartSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
-    // ADD CART
+    // ADD CART (CREATE NEW CART FOR USER)
     addCartStart: (state) => {
       state.isFetching = true;
       state.error = false;
@@ -50,7 +50,7 @@ const cartSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
-    //DELETE CART
+    //DELETE USER CART
     deleteCartStart: (state) => {
       state.isFetching = true;
       state.error = false;

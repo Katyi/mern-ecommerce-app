@@ -6,7 +6,10 @@ import {
   addCartStart, addCartSuccess, addCartFailure,
   deleteCartStart, deleteCartSuccess, deleteCartFailure
 } from './cartsRedux';
-import { getOrderFailure, getOrderStart, getOrderSuccess } from "./ordersRedux";
+import { 
+  addOrderFailure, addOrderStart, addOrderSuccess,
+  getOrderFailure, getOrderStart, getOrderSuccess,
+} from "./ordersRedux";
 import { 
   addWishlistFailure, addWishlistStart, addWishlistSuccess, 
   deleteWishlistFailure, deleteWishlistStart, deleteWishlistSuccess, 
@@ -47,10 +50,10 @@ export const getCart = async (userId, dispatch) => {
   }
 };
 
-export const updateCart = async (userId, cart, dispatch) => {
+export const updateCart = async (id, cart, dispatch) => {
   dispatch(updateCartStart());
   try {
-    const res = await userRequest.put(`carts/${userId}`, cart);
+    const res = await userRequest.put(`carts/${id}`, cart);
     dispatch(updateCartSuccess(res.data));
   } catch (err) {
     dispatch(updateCartFailure());
@@ -85,6 +88,16 @@ export const getOrder = async (userId, dispatch) => {
     dispatch(getOrderSuccess(res.data));
   } catch (err) {
     dispatch(getOrderFailure());
+  }
+};
+
+export const addOrder = async (order, dispatch) => {
+  dispatch(addOrderStart());
+  try {
+    const res = await userRequest.post("/orders", order);
+    dispatch(addOrderSuccess(res.data));
+  } catch (err) {
+    dispatch(addOrderFailure());
   }
 };
 

@@ -7,7 +7,7 @@ import { mobile } from "../responsive";
 import { useState, useEffect } from "react";
 import { publicRequest, userRequest } from "../requestMethods";
 import {Link, useNavigate} from 'react-router-dom';
-import { addCart, deleteCart, deleteWishlist, getCart, getWishlist, updateCart } from "../redux/apiCalls";
+import { addCart, deleteCart, deleteWishlist, getCart, getWishlist, updateCart, updateWishlist } from "../redux/apiCalls";
 
 const KEY = import.meta.env.VITE_STRIPE;
 
@@ -165,13 +165,6 @@ const Wishlist = () => {
   const wishlist = useSelector((state) => state.wishlists.currentWishlist?.products);
   const cart = useSelector((state) => state.carts.currentCart);
 
-  const deleteUserWishList = async() => {
-    console.log('delete')
-    await deleteWishlist(wishlistId, dispatch).then(() => {
-      getWishlist(userId, dispatch);
-    })
-  };
-  
   const getProducts = async () => {
     await getWishlist(userId, dispatch);
     let indArr = wishlist?.map(item => item.productId);
@@ -183,6 +176,19 @@ const Wishlist = () => {
       price: res.data.find(elem => elem._id === item.productId)?.price,
     }));
     setProductsOfWishlist(newArr);
+  };
+
+  const deleteUserWishList = async() => {
+    await deleteWishlist(wishlistId, dispatch).then(() => {
+      getWishlist(userId, dispatch);
+    })
+  };
+
+  const deleteProduct = async(id) => {
+    let newProdArr = wishlist.filter(item => item._id !== id);
+    const newWishlist = { userId: userId, products: newProdArr};
+    await updateWishlist(wishlistId, newWishlist, dispatch);
+    await getWishlist(userId, dispatch);
   };
 
   const addToCart = async(id, color, size) => {
@@ -258,7 +264,7 @@ const Wishlist = () => {
                 </Details>
                 <ButtonsPart>
                   <TopButton onClick={()=>addToCart(product.productId, product.color, product.size)} type="filled">ADD TO CART</TopButton>
-                  <TopButton type="filled" >DELETE</TopButton>
+                  <TopButton type="filled" onClick={()=>deleteProduct(product._id)}>DELETE</TopButton>
                 </ButtonsPart>
               </ProductDetail>
             </Product>

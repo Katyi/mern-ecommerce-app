@@ -141,14 +141,14 @@ const Product = ({item}) => {
             </Link>
         </Icon>
         </Tooltip>
-        {wishlistProducts.findIndex((elem) => elem.productId === item._id && elem.color === color && elem.size === size) === -1 &&
+        {wishlistProducts?.findIndex((elem) => elem.productId === item._id && elem.color === color && elem.size === size) === -1 &&
         <Tooltip title="Add to wishlist">
           <Icon onClick={()=>addToWishlist(item)}>
             <FavoriteBorderOutlined />
           </Icon>
         </Tooltip>
         }
-        {wishlistProducts.findIndex((elem) => elem.productId === item._id && elem.color === color && elem.size === size) > -1 &&
+        {wishlistProducts?.findIndex((elem) => elem.productId === item._id && elem.color === color && elem.size === size) > -1 &&
         <Tooltip title="Already in wishlist">
           <Icon>
             <Favorite style={{fill: "red"}}/>

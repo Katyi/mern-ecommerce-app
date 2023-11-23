@@ -181,7 +181,7 @@ const Product = () => {
       await addCart(newCart, dispatch)
       await getCart(userId, dispatch)
     } else {
-      if (cartProducts.findIndex((item)=> item.productId === product._id && item.color === color && item.size === size) > -1) {
+      if (cartProducts?.findIndex((item)=> item.productId === product._id && item.color === color && item.size === size) > -1) {
         let newProdArr = cartProducts?.map((item) => item.productId === product._id && item.color === color && item.size === size 
           ? {...item, quantity: item.quantity + quantity} : item);
         const newCart = { userId: cart.userId, products: newProdArr};
@@ -276,7 +276,7 @@ const Product = () => {
               <Add onClick={() => handleQuantity("inc")} style={{cursor:'pointer'}}/>
             </AmountContainer>
             <Button onClick={addToCart}>ADD TO CART</Button>
-            {wishlistProducts.findIndex((elem) => elem.productId === product._id && elem.color === color && elem.size === size) === -1 &&
+            {wishlistProducts?.findIndex((elem) => elem.productId === product._id && elem.color === color && elem.size === size) === -1 &&
               <Button onClick={addToWishlist}>ADD TO WISHLIST</Button>
             }
           </AddContainer>

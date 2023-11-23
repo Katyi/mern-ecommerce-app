@@ -23,23 +23,30 @@ const Header = styled.div`
   align-items: start;
   justify-content: space-between;
   border-bottom: 0.5px solid lightgray;
+  padding: 20px 0px 0px 0px;
 `;
 
 const LeftPart = styled.div`
-  width: 50vw;
-  height: 20vw;
+  width: 70%;
+  height: 15vw;
   display: flex;
   flex-direction: column;
   padding-left: 5%;
+  padding-right: 5%;
 `;
 
 const Title = styled.h1`
   font-size: 36px;
   font-weight: 700;
-  text-align: center;
   width: auto;
-  margin: 0;
-  /* color: teal; */
+  margin: 0 0 0 40vw;
+`;
+
+const SubTitle = styled.h1`
+  font-size: 30px;
+  font-weight: 700;
+  width: auto;
+  margin: 0 0 0 40vw;
 `;
 
 const TopText = styled.span`
@@ -49,13 +56,15 @@ const TopText = styled.span`
 `;
 
 const InfoPart = styled.div`
-height: 80%;
+  padding-top: 15px;
+  height: 80%;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 `;
 
 const Row = styled.div`
-  width: 50%;
+  width: 40%;
   display: flex;
   gap: 10%;
 `;
@@ -73,16 +82,16 @@ const Field2 = styled.div`
 `;
 
 const RightPart = styled.div`
-  width: 30vw;
-  height: 20vw;
+  width: 25%;
+  height: 15vw;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 `;
 
 const UserImage = styled.img`
-  width: 200px;
-  height: 200px;
+  width: 14vw;
+  height: 14vw;
   border-radius: 50%;
 `;
 
@@ -156,6 +165,18 @@ const Details = styled.div`
 
 const ProductField = styled.span``;
 
+const FilterColor = styled.div`
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: ${props => props.color};
+  margin: 0px 5px;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.7;
+  }
+`;
+
 const Summary = styled.div`
   flex: 1;
   border: 0.5px solid lightgray;
@@ -211,6 +232,9 @@ const UserPage = () => {
             productId: orders[i].products[j].productId,
             _id: orders[i].products[j]._id,
             quantity: orders[i].products[j].quantity,
+            price: orders[i].products[j].price,
+            color: orders[i].products[j].color,
+            size: orders[i].products[j].size,
           })
         }
       }
@@ -221,7 +245,7 @@ const UserPage = () => {
             title: res.data.find(elem => elem._id === item.productId)?.title, 
             desc: res.data.find(elem => elem._id === item?.productId)?.desc,
             img: res.data.find(elem => elem._id === item.productId)?.img,
-            price: res.data.find(elem => elem._id === item.productId)?.price,
+            // price: res.data.find(elem => elem._id === item.productId)?.price,
           }));
           setUserOrders(newArr);
         })
@@ -240,22 +264,16 @@ const UserPage = () => {
       <Navbar/>
       <Announcement/>
       <Wrapper>
+        {/* BUTTON AND LINKS */}
         <TopText onClick={()=>navigate('/cart')}>Shopping Bag ({cart?.length})</TopText>
         <TopText onClick={()=>navigate('/wishlist')}>Your Wishlist ({wishlist?.length})</TopText>
         <Button onClick={()=> navigate('/products/all')}>CONTINUE SHOPPING</Button>
         <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
-        <br/>
-        <br/>
+        {/* HEADER */}
         <Header>
-        <div>
-        
-        <br/>
-        <br/>
-        
-        </div>
+          {/* USERNAME INFO */}
           <LeftPart>
             <Title>{user.username}</Title>
-            <br/>
             <InfoPart>
             <Row>
               <Field1>Full name:</Field1>
@@ -283,14 +301,17 @@ const UserPage = () => {
             </Row>
             </InfoPart>
           </LeftPart>
+          {/* USERNAME PHOTO */}
           <RightPart>
             <UserImage src={user.img}/>
           </RightPart>
         </Header>
+        {/* ORDER HISTORY */}
         <Orders>
           <br/>
-            <Title>My orders history</Title>
+            <SubTitle>My orders history</SubTitle>
           <br/>
+          {/* ORDER INFO */}
           {orders?.map((order, index)=>
             <Info key={index}>
               <OrderInfoPart>
@@ -302,6 +323,7 @@ const UserPage = () => {
               </OrderInfoPart>
               <div style={{display:'flex', width:'100%', alignItems:'start'}}>
               <Order >
+                {/* PRODUCT INFO */}
                 {userOrders.filter(item => item.orderId === order._id)
                 .map((product, idx)=>
                   <OrderDetail key={idx}>
@@ -315,6 +337,8 @@ const UserPage = () => {
                       <ProductField><b>Product ID:</b> {product?.productId}</ProductField>
                       <ProductField><b>Product:</b> {product?.title}</ProductField>
                       <ProductField><b>Description:</b> {product?.desc}</ProductField>
+                       <FilterColor color={product?.color}/> 
+                      <ProductField><b>Size:</b> {product?.size}</ProductField>
                       <ProductField><b>Price:</b> {product?.price}</ProductField>
                       <ProductField><b>Quantity:</b> {product?.quantity}</ProductField>
                     </Details>

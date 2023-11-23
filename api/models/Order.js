@@ -13,6 +13,13 @@ const OrderSchema = new mongoose.Schema(
           type: Number,
           default: 1,
         },
+        color: {
+          type: String
+        },
+        size: {
+          type: String
+        },
+        price: {type: Number, required: true},
       },
     ],
     amount: {type: Number, required: true},

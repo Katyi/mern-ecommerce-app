@@ -63,6 +63,11 @@
   font-weight: 700;
   font-size: 16px;
 }
-.link {
+.outBtn {
   margin-left: 10px;
+  border: none;
+  background-color: transparent;
+  color: darkblue;
+  font-weight: 700;
+  font-size: 16px;
 }

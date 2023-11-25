@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import styled from "styled-components";
 import { Publish } from "@mui/icons-material";
@@ -64,11 +65,13 @@ const UserItem = styled.div`
 
 const UpdateUser = ({openModal, setOpenModal}) => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.user.currentUser);
-  const userId = useSelector((state) => state.user.currentUser?._id);
-  // let currentUser = useSelector((state) =>
-  //   state.users.users?.find((user) => user._id === userId)
-  // );
+  // const currentUser = useSelector((state) => state.user.currentUser);
+  // const userId = useSelector((state) => state.user.currentUser?._id);
+  const location = useLocation();
+  const userId = location.pathname.split("/")[2];
+  let currentUser = useSelector((state) =>
+    state.user.users?.find((user) => user._id === userId)
+  );
   const [gender, setGender] = useState(currentUser?.gender);
   const [file, setFile] = useState(null);
   const [user, setUser] = useState(currentUser);

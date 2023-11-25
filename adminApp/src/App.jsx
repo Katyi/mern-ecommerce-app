@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from './pages/login/Login';
@@ -15,7 +14,7 @@ import { useSelector } from 'react-redux';
 
 function App() {
   const admin = useSelector((state) => state.user.currentUser?.isAdmin);
-  // const admin = true;
+
   return (
     <Router>
       <Routes>

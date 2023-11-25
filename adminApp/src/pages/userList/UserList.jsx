@@ -10,10 +10,8 @@ import { deleteUser, getUsers } from "../../redux/apiCalls";
 export default function UserList() {
   const [data, setData] = useState(userRows);
   const dispatch = useDispatch();
-  const users = useSelector((state) => state.users?.users);
-  // const admin = useSelector((state) => state.user.currentUser?.isAdmin);
+  const users = useSelector((state) => state.user?.users);
 
-  console.log(users);
   useEffect(() => {
     getUsers(dispatch);
   }, [dispatch]);

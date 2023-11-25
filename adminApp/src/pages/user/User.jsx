@@ -1,5 +1,5 @@
 import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish } from "@material-ui/icons";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./user.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
@@ -12,8 +12,9 @@ export default function User() {
   const userId = location.pathname.split("/")[2];
   const dispatch = useDispatch();
   let currentUser = useSelector((state) =>
-    state.users.users.find((user) => user._id === userId)
+    state.user.users.find((user) => user?._id === userId)
   );
+  // const currentUser = useSelector((state) => state.user.currentUser);
 
   const [user, setUser] = useState(currentUser);
   const [file, setFile] = useState(null);
@@ -79,7 +80,6 @@ export default function User() {
       let newUser = { ...user, gender: gender, active: active, isAdmin: role }
       setUser(newUser);
       updateUser(userId, newUser, dispatch);
-      console.log(user)
     }
   };
 

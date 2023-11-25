@@ -12,6 +12,12 @@ export default function Topbar() {
     navigate('/login');
   };
 
+  const handleOut = (e) => {
+    e.preventDefault();
+    localStorage.removeItem("persist:root");
+    navigate('/');
+  };
+
   return (
     <div className="topbar">
       <div className="topbarWrapper">
@@ -38,7 +44,7 @@ export default function Topbar() {
             }} 
             className="topAvatar" />
           
-          <Link to="/" className="link">LogOut</Link>
+          <button onClick={handleOut} className="outBtn">LogOut</button>
         </div>
       </div>
     </div>

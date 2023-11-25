@@ -1,48 +1,30 @@
-import { loginFailure, loginStart, loginSuccess } from "./userRedux";
-import { 
-  getUsersStart,
-  getUsersSuccess,
-  getUsersFailure,
-  updateUsersStart,
-  updateUsersSuccess,
-  updateUsersFailure,
-  addUsersStart,
-  addUsersSuccess,
-  addUsersFailure,
-  deleteUsersStart,
-  deleteUsersSuccess,
-  deleteUsersFailure,
-} from "./usersRedux";
 import { publicRequest, userRequest } from "../requestMethods";
+import { 
+  loginStart, loginSuccess, loginFailure,
+  getUsersStart, getUsersSuccess, getUsersFailure,
+  updateUsersStart, updateUsersSuccess, updateUsersFailure,
+  addUsersStart, addUsersSuccess, addUsersFailure,
+  deleteUsersStart, deleteUsersSuccess, deleteUsersFailure,
+ } from "./userRedux";
 import {
-  getProductFailure,
-  getProductStart,
-  getProductSuccess,
-  deleteProductFailure,
-  deleteProductStart,
-  deleteProductSuccess,
-  updateProductFailure,
-  updateProductStart,
-  updateProductSuccess,
-  addProductFailure,
-  addProductStart,
-  addProductSuccess,
+  getProductStart, getProductSuccess, getProductFailure,
+  deleteProductStart, deleteProductSuccess, deleteProductFailure,
+  updateProductStart, updateProductSuccess, updateProductFailure,
+  addProductStart, addProductSuccess, addProductFailure,
 } from "./productRedux";
 
 // ---------------------- LOGIN -------------------------------------------
 export const login = async (dispatch, user) => {
-  console.log(user)
   dispatch(loginStart());
   try {
     const res = await publicRequest.post("/auth/login", user);
-    console.log(res)
     dispatch(loginSuccess(res.data));
   } catch (err) {
     dispatch(loginFailure());
   }
 };
 
-//---------------------- USERS --------------------------------------------
+//---------------------- USER --------------------------------------------
 export const getUsers = async (dispatch) => {
   dispatch(getUsersStart());
   try {

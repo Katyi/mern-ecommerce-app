@@ -53,14 +53,14 @@ export default function Sidebar() {
                 Products
               </li>
             </Link>
-            {/* <li className="sidebarListItem">
+            <li className="sidebarListItem">
               <AttachMoney className="sidebarIcon" />
-              Transactions
+              Orders
             </li>
             <li className="sidebarListItem">
               <BarChart className="sidebarIcon" />
               Reports
-            </li> */}
+            </li>
           </ul>
         </div>
         <div className="sidebarMenu">

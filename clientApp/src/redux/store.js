@@ -4,7 +4,6 @@ import cartsReducer from "./cartsRedux";
 import ordersReduser from "./ordersRedux";
 import wishlistsReduser from "./wishlistsRedux";
 
-
 import {
   persistStore,
   persistReducer,

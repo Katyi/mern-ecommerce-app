@@ -1,4 +1,9 @@
-import { loginFailure, loginStart, loginSuccess, registerStart, registerSuccess, registerFailure } from "./userRedux";
+import { 
+  loginFailure, loginStart, loginSuccess, 
+  registerStart, registerSuccess, registerFailure,
+  updateUserFailure, updateUserStart, updateUserSuccess,
+  getUserFailure, getUserStart,getUserSuccess,
+} from "./userRedux";
 import { publicRequest, userRequest } from "../requestMethods";
 import { 
   updateCartStart, updateCartSuccess, updateCartFailure, 
@@ -33,11 +38,32 @@ export const register = async (dispatch, user) => {
   dispatch(registerStart());
   try {
     const res = await publicRequest.post("/auth/register", user);
-    dispatch(loginSuccess(res.data));
+    dispatch(registerSuccess(res.data));
   } catch (error) {
     dispatch(registerFailure());
   }
 };
+//---------------------- USER --------------------------------------------
+export const updateUser = async (id, user, dispatch) => {
+  dispatch(updateUserStart());
+  try {
+    const res = await userRequest.put(`/users/${id}`, user);
+    dispatch(updateUserSuccess(res.data));
+  } catch (err) {
+    dispatch(updateUserFailure());
+  }
+};
+
+export const getUser = async (id, dispatch) => {
+  dispatch(getUserStart());
+  try {
+    const res = await userRequest.get('/users/find/' + id);
+    dispatch(getUserSuccess(res.data));
+  } catch (err) {
+    dispatch(getUserFailure());
+  }
+};
+
 
 //---------------------- CART ---------------------------------------------
 export const getCart = async (userId, dispatch) => {

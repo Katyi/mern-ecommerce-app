@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const userSlice = createSlice({
   name: "user",
   initialState: {
+    users: [],
     currentUser: null,
     isFetching: false,
     error: false,
@@ -32,6 +33,34 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
+    // UPDATE USER
+    updateUserStart: (state) => {
+      state.isFetching = true;
+      state.error = false;
+    },
+    updateUserSuccess: (state, action) => {
+      state.isFetching = false;
+      state.users[
+        state.users.findIndex((item) => item._id === action.payload.id)
+      ] = action.payload.user;
+    },
+    updateUserFailure: (state) => {
+      state.isFetching = false;
+      state.error = true;
+    },
+    // GET CURRENT USER
+    getUserStart: (state) => {
+      state.isFetching = true;
+      state.error = false;
+    },
+    getUserSuccess: (state, action) => {
+      state.isFetching = false;
+      state.currentUser = action.payload;
+    },
+    getUserFailure: (state) => {
+      state.isFetching = false;
+      state.error = true;
+    },
   },
 });
 
@@ -41,6 +70,12 @@ export const {
   loginFailure,
   registerStart,
   registerSuccess,
-  registerFailure
+  registerFailure,
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+  getUserStart,
+  getUserSuccess,
+  getUserFailure,
 } = userSlice.actions;
 export default userSlice.reducer;

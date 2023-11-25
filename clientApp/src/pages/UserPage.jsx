@@ -4,11 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import Navbar from '../components/Navbar';
 import Announcement from '../components/Announcement';
-import { getOrder } from '../redux/apiCalls';
+import { getOrder, getUser } from '../redux/apiCalls';
 import { mobile } from "../responsive";
 import dayjs from 'dayjs';
 import { publicRequest } from '../requestMethods';
 import Footer from '../components/Footer';
+import ModalTemplate from '../UI/modal/ModalTemplate';
+import UpdateUser from '../components/UpdateUser';
 
 const Container = styled.div`
 `;
@@ -213,11 +215,21 @@ const UserPage = () => {
   const cart = useSelector((state) => state.carts.currentCart?.products);
   const wishlist = useSelector((state) => state.wishlists.currentWishlist?.products);
   const [userOrders, setUserOrders] = useState([]);
+  const [openModal, setOpenModal] = useState(false);
 
-  // total price for cart
+  // GET TOTAL PRICE OF CART
   const getTotal = (order) => {
     return order?.reduce((total, item) => total + item.quantity * item.price, 0);
   }
+
+  const handleModal = () => {
+    setOpenModal(true);
+  };
+
+  // useEffect(() => {
+  //   getUser(userId, dispatch);
+  // },[dispatch]); 
+
 
   useEffect(() => {
     getOrder(userId, dispatch);
@@ -238,14 +250,12 @@ const UserPage = () => {
           })
         }
       }
-      
       const getProducts = async () => {
         const res = await publicRequest.get(`/products?_id=${indArr}`).then((res)=>{
           let newArr = indArr1.map(item => ({ ...item, 
             title: res.data.find(elem => elem._id === item.productId)?.title, 
             desc: res.data.find(elem => elem._id === item?.productId)?.desc,
             img: res.data.find(elem => elem._id === item.productId)?.img,
-            // price: res.data.find(elem => elem._id === item.productId)?.price,
           }));
           setUserOrders(newArr);
         })
@@ -256,7 +266,6 @@ const UserPage = () => {
       indArr = [];
       setUserOrders([])
     }
-
   },[user, orders?.length])
 
   return (
@@ -269,41 +278,42 @@ const UserPage = () => {
         <TopText onClick={()=>navigate('/wishlist')}>Your Wishlist ({wishlist?.length})</TopText>
         <Button onClick={()=> navigate('/products/all')}>CONTINUE SHOPPING</Button>
         <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
+        <Button onClick={handleModal}>UPDATE ACCOUNT</Button>
         {/* HEADER */}
         <Header>
           {/* USERNAME INFO */}
           <LeftPart>
-            <Title>{user.username}</Title>
+            <Title>{user?.username}</Title>
             <InfoPart>
             <Row>
               <Field1>Full name:</Field1>
-              <Field2>{user.fullname}</Field2>
+              <Field2>{user?.fullname}</Field2>
             </Row>
             <Row>
               <Field1>Gender:</Field1>
-              <Field2>{user.gender}</Field2>
+              <Field2>{user?.gender}</Field2>
             </Row>
             <Row>
               <Field1>Occupation:</Field1>
-              <Field2>{user.occupation}</Field2>
+              <Field2>{user?.occupation}</Field2>
             </Row>
             <Row>
               <Field1>Address:</Field1>
-              <Field2>{user.address}</Field2>
+              <Field2>{user?.address}</Field2>
             </Row>
             <Row>
               <Field1>Phone:</Field1>
-              <Field2>{user.phone}</Field2>
+              <Field2>{user?.phone}</Field2>
             </Row>
             <Row>
               <Field1>Email:</Field1>
-              <Field2>{user.email}</Field2>
+              <Field2>{user?.email}</Field2>
             </Row>
             </InfoPart>
           </LeftPart>
           {/* USERNAME PHOTO */}
           <RightPart>
-            <UserImage src={user.img}/>
+            <UserImage src={user?.img}/>
           </RightPart>
         </Header>
         {/* ORDER HISTORY */}
@@ -370,6 +380,13 @@ const UserPage = () => {
             )}
         </Orders>
       </Wrapper>
+
+      {openModal &&
+       <ModalTemplate active={openModal} setActive={setOpenModal}>
+        <UpdateUser openModal={openModal} setOpenModal={setOpenModal}/>
+       </ModalTemplate>
+      }
+
       <Footer/>
     </Container>
   )

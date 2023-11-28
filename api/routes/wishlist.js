@@ -3,12 +3,12 @@ const {
   verifyTokenAndAuthorization, 
   verifyTokenAndAdmin, 
   verifyToken
-} = require("./verifyToken");
+} = require("./verifyToken.js");
 
 const router = require("express").Router();
 
 //ADD NEW WISHLIST WHEN USER DON'T HAVE WISHLIST YET
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", async (req, res) => {
   const newWishlist = new Wishlist(req.body);
   try {
     const savedWishlist = await newWishlist.save();
@@ -29,7 +29,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //GET ALL
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const wishlists = await Wishlist.find();
     res.status(200).json(wishlists);

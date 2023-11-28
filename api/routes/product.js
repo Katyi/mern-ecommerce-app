@@ -8,7 +8,7 @@ const {
 const router = require("express").Router();
 
 //CREATE
-router.post("/", verifyTokenAndAdmin, async(req, res)=>{
+router.post("/", async(req, res)=>{
   const newProduct = new Product(req.body);
 
   try {
@@ -20,7 +20,7 @@ router.post("/", verifyTokenAndAdmin, async(req, res)=>{
 });
 
 //UPDATE
-router.put("/:id", verifyTokenAndAdmin, async (req, res) => {  
+router.put("/:id", async (req, res) => {  
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id, 
@@ -36,7 +36,7 @@ router.put("/:id", verifyTokenAndAdmin, async (req, res) => {
 });
 
 //DELETE
-router.delete("/:id", verifyTokenAndAdmin, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try{
     await Product.findByIdAndDelete(req.params.id);
     res.status(200).json("Product has been deleted...");
@@ -62,7 +62,7 @@ router.get("/", async (req, res) => {
   const qId = req.query._id;
   
   try {
-    let products;
+    let products;  
 
     if (qNew) {
       products = await Product.find().sort({ createdAt: -1 }).limit(1);
@@ -75,6 +75,7 @@ router.get("/", async (req, res) => {
         });
       } else {
         products = await Product.find();
+        console.log(products)
       }  
     } else if(qId) {
       products = await Product.find({ _id: { $in: qId.split(',') }});

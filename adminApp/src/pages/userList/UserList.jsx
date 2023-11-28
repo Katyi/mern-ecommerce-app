@@ -1,14 +1,12 @@
 import "./userList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { DeleteOutline } from "@material-ui/icons";
-import { userRows } from "../../dummyData";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, getUsers } from "../../redux/apiCalls";
 
 export default function UserList() {
-  const [data, setData] = useState(userRows);
   const dispatch = useDispatch();
   const users = useSelector((state) => state.user?.users);
 
@@ -17,7 +15,6 @@ export default function UserList() {
   }, [dispatch]);
 
   const handleDelete = (id) => {
-    // setData(data.filter((item) => item.id !== id));
     deleteUser(id, dispatch);
   };
 
@@ -30,7 +27,7 @@ export default function UserList() {
       renderCell: (params) => {
         return (
           <div className="userListUser">
-            <img className="userListImg" src={params.row.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} 
+            <img className="userListImg" src={params.row.img} 
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null; // prevents looping
                 currentTarget.src="https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif";
@@ -43,7 +40,7 @@ export default function UserList() {
     },
     { field: {"isAdmin": "Admin"}, headerName: "Role", width: 150,
       renderCell: (params) => {
-        return (params.row.isAdmin ? "Admin" : "User");
+        return (params.row?.isAdmin ? "Admin" : "User");
       },
   
     },

@@ -85,7 +85,7 @@ const Product = ({item}) => {
         getCart(userId, dispatch)
       )
     } else {
-      if (cartProducts.findIndex((item) => item.productId === product._id && item.color === color && item.size === size) > -1) {
+      if (cartProducts?.findIndex((item) => item.productId === product._id && item.color === color && item.size === size) > -1) {
         let newProdArr = cartProducts?.map((item) => item.productId === product._id && item.color === color && item.size === size 
           ? {...item, quantity: item.quantity + 1} : item);
         const newCart = { userId: cart.userId, products: newProdArr};
@@ -108,7 +108,7 @@ const Product = ({item}) => {
         getWishlist(userId, dispatch)
       )
     } else {
-      if (wishlistProducts.findIndex((item) => item.productId === product._id && item.color === color && item.size === size) < 0) {
+      if (wishlistProducts?.findIndex((item) => item.productId === product._id && item.color === color && item.size === size) < 0) {
         let newProdArrAdd = [...wishlistProducts, {productId: product._id, color: color, size: size}];
         const newWishlist = { userId: wishlist.userId, products: newProdArrAdd};
         await updateWishlist(wishlist._id, newWishlist, dispatch);
@@ -141,6 +141,15 @@ const Product = ({item}) => {
             </Link>
         </Icon>
         </Tooltip>
+        
+        {!wishlist &&
+        <Tooltip title="Add to wishlist">
+          <Icon onClick={()=>addToWishlist(item)}>
+            <FavoriteBorderOutlined />
+          </Icon>
+        </Tooltip>
+        }
+
         {wishlistProducts?.findIndex((elem) => elem.productId === item._id && elem.color === color && elem.size === size) === -1 &&
         <Tooltip title="Add to wishlist">
           <Icon onClick={()=>addToWishlist(item)}>
@@ -160,4 +169,4 @@ const Product = ({item}) => {
   )
 }
 
-export default Product
+export default Product;

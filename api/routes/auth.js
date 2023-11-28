@@ -41,6 +41,7 @@ router.post('/login', async (req, res) => {
     );
     
     const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
+    // console.log(originalPassword)
 
     const inputPassword = req.body.password;
     

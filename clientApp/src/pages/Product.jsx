@@ -204,7 +204,7 @@ const Product = () => {
         getWishlist(userId, dispatch)
       )
     } else {
-      if (wishlistProducts.findIndex((item) => item.productId === product._id && item.color === color && item.size === size) < 0) {
+      if (wishlistProducts?.findIndex((item) => item.productId === product._id && item.color === color && item.size === size) < 0) {
         let newProdArrAdd = [...wishlistProducts, {productId: product._id, color: color, size: size}];
         const newWishlist = { userId: wishlist.userId, products: newProdArrAdd};
         await updateWishlist(wishlist._id, newWishlist, dispatch);
@@ -241,7 +241,7 @@ const Product = () => {
           <Button onClick={()=> navigate('/products/all')} style={{marginLeft:"10px"}}>CONTINUE SHOPPING</Button>
           <TitleContainer>
             <Title>{product.title}</Title>
-            {wishlistProducts.findIndex((elem) => elem.productId === product._id && elem.color === color && elem.size === size) > -1 &&
+            {wishlistProducts?.findIndex((elem) => elem.productId === product._id && elem.color === color && elem.size === size) > -1 &&
             <Icon>
               <Favorite style={{fill: "red"}}/>
             </Icon>

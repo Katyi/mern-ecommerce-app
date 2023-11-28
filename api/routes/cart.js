@@ -8,7 +8,7 @@ const {
 const router = require("express").Router();
 
 //ADD NEW CART WHEN USER DON'T HAVE CART YET
-router.post("/", verifyToken, async (req, res) => {
+router.post("/", async (req, res) => {
   const newCart = new Cart(req.body);
   try {
     const savedCart = await newCart.save();
@@ -45,7 +45,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // //GET ALL CARTS
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const carts = await Cart.find();
     res.status(200).json(carts);

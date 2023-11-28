@@ -15,7 +15,7 @@ export default function NewUser() {
   const [inputs, setInputs] = useState({});
   const [file, setFile] = useState(null);
   const [gender, setGender] = useState("male");
-  const [selected, setSelected] = useState(null);
+  const [selected, setSelected] = useState(false);
   const [role, setRole] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -139,15 +139,15 @@ export default function NewUser() {
               onChange={handleChange}
             />
           </div>
-          {/* <div className="newUserItem">
+          <div className="newUserItem">
             <label>Password</label>
             <input 
               name="password"
-              type="password" 
+              type="text" 
               placeholder="password"
               onChange={handleChange}
             />
-          </div> */}
+          </div>
           <div className="newUserItem">
             <label>Phone</label>
             <input 

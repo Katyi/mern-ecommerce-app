@@ -33,7 +33,7 @@ export default function WidgetLg() {
     
   const getUserNamefromOrder = (userId) => {
     let userName = "";
-    if (users.length) {
+    if (users?.length) {
       userName = users?.find(elem => elem._id === userId)?.username;
     }
     return userName;
@@ -52,7 +52,7 @@ export default function WidgetLg() {
         </tr>
         </thead>
         <tbody>
-          {orders.map((order)=> (
+          {orders?.map((order)=> (
             <tr className="widgetLgTr" key={order._id}>
               <td className="widgetLgUser">
                 <span className="widgetLgName">

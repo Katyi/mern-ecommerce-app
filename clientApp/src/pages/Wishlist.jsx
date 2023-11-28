@@ -186,9 +186,13 @@ const Wishlist = () => {
 
   const deleteProduct = async(id) => {
     let newProdArr = wishlist.filter(item => item._id !== id);
-    const newWishlist = { userId: userId, products: newProdArr};
-    await updateWishlist(wishlistId, newWishlist, dispatch);
-    await getWishlist(userId, dispatch);
+    if (newProdArr.length>0) {
+      const newWishlist = { userId: userId, products: newProdArr};
+      await updateWishlist(wishlistId, newWishlist, dispatch);
+      await getWishlist(userId, dispatch);
+    } else {
+      deleteUserWishList();
+    }
   };
 
   const addToCart = async(id, color, size) => {
@@ -198,7 +202,7 @@ const Wishlist = () => {
       await addCart(newCart, dispatch)
       await getCart(userId, dispatch)
     } else {
-      if (cartProducts.findIndex((item)=> item.productId === id && item.color === color && item.size === size) > -1) {
+      if (cartProducts?.findIndex((item)=> item.productId === id && item.color === color && item.size === size) > -1) {
         let newProdArr = cartProducts?.map((item) => item.productId === id && item.color === color && item.size === size 
           ? {...item, quantity: item.quantity + 1} : item);
         const newCart = { userId: cart.userId, products: newProdArr};

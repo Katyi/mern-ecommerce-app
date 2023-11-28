@@ -1,31 +1,34 @@
 import "./productList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { DeleteOutline } from "@material-ui/icons";
-import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "../../redux/apiCalls";
 
 export default function ProductList() {
+  const location = useLocation();
+  const cat = location.pathname.split('/')[2];
+  console.log(cat)
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product?.products);
 
-  console.log(products)
-
   useEffect(() => {
     getProducts(dispatch);
-  }, [dispatch]);
+    // setProducts()
+    console.log(products)
+  },[dispatch]);
 
   const handleDelete = (id) => {
     deleteProduct(id, dispatch);
   };
 
   const columns = [
-    { field: "No.", headerName: "No.", width: 100 },
+    { field: "No.", headerName: "No.", width: 90 },
     {
       field: "product",
       headerName: "Product",
-      width: 200,
+      width: 250,
       renderCell: (params) => {
         return (
           <div className="productListItem">
@@ -40,11 +43,11 @@ export default function ProductList() {
         );
       },
     },
-    { field: "inStock", headerName: "Stock", width: 200 },
+    { field: "inStock", headerName: "inStock", width: 150 },
     {
       field: "price",
-      headerName: "price",
-      width: 160,
+      headerName: "Price",
+      width: 250,
     },
     {
       field: "action",
@@ -66,7 +69,6 @@ export default function ProductList() {
     },
   ];
   const rows = products?.map((p, i)=> ({ 'No.': i + 1, ...p }))
-
 
   return (
     <div className="productList">

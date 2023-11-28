@@ -20,7 +20,7 @@ export default function User() {
   const [file, setFile] = useState(null);
   const [active, setActive] = useState(user.active);
   const [gender, setGender] = useState(user.gender);
-  const [role, setRole] = useState(user.isAdmin);
+  const [role, setRole] = useState(user?.isAdmin);
 
   const handleChange = (e) => {
     setUser((prev) => {

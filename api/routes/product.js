@@ -75,7 +75,7 @@ router.get("/", async (req, res) => {
         });
       } else {
         products = await Product.find();
-        console.log(products)
+        // console.log(products)
       }  
     } else if(qId) {
       products = await Product.find({ _id: { $in: qId.split(',') }});

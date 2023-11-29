@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import backGroundphoto from "../img/backGroundphoto1.jpg";
 import {mobile} from "../responsive";
-import { login } from "../redux/apiCalls";
-import { useState } from "react";
+import { getUser, login } from "../redux/apiCalls";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { publicRequest } from '../requestMethods';
 
 const Container = styled.div`
   width: 100vw;
@@ -79,13 +80,18 @@ const Login = () => {
   const [password, setPassword] =  useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { isFetching, error } = useSelector((state) => state.user);
+  let { isFetching, error } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.currentUser);
 
-  const handleClick = (e) => {
+  const handleClick = async(e) => {
     e.preventDefault();
-    login(dispatch, { username, password });
-    navigate('/home');
+    await login(dispatch, { username, password });
   };
+
+  useEffect(() => {
+    console.log(user);
+    if (user) navigate("/home");
+  },[handleClick, user]);
 
   return (
     <Container>
@@ -93,12 +99,15 @@ const Login = () => {
         <Title>SIGN IN</Title>
         <Form>
           <Input 
+            type="text"
             placeholder="username" 
+            required
             onChange={(e) =>setUsername(e.target.value)}
           />
           <Input 
-            placeholder="password"
             type="password"
+            placeholder="password"
+            required
             onChange={(e) =>setPassword(e.target.value)}
           />
           <Button onClick={handleClick} disabled={isFetching}>LOGIN</Button>

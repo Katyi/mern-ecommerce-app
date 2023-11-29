@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import {mobile} from '../responsive.js';
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
-import { getCart, getWishlist } from '../redux/apiCalls.js';
+import { getCart, getUser, getWishlist, logout } from '../redux/apiCalls.js';
 
 const Container = styled.div`
   height: 60px;
@@ -107,8 +107,10 @@ const Navbar = () => {
     getWishlist(userId, dispatch);
   },[userId, quantityWishlist]);
 
-  const handleClick = (e) => {
+  const handleClick = async(e) => {
     e.preventDefault();
+    // navigate('/');
+    await logout(dispatch, user);
     localStorage.removeItem("persist:root");
     navigate('/');
   };

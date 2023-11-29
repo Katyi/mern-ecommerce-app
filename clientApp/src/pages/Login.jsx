@@ -78,10 +78,12 @@ const Error = styled.span`
 const Login = () => {
   const [username, setUsername] =  useState("");
   const [password, setPassword] =  useState("");
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let { isFetching, error } = useSelector((state) => state.user);
   const user = useSelector((state) => state.user.currentUser);
+  const [loginError, setLoginError] = useState(error);
 
   const handleClick = async(e) => {
     e.preventDefault();
@@ -90,7 +92,12 @@ const Login = () => {
 
   useEffect(() => {
     console.log(user);
-    if (user) navigate("/home");
+    if (user) {
+      setLoginError(false);
+      navigate("/home");
+    } else {
+      setLoginError(true)
+    };
   },[handleClick, user]);
 
   return (

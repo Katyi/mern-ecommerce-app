@@ -22,12 +22,28 @@ const persistConfig = {
   storage,
 };
 
-const rootReducer = combineReducers({ 
+// const rootReducer = combineReducers({ 
+//   user: userReducer,
+//   carts: cartsReducer,
+//   orders: ordersReduser,
+//   wishlists: wishlistsReduser,
+// });
+
+const appReducer = combineReducers({ 
   user: userReducer,
   carts: cartsReducer,
   orders: ordersReduser,
   wishlists: wishlistsReduser,
 });
+const rootReducer = (state, action) =>
+  // appReducer(action.type === 'auth/logout' ? state = {} : state, action);
+  {
+    if (action.type === 'auth/logout') {
+      state = undefined;
+    }
+    return appReducer(state, action);
+
+  }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

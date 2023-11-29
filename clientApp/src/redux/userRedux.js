@@ -12,7 +12,7 @@ const userSlice = createSlice({
     // LOGIN
     loginStart: (state) => {
       state.isFetching = true;
-      // state.error = false;
+      state.error = false;
     },
     loginSuccess: (state, action) => {
       state.isFetching = false;
@@ -37,12 +37,12 @@ const userSlice = createSlice({
     // LOGOUT
     logoutStart: (state) => {
       state.isFetching = true;
-      // state.error = false;
+      state.error = false;
     },
     logoutSuccess: (state) => {
       state.isFetching = false;
       state.currentUser = null;
-      // state.error = false;
+      state.error = false;
     },
     logoutFailure: (state) => {
       state.isFetching = false;

@@ -22,19 +22,13 @@ const persistConfig = {
   storage,
 };
 
-// const rootReducer = combineReducers({ 
-//   user: userReducer,
-//   carts: cartsReducer,
-//   orders: ordersReduser,
-//   wishlists: wishlistsReduser,
-// });
-
 const appReducer = combineReducers({ 
   user: userReducer,
   carts: cartsReducer,
   orders: ordersReduser,
   wishlists: wishlistsReduser,
 });
+
 const rootReducer = (state, action) => {
   if (action.type === 'auth/logout') state = undefined;
   return appReducer(state, action);

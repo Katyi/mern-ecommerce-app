@@ -1,18 +1,18 @@
-.productList {
+.wishList {
   flex: 4;
-  /* height: calc(100vh - 80px - 100px); */
+  /* height: calc(80vh - 80px - 100px); */
   margin: 20px;
 }
-.product_button_wrapper {
+.wishList_button_wrapper {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.productsTitle {
+.WishlistsTitle {
   margin-left: 20px;
 }
-.productAddButton {
+.wishlistAddButton {
   width: auto;
   border: none;
   padding: 5px 8px;
@@ -23,18 +23,11 @@
   cursor: pointer;
   margin-right: 20px;
 }
-.productListItem {
+.wishlistListItem {
   display: flex;
   align-items: center;
 }
-.productListImg {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 10px;
-}
-.productListEdit {
+.wishListEdit {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
@@ -43,10 +36,10 @@
   cursor: pointer;
   margin-right: 20px;
 }
-.productListDelete {
+.wishListDelete {
   color: red;
   cursor: pointer;
 }
-.productListGrid {
+.wishListGrid {
   height: calc(100vh - 80px - 10px - 54px - 20px);
 }

@@ -2,43 +2,37 @@ import { useEffect, useState } from "react";
 import { userRequest } from "../../requestMethods";
 import "./widgetLg.css";
 import {format} from "timeago.js"
+import { getUsers } from "../../redux/apiCalls";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function WidgetLg() {
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.user?.users);
   const [orders, setOrders] = useState([]);
-  const [users, setUsers] = useState([]);
 
+  const getUserNamefromOrder = (userId) => {
+    return users?.find(elem => elem._id === userId)?.username;
+  };
+  
   useEffect(() => {
     const getOrders = async () => {
       try {
-        const res = await userRequest.get("orders");
+        const res = await userRequest.get("orders/?new=true");
         setOrders(res.data);
       } catch {}
     };
     getOrders();
   }, []);
-  
+
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const res = await userRequest.get("users/?new=true");
-        setUsers(res.data);
-      } catch {}
-    };
-    getUsers();
-  }, []);
+    getUsers(dispatch);
+  },[dispatch])
+
 
   const Button = ({ type }) => {
     return <button className={"widgetLgButton " + type}>{type}</button>;
   };
-    
-  const getUserNamefromOrder = (userId) => {
-    let userName = "";
-    if (users?.length) {
-      userName = users?.find(elem => elem._id === userId)?.username;
-    }
-    return userName;
-  };
-
+  
   return (
     <div className="widgetLg">
       <h3 className="widgetLgTitle">Latest transactions</h3>

@@ -1,6 +1,8 @@
 import "./productList.css";
-import { DataGrid } from "@material-ui/data-grid";
-import { DeleteOutline } from "@material-ui/icons";
+// import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+// import { DeleteOutline } from "@material-ui/icons";
+import { DeleteOutline } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,7 +70,8 @@ export default function ProductList() {
   
   return (
     <div className="productList">
-      <div className="button_wrapper">
+      <div className="product_button_wrapper">
+        <h2 className="productsTitle">Products</h2>
         <Link to="/newproduct">
           <button className="productAddButton">Create new product</button>
         </Link>

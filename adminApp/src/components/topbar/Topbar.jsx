@@ -1,9 +1,12 @@
 import "./topbar.css";
-import { NotificationsNone, Language, Settings } from "@material-ui/icons";
-import { useSelector } from "react-redux";
+// import { NotificationsNone, Language, Settings } from "@material-ui/icons";
+import { NotificationsNone, Language, Settings } from "@mui/icons-material";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { logout } from "../../redux/apiCalls";
 
 export default function Topbar() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user?.currentUser);
 
@@ -12,8 +15,9 @@ export default function Topbar() {
     navigate('/login');
   };
 
-  const handleOut = (e) => {
+  const handleOut = async(e) => {
     e.preventDefault();
+    await logout(dispatch, user);
     localStorage.removeItem("persist:root");
     navigate('/');
   };

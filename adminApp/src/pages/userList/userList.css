@@ -1,10 +1,16 @@
 .userList {
   flex: 4;
+  margin: 20px;
 }
 
-.button_wrapper {
+.user_button_wrapper {
   display: flex;
-  justify-content: end;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.userTitle {
+  margin-left: 20px;
 }
 .userAddButton {
   width: auto;
@@ -15,7 +21,7 @@
   cursor: pointer;
   color: white;
   font-size: 16px;
-  margin: 5px 20px 20px 0px;
+  margin-right: 20px;
 }
 
 .userListUser {

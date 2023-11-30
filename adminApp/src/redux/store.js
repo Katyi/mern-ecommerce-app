@@ -1,6 +1,8 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducer from "./userRedux";
 import productReducer from "./productRedux";
+import wishlistReducer from "./wishlistRedux";
+import orderReducer from './orderRedux';
 // import usersReduser from "./usersRedux";
 
 import {
@@ -21,11 +23,18 @@ const persistConfig = {
   storage,
 };
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   user: userReducer, 
   product: productReducer,
+  wishlist: wishlistReducer,
+  order: orderReducer,
   // users: usersReduser,
 });
+
+const rootReducer = (state, action) => {
+  if (action.type === 'auth/logout') state = undefined;
+  return appReducer(state, action);
+}
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

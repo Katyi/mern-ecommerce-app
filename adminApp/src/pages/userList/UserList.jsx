@@ -1,6 +1,8 @@
 import "./userList.css";
-import { DataGrid } from "@material-ui/data-grid";
-import { DeleteOutline } from "@material-ui/icons";
+// import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
+// import { DeleteOutline } from "@material-ui/icons";
+import { DeleteOutline } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -68,7 +70,8 @@ export default function UserList() {
 
   return (
     <div className="userList">
-      <div className="button_wrapper">
+      <div className="user_button_wrapper">
+        <h2 className="userTitle">Users</h2>
         <Link to="/newUser">
           <button className="userAddButton">Create new user</button>
         </Link>

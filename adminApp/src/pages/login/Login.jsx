@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../redux/apiCalls";
 import { useNavigate} from 'react-router-dom';
+import { useEffect } from 'react';
+import './login.css';
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.currentUser);
+  let { isFetching, error } = useSelector((state) => state.user);
 
-  const handleClick = (e) => {
+  const handleClick = async(e) => {
     e.preventDefault();
-    login(dispatch, { username: username, password: password });
-    navigate('/home');
+    await login(dispatch, { username: username, password: password });
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    } 
+  },[handleClick, user]);
 
   return (
     <div style={{
@@ -39,6 +48,7 @@ const Login = () => {
       <button onClick={handleClick} style={{ padding: 10, width:100 }}>
         Login
       </button>
+      {error && <span className='loginError'>Something went wrong...</span>}
     </div>
   )
 };

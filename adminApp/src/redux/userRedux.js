@@ -21,6 +21,20 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
+    // LOGOUT
+    logoutStart: (state) => {
+      state.isFetching = true;
+      state.error = false;
+    },
+    logoutSuccess: (state) => {
+      state.isFetching = false;
+      state.currentUser = null;
+      state.error = false;
+    },
+    logoutFailure: (state) => {
+      state.isFetching = false;
+      state.error = true;
+    },
     //GET ALL
     getUsersStart: (state) => {
       state.isFetching = true;
@@ -83,6 +97,7 @@ const userSlice = createSlice({
 
 export const { 
   loginStart, loginSuccess, loginFailure,
+  logoutStart, logoutSuccess, logoutFailure,
   getUsersStart, getUsersSuccess, getUsersFailure,
   deleteUsersStart, deleteUsersSuccess, deleteUsersFailure,
   updateUsersStart, updateUsersSuccess, updateUsersFailure,

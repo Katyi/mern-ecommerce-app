@@ -4,7 +4,8 @@ import {
   getUsersStart, getUsersSuccess, getUsersFailure,
   updateUsersStart, updateUsersSuccess, updateUsersFailure,
   addUsersStart, addUsersSuccess, addUsersFailure,
-  deleteUsersStart, deleteUsersSuccess, deleteUsersFailure,
+  deleteUsersStart, deleteUsersSuccess, deleteUsersFailure, 
+  logoutStart, logoutSuccess, logoutFailure,
  } from "./userRedux";
 import {
   getProductStart, getProductSuccess, getProductFailure,
@@ -12,7 +13,18 @@ import {
   updateProductStart, updateProductSuccess, updateProductFailure,
   addProductStart, addProductSuccess, addProductFailure,
 } from "./productRedux";
-
+import {
+  getWishlistStart, getWishlistSuccess, getWishlistFailure,
+  deleteWishlistStart, deleteWishlistSuccess, deleteWishlistFailure,
+  updateWishlistStart, updateWishlistSuccess, updateWishlistFailure,
+  addWishlistStart, addWishlistSuccess, addWishlistFailure,
+} from "./wishlistRedux";
+import {
+  getOrderStart, getOrderSuccess, getOrderFailure,
+  deleteOrderStart, deleteOrderSuccess, deleteOrderFailure,
+  updateOrderStart, updateOrderSuccess, updateOrderFailure,
+  addOrderStart, addOrderSuccess, addOrderFailure,
+} from "./orderRedux";
 // ---------------------- LOGIN -------------------------------------------
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
@@ -24,7 +36,19 @@ export const login = async (dispatch, user) => {
   }
 };
 
-//---------------------- USER --------------------------------------------
+//---------------------- LOGOUT -------------------------------------------
+export const logout = async (dispatch, user) => {
+  dispatch(logoutStart());
+  try {
+    const res = await userRequest.post(`/auth/logout/${user.id}`);
+    dispatch(logoutSuccess());
+    // return res.data;
+  } catch (error) {
+    dispatch(logoutFailure());
+  }
+};
+
+//---------------------- USER ---------------------------------------------
 export const getUsers = async (dispatch) => {
   dispatch(getUsersStart());
   try {
@@ -103,5 +127,57 @@ export const addProduct = async (product, dispatch) => {
     dispatch(addProductSuccess(res.data));
   } catch (err) {
     dispatch(addProductFailure());
+  }
+};
+
+//---------------------- WISHLISTS -----------------------------------------
+export const getWishlists = async (dispatch) => {
+  dispatch(getWishlistStart());
+  try {
+    const res = await userRequest.get("/wishlists");
+    dispatch(getWishlistSuccess(res.data));
+  } catch (err) {
+    dispatch(getWishlistFailure());
+  }
+};
+
+export const deleteWishlist = async (id, dispatch) => {
+  dispatch(deleteWishlistStart());
+  try {
+    const res = await userRequest.delete(`/wishlists/${id}`);
+    dispatch(deleteWishlistSuccess(id));
+  } catch (err) {
+    dispatch(deleteWishlistFailure());
+  }
+};
+
+export const updateWishlist = async (id, wishlist, dispatch) => {
+  dispatch(updateWishlistStart());
+  try {
+    const res = await userRequest.put(`/wishlists/${id}`, wishlist);
+    dispatch(updateWishlistSuccess(res.data));
+  } catch (err) {
+    dispatch(updateWishlistFailure());
+  }
+};
+
+export const addWishlist = async (wishlist, dispatch) => {
+  dispatch(addWishlistStart());
+  try {
+    const res = await userRequest.post(`/wishlists`, wishlist);
+    dispatch(addWishlistSuccess(res.data));
+  } catch (err) {
+    dispatch(addWishlistFailure());
+  }
+};
+
+//---------------------- WISHLISTS -----------------------------------------
+export const getOrders = async (dispatch) => {
+  dispatch(getOrderStart());
+  try {
+    const res = await userRequest.get("/orders");
+    dispatch(getOrderSuccess(res.data));
+  } catch (err) {
+    dispatch(getOrderFailure());
   }
 };

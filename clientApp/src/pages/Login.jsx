@@ -72,7 +72,7 @@ const Link = styled.a`
 
 const Error = styled.span`
   color: red;
-  /* font-size: 10px; */
+  font-size: 12px;
 `;
 
 const Login = () => {
@@ -91,7 +91,6 @@ const Login = () => {
   };
 
   useEffect(() => {
-    console.log(user);
     if (user) {
       setLoginError(false);
       navigate("/home");

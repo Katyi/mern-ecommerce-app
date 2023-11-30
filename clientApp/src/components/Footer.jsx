@@ -122,11 +122,12 @@ const Footer = () => {
           <ListItem onClick={()=>navigate("/cart")}>Cart</ListItem>
           <ListItem onClick={()=>navigate("/products/men")}>Man Fashion</ListItem>
           <ListItem onClick={()=>navigate("/products/women")}>Woman Fashion</ListItem>
+          <ListItem onClick={()=>navigate("/products/kids")}>Kids Fashion</ListItem>
           <ListItem onClick={()=>navigate("/products/accessories")}>Accessories</ListItem>
           <ListItem onClick={()=>navigate("/account")}>My Account</ListItem>
           {/* <ListItem>Order Tracking</ListItem> */}
           <ListItem onClick={()=>navigate("/wishlist")}>Wishlist</ListItem>
-          <ListItem>Terms</ListItem>
+          {/* <ListItem>Terms</ListItem> */}
         </List>
       </Center>
       <Right>

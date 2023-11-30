@@ -7,18 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "../../redux/apiCalls";
 
 export default function ProductList() {
-  const location = useLocation();
-  const cat = location.pathname.split('/')[2];
-  console.log(cat)
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product?.products);
-
+  
   useEffect(() => {
     getProducts(dispatch);
-    // setProducts()
-    console.log(products)
   },[dispatch]);
-
+  
   const handleDelete = (id) => {
     deleteProduct(id, dispatch);
   };
@@ -32,7 +27,7 @@ export default function ProductList() {
       renderCell: (params) => {
         return (
           <div className="productListItem">
-            <img className="productListImg" src={params.row.img}
+            <img className="productListImg" src={params?.row.img}
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null; // prevents looping
                 currentTarget.src="https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/462666/item/goods_69_462666.jpg";
@@ -43,7 +38,7 @@ export default function ProductList() {
         );
       },
     },
-    { field: "inStock", headerName: "inStock", width: 150 },
+    { field: "inStock", headerName: "InStock", width: 150 },
     {
       field: "price",
       headerName: "Price",
@@ -68,8 +63,9 @@ export default function ProductList() {
       },
     },
   ];
-  const rows = products?.map((p, i)=> ({ 'No.': i + 1, ...p }))
 
+  const rows = products?.map((p, i)=> ({ 'No.': i + 1, ...p }));
+  
   return (
     <div className="productList">
       <div className="button_wrapper">
@@ -78,14 +74,14 @@ export default function ProductList() {
         </Link>
       </div>
       <div className="productListGrid">
-      <DataGrid
-        rows={rows}
-        disableSelectionOnClick
-        columns={columns}
-        getRowId={(row) => row._id}
-        pageSize={10}
-        checkboxSelection
-      />
+        <DataGrid
+          rows={rows}
+          disableSelectionOnClick
+          columns={columns}
+          getRowId={(row) => row._id}
+          pageSize={10}
+          checkboxSelection
+        />
       </div>
     </div>
   );

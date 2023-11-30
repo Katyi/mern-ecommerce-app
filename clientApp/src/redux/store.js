@@ -35,15 +35,10 @@ const appReducer = combineReducers({
   orders: ordersReduser,
   wishlists: wishlistsReduser,
 });
-const rootReducer = (state, action) =>
-  // appReducer(action.type === 'auth/logout' ? state = {} : state, action);
-  {
-    if (action.type === 'auth/logout') {
-      state = undefined;
-    }
-    return appReducer(state, action);
-
-  }
+const rootReducer = (state, action) => {
+  if (action.type === 'auth/logout') state = undefined;
+  return appReducer(state, action);
+}
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 

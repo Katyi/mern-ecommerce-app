@@ -65,21 +65,15 @@ const UserItem = styled.div`
 
 const UpdateUser = ({openModal, setOpenModal}) => {
   const dispatch = useDispatch();
-  // const currentUser = useSelector((state) => state.user.currentUser);
-  // const userId = useSelector((state) => state.user.currentUser?._id);
-  const location = useLocation();
-  const userId = location.pathname.split("/")[2];
-  let currentUser = useSelector((state) =>
-    state.user.users?.find((user) => user._id === userId)
-  );
+  let currentUser = useSelector((state) => state.user.currentUser);
+  let userId = useSelector((state) => state.user.currentUser._id);
+  
   const [gender, setGender] = useState(currentUser?.gender);
   const [file, setFile] = useState(null);
   const [user, setUser] = useState(currentUser);
   
   const handleChange = (e) => {
-    setUser((prev) => {
-      return { ...prev, [e.target?.name]: e.target?.value };
-    });
+    setUser({ ...user, [e.target?.name]: e.target?.value });
   };
 
   const handleGenderSelectChange = (e) => {

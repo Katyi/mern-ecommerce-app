@@ -31,7 +31,7 @@ const Container = styled.div`
 `;
 
 const Wrapper = styled.div`
-  width: 40%;
+  width: 40vw;
   padding: 20px;
   background-color: white;
   ${mobile({width:"75%"})}
@@ -86,6 +86,7 @@ const Link = styled.a`
 `;
 
 const ImgDiv = styled.div`
+  min-width: 50%;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -203,7 +204,7 @@ const Register = () => {
             type="password"
             onChange={(e) => setUser({...user, password: e.target.value})}
           />
-          <Input 
+          <Input
             placeholder="confirm password"
             type="password"
             onChange={(e) => setConfirmpassword(e.target.value)}

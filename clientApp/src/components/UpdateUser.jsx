@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from "styled-components";
 import { Publish } from "@mui/icons-material";
 import { updateUser, getUser } from '../redux/apiCalls';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 const Container = styled.div`
   flex: 4;
@@ -82,12 +83,51 @@ const UpdateUser = ({openModal, setOpenModal}) => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    let newUser = { ...user, gender: gender }
-    await updateUser(userId, newUser, dispatch);
-    await getUser(userId, dispatch);
-    console.log(newUser)
-    setUser(currentUser);
-    setOpenModal(false);
+    let fileName = user.img;
+    if (file !== null) {
+      fileName = new Date().getTime() + file.name;
+      const storage = getStorage();
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log('Upload is ' + progress + '% done');
+          switch (snapshot.state) {
+            case 'paused':
+              console.log('Upload is paused');
+              break;
+            case 'running':
+              console.log('Upload is running');
+              break;
+            default:
+          }
+        },
+        (error) => {
+          // Handle unsuccessful uploads
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            let newUser = { ...user, gender: gender, img: downloadURL };
+            setUser(newUser);
+            updateUser(userId, newUser, dispatch);
+            getUser(userId, dispatch);
+            console.log(newUser)
+            setOpenModal(false);
+          });
+        }
+      );
+    } else {
+      let newUser = { ...user, gender: gender };
+      setUser(newUser);
+      await updateUser(userId, newUser, dispatch);
+      await getUser(userId, dispatch);
+      console.log(newUser)
+      setOpenModal(false);
+    }
   };
 
   return (
@@ -95,7 +135,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
       <Title>{user?.username}'s account:</Title>
       <UserForm onSubmit={handleSubmit}>
         {/* USER IMAGE PART */}
-        {/* <UserImage>
+        <UserImage>
           <img src={user?.img}
             onError={({ currentTarget }) => {
               currentTarget.onerror = null; // prevents looping
@@ -104,7 +144,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
           />
           <label htmlFor="file"><Publish/></label>
           <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])}/>
-        </UserImage> */}
+        </UserImage>
         {/* USER OTHER INFO */}
         <UserItem>
           <label>Username</label>
@@ -177,4 +217,4 @@ const UpdateUser = ({openModal, setOpenModal}) => {
   )
 }
 
-export default UpdateUser
+export default UpdateUser;

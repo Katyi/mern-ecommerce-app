@@ -15,20 +15,16 @@ import { useSelector } from 'react-redux';
 import OrderList from './pages/orderList/OrderList';
 
 function App() {
-  const admin = useSelector((state) => state.user?.currentUser?.isAdmin);
+  const user = useSelector((state) => state.user?.currentUser);
 
   return (
     <Router>
-      <Routes>
-        <Route exact path='/' element={<Login/>}/>
-        {/* <Route path="/" element={admin ? <Navigate to='/home'/> : <Login/>}/> */}
-      </Routes>
-      {admin && (
         <div className='wrapper'>
-          <Topbar/>
+          {user ? <Topbar/> : ""}
           <div className="container">
-            <Sidebar/>
+            {user ? <Sidebar/> : ""}
             <Routes>
+              <Route exact path='/' element={<Login/>}/>
               <Route exact path="/home" element={<Home/>}/>
               <Route path="/users" element={<UserList />}/> 
               <Route path="/user/:userId" element={<User />}/>
@@ -41,9 +37,8 @@ function App() {
             </Routes>
           </div>
         </div>
-      )}
     </Router>
   )
 }
 
-export default App
+export default App;

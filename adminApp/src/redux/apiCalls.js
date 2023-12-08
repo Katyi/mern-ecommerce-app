@@ -20,7 +20,7 @@ import {
   addWishlistStart, addWishlistSuccess, addWishlistFailure,
 } from "./wishlistRedux";
 import {
-  getOrderStart, getOrderSuccess, getOrderFailure,
+  getOrderStart, getOrderSuccess, getOrderFailure, 
   deleteOrderStart, deleteOrderSuccess, deleteOrderFailure,
   updateOrderStart, updateOrderSuccess, updateOrderFailure,
   addOrderStart, addOrderSuccess, addOrderFailure,
@@ -29,7 +29,7 @@ import {
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
   try {
-    const res = await publicRequest.post("/auth/login", user);
+    const res = await publicRequest.post("/auth/adminAuth", user);
     dispatch(loginSuccess(res.data));
   } catch (err) {
     dispatch(loginFailure());
@@ -119,6 +119,8 @@ export const updateProduct = async (id, product, dispatch) => {
     dispatch(updateProductFailure());
   }
 };
+
+
 
 export const addProduct = async (product, dispatch) => {
   dispatch(addProductStart());

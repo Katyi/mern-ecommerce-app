@@ -16,12 +16,14 @@ const Login = () => {
   const handleClick = async(e) => {
     e.preventDefault();
     await login(dispatch, { username: username, password: password });
+    
   };
 
   useEffect(() => {
     if (user) {
       navigate("/home");
-    } 
+    }
+
   },[handleClick, user]);
 
   return (

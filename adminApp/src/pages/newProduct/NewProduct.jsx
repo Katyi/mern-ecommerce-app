@@ -56,18 +56,21 @@ export default function NewProduct() {
             const product = { ...inputs, img: downloadURL, categories: cat };
             addProduct(product, dispatch);
           });
-          navigate('/products');
         }
       );
+      navigate('/products');
     } else {
       const product = { ...inputs, categories: cat };
       addProduct(product, dispatch);
+      navigate('/products');
     }
   };
 
   return (
     <div className="newProduct">
-      <h1 className="addProductTitle">New Product</h1>
+      <div className="addProductTitle">
+        <h1>New Product</h1>
+      </div>
       <form className="addProductForm">
         <div className="addProductItem">
           <label>Image</label>

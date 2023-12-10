@@ -1,12 +1,14 @@
 .user {
   flex: 4;
-  padding: 20px;
+  margin-top: 10px;
+  padding: 0px 20px;
 }
 
 .userTitleContainer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 80px;
 }
 
 /* .userAddButton {

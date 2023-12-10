@@ -1,13 +1,12 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./product.css";
-import Chart from "../../components/chart/Chart"
-// import { Publish } from "@material-ui/icons";
+import Chart from "../../components/chart/Chart";
 import { Publish } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { userRequest } from "../../requestMethods";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { updateProduct } from "../../redux/apiCalls";
+import { getProducts, updateProduct } from "../../redux/apiCalls";
 
 export default function Product() {
   const location = useLocation();
@@ -16,6 +15,7 @@ export default function Product() {
   const [file, setFile] = useState(null);
   const [cat, setCat] = useState([]);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let currentProduct = useSelector((state) =>
     state.product.products.find((product) => product._id === productId)
   );
@@ -80,14 +80,19 @@ export default function Product() {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             let newproduct = { ...product, img: downloadURL };
+            updateProduct(productId, newproduct, dispatch).then(
+              getProducts(dispatch)
+            );
             setProduct(newproduct);
-            updateProduct(productId, newproduct, dispatch);
           });
         }
       );
+      
+      navigate('/products');
     } else {
       setProduct(product);
       updateProduct(productId, product, dispatch);
+      navigate('/products');
     }
   };
 
@@ -95,9 +100,6 @@ export default function Product() {
     <div className="product">
       <div className="productTitleContainer">
         <h1 className="productTitle">Product</h1>
-        {/* <Link to="/newproduct">
-          <button className="productAddButton">Create</button>
-        </Link> */}
       </div>
       <div className="productTop">
         <div className="productTopLeft">

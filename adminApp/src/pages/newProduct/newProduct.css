@@ -6,7 +6,10 @@
 .addProductForm {
   margin-top: 10px;
 }
-
+.addProductTitle {
+  height: 80px;
+  margin: 0;
+}
 .addProductItem {
   width: 250px;
   display: flex;

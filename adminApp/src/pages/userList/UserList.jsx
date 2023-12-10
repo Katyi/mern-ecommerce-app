@@ -42,12 +42,10 @@ export default function UserList() {
     setCurrentPage(newPage);
   };
 
-  // const getPaginatedData = () => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    const getPaginatedData = users.slice(startIndex, endIndex);
-  // };
-
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const getPaginatedData = users.slice(startIndex, endIndex);
+  
   return (
     <div className="userList">
       <div className="user_button_wrapper">
@@ -84,7 +82,7 @@ export default function UserList() {
                 <TableCell style={{width:"10%"}}>{item.isAdmin ? "Admin" : "User"}</TableCell>
                 <TableCell style={{width:"30%"}}>{item.email}</TableCell>
                 <TableCell style={{width:"15%"}}>
-                <>
+                <div style={{display:"flex", alignItems:"center"}}>
                   <Link to={"/user/" + item._id}>
                     <button className="userListEdit">Edit</button>
                   </Link>
@@ -92,9 +90,8 @@ export default function UserList() {
                     className="userListDelete"
                     onClick={() => handleDelete(item._id)}
                   />
-                </>
+                </div>
                 </TableCell>
-                
               </TableRow>
             ))}
           </TableBody>

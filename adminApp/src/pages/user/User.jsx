@@ -1,21 +1,20 @@
-// import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish } from "@material-ui/icons";
 import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish } from "@mui/icons-material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./user.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { format } from "timeago.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { updateUser } from "../../redux/apiCalls";
+import { getUsers, updateUser } from "../../redux/apiCalls";
 
 export default function User() {
   const location = useLocation();
   const userId = location.pathname.split("/")[2];
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let currentUser = useSelector((state) =>
     state.user.users.find((user) => user?._id === userId)
   );
-  // const currentUser = useSelector((state) => state.user.currentUser);
 
   const [user, setUser] = useState(currentUser);
   const [file, setFile] = useState(null);
@@ -72,15 +71,19 @@ export default function User() {
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             let newUser = { ...user, gender: gender, active: active, isAdmin: role, img: downloadURL };
+            updateUser(userId, newUser, dispatch).then(
+              getUsers(dispatch)
+            );
             setUser(newUser);
-            updateUser(userId, newUser, dispatch);
           });
         }
       );
+      navigate('/users');
     } else {
       let newUser = { ...user, gender: gender, active: active, isAdmin: role }
-      setUser(newUser);
       updateUser(userId, newUser, dispatch);
+      setUser(newUser);
+      navigate('/users');
     }
   };
 

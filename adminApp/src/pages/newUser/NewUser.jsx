@@ -72,9 +72,9 @@ export default function NewUser() {
             const newUser = { ...inputs, gender: gender, active: selected, isAdmin: role, img: downloadURL };
             addUser(newUser, dispatch);
           });
-          navigate('/users');
         }
       );
+      navigate('/users');
     } else {
       const newUser = { ...inputs, gender: gender, active: selected, isAdmin: role };
       addUser(newUser, dispatch);
@@ -84,9 +84,12 @@ export default function NewUser() {
 
   return (
     <div className="newUser">
-      <h1 className="newUserTitle">New User</h1>
+      <div className="newUserTitle">
+        <h1>New User</h1>
+      </div>
+      
       <form className="newUserForm">
-      <div className="newUserItem">
+        <div className="newUserItem">
           <label>Image</label>
           <input 
             className="newUserImg"

@@ -4,7 +4,7 @@ import { mobile } from "../responsive";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { register } from "../redux/apiCalls";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { 
   getStorage, 
   ref, 
@@ -53,7 +53,11 @@ const Input = styled.input`
   min-width: 40%;
   margin: 20px 10px 0px 0px;
   padding: 10px;
-
+  &[name='username']::placeholder, &[name='email']::placeholder,
+  &[name='password']::placeholder, &[name='confirm password']::placeholder {
+  opacity: 0.6;
+  color: red;
+}
 `;
 
 const Select = styled.select`
@@ -86,10 +90,13 @@ const Link = styled.a`
 `;
 
 const ImgDiv = styled.div`
-  min-width: 50%;
+  min-width: 90%;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex: 1;
+  margin: 20px 10px 0px 0px;
+  padding: 10px;
 `;
 
 const NewUserImg = styled.input`
@@ -100,17 +107,34 @@ const Label = styled.label`
   font-weight: 700;
 `;
 
+const Error = styled.span`
+  margin-top: 10px;
+  color: red;
+  font-size: 12px;
+  width: 100%;
+`;
+
 const Register = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  let { isFetching, currentUser, error } = useSelector((state) => state.user);
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
-  const [confirmpassword, setConfirmpassword] = useState("");
-  const [user, setUser] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [user, setUser] = useState(null);
   const [file, setFile] = useState(null);
+  const [err, setErr] = useState(null);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (user?.password !== confirmPassword) {
+      setErr('Password mismatch!');
+      return;
+    } else {
+      setErr(null)
+    }
+
     if (file !== null) {
       let fileName = new Date().getTime() + file.name;
       const storage = getStorage();
@@ -141,15 +165,24 @@ const Register = () => {
             const newUser = {...user, fullname: name.concat(" ").concat(lastname), img: downloadURL};
             register(dispatch, newUser);
           });
-          navigate('/home');
+          
         }
       );
     } else {
       const newUser = {...user, fullname: name.concat(" ").concat(lastname)};
       register(dispatch, newUser);
-      navigate('/home');
     }
   };
+
+  // useEffect(() => {
+  //   setErr(null);
+  // },[]);
+
+  useEffect(() => {
+    if (currentUser) {
+      navigate("/home");
+    }
+  },[navigate, currentUser]);
 
   return (
     <Container>
@@ -165,16 +198,21 @@ const Register = () => {
             onChange={(e) => setFile(e.target.files[0])}
           />
         </ImgDiv>
+        {/* <InputWrapper> */}
+          {/* <Label>name</Label> */}
           <Input 
             placeholder="name"
+            name="name"
             onChange={(e) => setName(e.target.value)}
           />
+        {/* </InputWrapper> */}
           <Input 
             placeholder="last name"
             onChange={(e) => setLastname(e.target.value)}
           />
           <Input 
-            placeholder="username" 
+            placeholder="username*" 
+            name='username'
             onChange={(e) => setUser({...user, username: e.target.value})}
           />
           <Select className="newUserSelect" name="active" id="active" onChange={(e)=>setUser({...user, gender: e.target.value})}>
@@ -184,7 +222,8 @@ const Register = () => {
           </Select>
 
           <Input 
-            placeholder="email" 
+            placeholder="email*" 
+            name="email"
             onChange={(e) => setUser({...user, email: e.target.value})}
           />
           <Input 
@@ -200,20 +239,27 @@ const Register = () => {
             onChange={(e) => setUser({...user, occupation: e.target.value})}
           />
           <Input 
-            placeholder="password" 
+            placeholder="password*" 
+            name="password"
             type="password"
             onChange={(e) => setUser({...user, password: e.target.value})}
           />
           <Input
-            placeholder="confirm password"
+            placeholder="confirm password*"
+            name="confirm password"
             type="password"
-            onChange={(e) => setConfirmpassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <Agreement>
             By creating an account, I consent to the processing of my personal
-            data in accordance with the <b>PRIVACY POLICY</b>
+            data in accordance with the <b>PRIVACY POLICY</b><br/>
+            <b style={{color: "red"}}>* - required field</b>
           </Agreement>
           <Button>CREATE</Button>
+          <div style={{height:"12px", width:"100%", marginTop:"3px"}}>
+            {!err && error && <Error>{error}</Error>}
+            {err && <Error>{err}</Error>}
+          </div>
         </Form>
         <br/>
         <Link onClick={()=>navigate("/")}>SIGN IN IF YOU ALREADY HAVE AN ACCOUNT</Link>

@@ -21,59 +21,86 @@ router.post("/register", async (req, res) => {
   });
 
   try{
+    // Validate username and password
+    if (!req.body.username || !req.body.password || !req.body.email ) {
+      return res.status(401).json("Missing required fields!");
+    }
+    // Check username and email
+    const user = await User.findOne({ username: req.body.username });
+    const email = await User.findOne({ email: req.body.email });
+    if (user) { 
+      return res.status(401).json("Username already exists!");
+    } else if (email) { 
+      return res.status(401).json("Email already exists!");
+    }
+    
     const savedUser = await newUser.save();
     res.status(201).json(savedUser)
-  }catch(err){
-    res.status(500).json(err);
+  } catch(error) {
+    res.status(500).json("Internal Server Error!");
   }
 });
 
-//LOGIN
+// LOGIN
 router.post('/login', async (req, res) => {
   try{
+    // Validate username and password
+    if (!req.body.username || !req.body.password) {
+      return res.status(401).json("Missing required fields!");
+    }
+    
+    // Check username
     const user = await User.findOne({ username: req.body.username });
     
-    if (!user) { res.status(401).json("Wrong User Name!"); return }
-
+    if (!user) { 
+      return res.status(401).json("Wrong User Name!");
+    }
+    
+    // Check password
     const hashedPassword = CryptoJS.AES.decrypt(
       user.password,
       process.env.PASS_SEC
     );
     
     const originalPassword = hashedPassword.toString(CryptoJS.enc.Utf8);
-    // console.log(originalPassword)
 
     const inputPassword = req.body.password;
     
     if (originalPassword != inputPassword) { res.status(401).json("Wrong Password!"); return}
     
-      const accessToken = jwt.sign(
-        {
-          id: user._id,
-          isAdmin: user.isAdmin,
-        },
-        process.env.JWT_SEC,
-        {expiresIn: "3d"}
-      );
+    const accessToken = jwt.sign(
+      {
+        id: user._id,
+        isAdmin: user.isAdmin,
+      },
+      process.env.JWT_SEC,
+      {expiresIn: "3d"}
+    );
       
-      
-      const { password, ...others } = user._doc;
-      res.status(200).json({...others, accessToken});
+    const { password, ...others } = user._doc;
+    res.status(200).json({...others, accessToken});
 
-  }catch(err){
-    res.status(500).json(err);
+  } catch(error) {
+    res.status(500).json('Internal Server Error!');
   }
-
 });
 
-//adminAuth
+// AdminAuth
 router.post('/adminAuth', async (req, res) => {
   try{
+    // Validate username and password
+    if (!req.body.username || !req.body.password) {
+      return res.status(401).json("Missing required fields!");
+    }
+
+    // Check username and isAdmin
     const user = await User.findOne({ username: req.body.username });
     
     if (!user) { res.status(401).json("Wrong User Name!"); return }
     if (!user.isAdmin) { res.status(403).json("You are not admin!"); return }
 
+
+    // Check password
     const hashedPassword = CryptoJS.AES.decrypt(
       user.password,
       process.env.PASS_SEC

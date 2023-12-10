@@ -31,8 +31,8 @@ export const login = async (dispatch, user) => {
   try {
     const res = await publicRequest.post("/auth/adminAuth", user);
     dispatch(loginSuccess(res.data));
-  } catch (err) {
-    dispatch(loginFailure());
+  } catch (error) {
+    dispatch(loginFailure(error.response.data));
   }
 };
 
@@ -42,7 +42,6 @@ export const logout = async (dispatch, user) => {
   try {
     const res = await userRequest.post(`/auth/logout/${user.id}`);
     dispatch(logoutSuccess());
-    // return res.data;
   } catch (error) {
     dispatch(logoutFailure());
   }

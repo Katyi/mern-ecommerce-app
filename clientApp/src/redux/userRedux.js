@@ -18,21 +18,22 @@ const userSlice = createSlice({
       state.isFetching = false;
       state.currentUser = action.payload;
     },
-    loginFailure: (state) => {
+    loginFailure: (state, action) => {
       state.isFetching = false;
-      state.error = true;
+      state.error = action.payload;
     },
     // REGISTER
     registerStart: (state) => {
       state.isFetching = true;
+      state.error = false;
     },
     registerSuccess: (state, action) => {
       state.isFetching = false;
       state.currentUser = action.payload;
     },
-    registerFailure: (state) => {
+    registerFailure: (state, action) => {
       state.isFetching = false;
-      state.error = true;
+      state.error = action.payload;
     },
     // LOGOUT
     logoutStart: (state) => {

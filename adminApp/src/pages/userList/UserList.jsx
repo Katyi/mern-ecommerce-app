@@ -1,16 +1,34 @@
 import "./userList.css";
-// import { DataGrid } from "@material-ui/data-grid";
-import { DataGrid } from "@mui/x-data-grid";
-// import { DeleteOutline } from "@material-ui/icons";
 import { DeleteOutline } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, getUsers } from "../../redux/apiCalls";
+import { Table, TableHead, TableBody, TableRow, TableCell, Pagination } from '@mui/material';
+
+const styles = {
+  table: {
+    border: '0.1px solid #ddd',
+    borderCollapse: 'collapse',
+    width: '100%',
+    boxShadow: "0px 0px 15px -10px rgba(0, 0, 0, 0.75)",
+    WebkitBoxShadow: "0px 0px 15px -10px rgba(0, 0, 0, 0.75)"
+  },
+  thead: {
+    backgroundColor: '#f1f1f1',
+  },
+  pagination: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: '20px',
+  },
+};
 
 export default function UserList() {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.user?.users);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = Math.floor((window.innerHeight - 80 - 10 - 20 - 76 - 57 - 32)/ 67);
 
   useEffect(() => {
     getUsers(dispatch);
@@ -20,53 +38,15 @@ export default function UserList() {
     deleteUser(id, dispatch);
   };
 
-  const columns = [
-    { field: "No.", headerName: "No.", width: 90 },
-    {
-      field: "user",
-      headerName: "User",
-      width: 250,
-      renderCell: (params) => {
-        return (
-          <div className="userListUser">
-            <img className="userListImg" src={params.row.img} 
-              onError={({ currentTarget }) => {
-                currentTarget.onerror = null; // prevents looping
-                currentTarget.src="https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif";
-              }}
-            />
-            {params.row.username}
-          </div>
-        );
-      },
-    },
-    { field: {"isAdmin": "Admin"}, headerName: "Role", width: 150,
-      renderCell: (params) => {
-        return (params.row?.isAdmin ? "Admin" : "User");
-      },
-  
-    },
-    { field: "email", headerName: "Email", width: 250 },
-    {
-      field: "action",
-      headerName: "Action",
-      width: 150,
-      renderCell: (params) => {
-        return (
-          <>
-            <Link to={"/user/" + params.row._id}>
-              <button className="userListEdit">Edit</button>
-            </Link>
-            <DeleteOutline
-              className="userListDelete"
-              onClick={() => handleDelete(params.row._id)}
-            />
-          </>
-        );
-      },
-    },
-  ];
-  const rows = users?.map((p, i)=> ({ 'No.': i + 1, ...p }))
+  const handleChangePage = (event, newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  // const getPaginatedData = () => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const getPaginatedData = users.slice(startIndex, endIndex);
+  // };
 
   return (
     <div className="userList">
@@ -76,16 +56,55 @@ export default function UserList() {
           <button className="userAddButton">Create new user</button>
         </Link>
       </div>
-      <div className="userListGrid">
-        <DataGrid
-          rows={rows}
-          disableSelectionOnClick
-          columns={columns}
-          getRowId={(row) => row._id}
-          pageSize={10}
-          checkboxSelection
-        />
-      </div>
+      <Table style={styles.table}>
+        <TableHead style={styles.thead}>
+          <TableRow>
+            <TableCell style={{width:"10%", fontWeight: "700", paddingLeft: "5%"}} >No.</TableCell>
+            <TableCell style={{width:"20%", fontWeight: "700"}}>user</TableCell>
+            <TableCell style={{width:"10%", fontWeight: "700"}}>Role</TableCell>
+            <TableCell style={{width:"30%", fontWeight: "700"}}>Email</TableCell>
+            <TableCell style={{width:"15%", fontWeight: "700"}}>Action</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+            {getPaginatedData.map((item, index) => (
+              <TableRow key={item._id}>
+                <TableCell style={{width:"10%", paddingLeft: "5%"}}>{startIndex + index+1}</TableCell>
+                <TableCell style={{width:"20%"}}>
+                  <div className="userListUser">
+                    <img className="userListImg" src={item.img} 
+                      onError={({ currentTarget }) => {
+                        currentTarget.onerror = null; // prevents looping
+                        currentTarget.src="https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif";
+                      }}
+                    />
+                    {item.username}  
+                  </div>
+                </TableCell>
+                <TableCell style={{width:"10%"}}>{item.isAdmin ? "Admin" : "User"}</TableCell>
+                <TableCell style={{width:"30%"}}>{item.email}</TableCell>
+                <TableCell style={{width:"15%"}}>
+                <>
+                  <Link to={"/user/" + item._id}>
+                    <button className="userListEdit">Edit</button>
+                  </Link>
+                  <DeleteOutline
+                    className="userListDelete"
+                    onClick={() => handleDelete(item._id)}
+                  />
+                </>
+                </TableCell>
+                
+              </TableRow>
+            ))}
+          </TableBody>
+      </Table>
+      <Pagination
+        style={styles.pagination}
+        count={Math.ceil(users.length / itemsPerPage)}
+        page={currentPage}
+        onChange={handleChangePage}
+      />
     </div>
   );
 }

@@ -16,7 +16,6 @@ const Login = () => {
   const handleClick = async(e) => {
     e.preventDefault();
     await login(dispatch, { username: username, password: password });
-    
   };
 
   useEffect(() => {
@@ -50,7 +49,7 @@ const Login = () => {
       <button onClick={handleClick} style={{ padding: 10, width:100 }}>
         Login
       </button>
-      {error && <span className='loginError'>Something went wrong...</span>}
+      {error && <span className='loginError'>{error}</span>}
     </div>
   )
 };

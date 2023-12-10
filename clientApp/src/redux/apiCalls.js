@@ -29,8 +29,8 @@ export const login = async (dispatch, user) => {
   try {
     const res = await publicRequest.post("/auth/login", user);
     dispatch(loginSuccess(res.data));
-  } catch (err) {
-    dispatch(loginFailure());
+  } catch (error) {
+    dispatch(loginFailure(error.response.data));
   }
 };
 
@@ -42,7 +42,7 @@ export const register = async (dispatch, user) => {
     dispatch(registerSuccess(res.data));
     return res;
   } catch (error) {
-    dispatch(registerFailure());
+    dispatch(registerFailure(error.response.data));
     return false;
   }
 };

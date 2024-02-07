@@ -28,7 +28,7 @@ export default function ProductList() {
   const dispatch = useDispatch();
   const products = useSelector((state) => state.product?.products);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = Math.floor((window.innerHeight - 80 - 10 - 20 - 76 - 57 - 32)/ 67);
+  const itemsPerPage = Math.floor((window.innerHeight - 130 - 20 - 46 - 57 - 10 - 32)/ 67);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const getPaginatedData = products.slice(startIndex, endIndex);
@@ -48,12 +48,12 @@ export default function ProductList() {
   return (
     <div className="productList">
       <div className="product_button_wrapper">
-        <h2 className="productsTitle">Products</h2>
+        <div className="productsTitle">Products</div>
         <Link to="/newproduct">
           <button className="productAddButton">Create new product</button>
         </Link>
       </div>
-      <Table>
+      <Table style={styles.table}>
         <TableHead style={styles.thead}>
           <TableRow>
           <TableCell style={{width:"10%", fontWeight: "700", paddingLeft: "5%"}} >No.</TableCell>

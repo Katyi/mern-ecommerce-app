@@ -1,0 +1,37 @@
+.dateInputWrapper {
+  position: relative; /* Allow for calendar picker positioning */
+}
+.dateInput {
+  display: flex;
+  align-items: center;
+  border: 2px solid teal;
+  padding: 5px 5px 5px 15px;
+  background: rgb(255, 255, 255);
+}
+.dateInput:focus-within {
+  border: 2px solid teal;
+}
+.dateInput:hover {
+  border: 2px solid teal;
+}
+
+.dateInput .inputMask {
+  border: none;
+  margin-right: 15px;
+  padding: 0;
+  flex-grow: 1; /* Allow input to fill remaining space */
+}
+.inputMask:focus {
+  outline: none;
+}
+.dateInput .calendarIcon {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+@media (max-width: 450px) {
+  .inputMask {
+    width: 50%;
+  }
+}

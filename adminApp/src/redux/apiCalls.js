@@ -25,6 +25,11 @@ import {
   updateOrderStart, updateOrderSuccess, updateOrderFailure,
   addOrderStart, addOrderSuccess, addOrderFailure,
 } from "./orderRedux";
+import { 
+  // uploadImageStart, uploadImageSuccess, uploadImageFailure
+  
+} from "./imageRedux";
+
 // ---------------------- LOGIN -------------------------------------------
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
@@ -178,5 +183,34 @@ export const getOrders = async (dispatch) => {
     dispatch(getOrderSuccess(res.data));
   } catch (err) {
     dispatch(getOrderFailure());
+  }
+};
+
+//---------------------- IMAGES -----------------------------------------
+// export const uploadImage = async (file, dispatch) => {
+//   // dispatch({type: 'image/upload/start', payload: file});
+//   dispatch(uploadImageStart(file))
+//   console.log(file)
+//   try {
+//     const res = await userRequest.post('/images/upload', file);
+//     console.log(res.data)
+//     // dispatch({ type: 'image/upload/success', payload: data});
+//     dispatch(uploadImageSuccess(res))
+//   } catch (err) {
+//     // dispatch({type: 'image/upload/failure', payload: err.message});
+//     dispatch(uploadImageFailure())
+//   }
+// };
+
+export const uploadImage = (file) => async (dispatch) => {
+  dispatch({ type: 'image/upload/start', payload: file });
+  try {
+    // Your logic to upload the file using an API call or other methods
+    // Replace this with your actual upload implementation
+    const data = await userRequest.post('/upload', { image: file });
+
+    dispatch({ type: 'image/upload/success', payload: data });
+  } catch (error) {
+    dispatch({ type: 'image/upload/failure', payload: error.message });
   }
 };

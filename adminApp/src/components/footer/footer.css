@@ -1,0 +1,29 @@
+.footer {
+  width: calc(100vw - 40px);
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.leftPart {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.githubIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.copyright {
+  font-size: 14px;
+  font-weight: 500;
+}
+.emailDiv {
+  font-size: 14px;
+  font-weight: 500;
+}

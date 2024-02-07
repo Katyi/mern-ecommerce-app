@@ -1,19 +1,20 @@
 .userList {
   flex: 4;
-  margin: 20px 20px 0px 20px;
+  margin: 10px 20px;
 }
-
 .user_button_wrapper {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: space-between;
 }
-.userTitle {
-  margin-left: 20px;
+.usersTitle {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 36px;
+  margin-bottom: 10px;
 }
 .userAddButton {
-  width: auto;
   border: none;
   padding: 5px 8px;
   background-color: teal;
@@ -21,18 +22,14 @@
   cursor: pointer;
   color: white;
   font-size: 16px;
-  margin-right: 20px;
 }
-
 .userListUser {
   display: flex;
   align-items: center;
   /* justify-content: space-between; */
   width: 100%;
   gap: 30px;
-
 }
-
 .userListImg {
   width: 32px;
   height: 32px;
@@ -40,22 +37,19 @@
   object-fit: cover;
   margin-right: 10px;
 }
-
 .userListEdit{
-    border: none;
-    border-radius: 10px;
-    padding: 5px 10px;
-    background-color: #3bb077;
-    color: white;
-    cursor: pointer;
-    margin-right: 20px;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #3bb077;
+  color: white;
+  cursor: pointer;
+  margin-right: 20px;
 }
-
 .userListDelete{
-    color: red;
-    cursor: pointer;
+  color: red;
+  cursor: pointer;
 }
-
 .userListGrid {
   height: calc(100vh - 80px - 10px - 54px);
 }

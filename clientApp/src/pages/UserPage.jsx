@@ -294,6 +294,10 @@ const UserPage = () => {
               <Field2>{user?.gender}</Field2>
             </Row>
             <Row>
+              <Field1>Birthday:</Field1>
+              <Field2>{user?.birthday}</Field2>
+            </Row>
+            <Row>
               <Field1>Occupation:</Field1>
               <Field2>{user?.occupation}</Field2>
             </Row>
@@ -309,7 +313,7 @@ const UserPage = () => {
               <Field1>Email:</Field1>
               <Field2>{user?.email}</Field2>
             </Row>
-            </InfoPart>
+          </InfoPart>
           </LeftPart>
           {/* USERNAME PHOTO */}
           <RightPart>

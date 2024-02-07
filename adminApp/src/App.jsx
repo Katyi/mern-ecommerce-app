@@ -1,8 +1,9 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from './pages/login/Login';
 import Home from "./pages/home/Home";
 import Topbar from './components/topbar/Topbar';
+import Footer from './components/footer/Footer';
 import Sidebar from './components/sidebar/Sidebar';
 import UserList from './pages/userList/UserList';
 import User from './pages/user/User';
@@ -16,7 +17,6 @@ import OrderList from './pages/orderList/OrderList';
 
 function App() {
   const user = useSelector((state) => state.user?.currentUser);
-
   return (
     <Router>
         <div className='wrapper'>
@@ -32,10 +32,12 @@ function App() {
               <Route path="/products" element={<ProductList />}/>
               <Route path="/product/:productId" element={<Product/>}/>
               <Route path="/newproduct" element={<NewProduct />}/>
-              <Route path="/wishlists" element={<WishList />}/>
-              <Route path="/orders" element={<OrderList />}/>
+              {/* <Route path="/wishlists" element={<WishList />}/>
+              <Route path="/orders" element={<OrderList />}/> */}
             </Routes>
+            
           </div>
+          {user ? <Footer/> : ""}
         </div>
     </Router>
   )

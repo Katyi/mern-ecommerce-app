@@ -5,7 +5,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { format } from "timeago.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { getUsers, updateUser } from "../../redux/apiCalls";
+import { getUsers, updateUser, uploadImage } from "../../redux/apiCalls";
+import Select from '../../UI/select/Select';
+import CalendarPicker from '../../UI/CalendarPicker/CalendarPicker';
 
 export default function User() {
   const location = useLocation();
@@ -15,12 +17,30 @@ export default function User() {
   let currentUser = useSelector((state) =>
     state.user.users.find((user) => user?._id === userId)
   );
+  // let currentImage = useSelector((state) => state.image.images.)
+  const currentImage = useSelector((state) => state.image.images);
+
 
   const [user, setUser] = useState(currentUser);
   const [file, setFile] = useState(null);
-  const [active, setActive] = useState(user.active);
-  const [gender, setGender] = useState(user.gender);
-  const [role, setRole] = useState(user?.isAdmin);
+  const [active, setActive] = useState(user?.active ? 'Yes' : 'No');
+  const [gender, setGender] = useState(currentUser?.gender);
+  const [role, setRole] = useState(user?.isAdmin ? 'Admin' : 'User');
+  const [openIsAdmin, setOpenIsAdmin] = useState(false);
+  const [openGender, setOpenGender] = useState(false);
+  const [openActive, setOpenActive] = useState(false);
+  const optionsIsAdmin  = [
+    { value: 'Admin'},
+    { value: 'User'},
+  ];
+  const optionsForGender  = [
+    { value: 'Female'},
+    { value: 'Male'},
+  ];
+  const optionsForActive  = [
+    { value: 'Yes'},
+    { value: 'No'},
+  ];
 
   const handleChange = (e) => {
     setUser((prev) => {
@@ -32,15 +52,32 @@ export default function User() {
     setActive(e.target.value);
   };
 
-  const handleGenderSelectChange = (e) => {
-    setGender(e.target.value);
+  const handleGenderSelectChange = (value) => {
+    // setGender(e.target.value);
+    setUser((prev) => {
+      return { ...prev, gender: value };
+    });
+    setOpenGender(false)
   };
 
-  const handleIsAdminSelectChange = (e) => {
-    setRole(e.target.value);
+  const handleIsAdminSelectChange = (value) => {
+    if (openIsAdmin) {
+      setRole(value);
+      setOpenIsAdmin(false);
+    } else if (openGender) {
+      setGender(value);
+      setOpenGender(false);
+    } else if (openActive) {
+      setActive(value);
+      setOpenActive(false);
+    }
   };
 
-  const handleClick = (e) => {
+  const handleChangeImage = (event) => {
+    setFile(event.target.files[0]);
+  };
+
+  const handleClick = async(e) => {
     e.preventDefault();
     let fileName = user.img;
     if (file !== null) {
@@ -67,10 +104,11 @@ export default function User() {
         },
         (error) => {
           // Handle unsuccessful uploads
+          console.log(error);
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            let newUser = { ...user, gender: gender, active: active, isAdmin: role, img: downloadURL };
+            let newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: downloadURL };
             updateUser(userId, newUser, dispatch).then(
               getUsers(dispatch)
             );
@@ -78,11 +116,20 @@ export default function User() {
           });
         }
       );
+      console.log(file.img)
+      await uploadImage(file, dispatch);
+      console.log(currentImage)
+
+      let newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: "" };
+      setUser(newUser);
+      updateUser(userId, newUser, dispatch);
+      getUsers(dispatch);
       navigate('/users');
     } else {
-      let newUser = { ...user, gender: gender, active: active, isAdmin: role }
-      updateUser(userId, newUser, dispatch);
+      let newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false }
       setUser(newUser);
+      updateUser(userId, newUser, dispatch);
+      getUsers(dispatch);
       navigate('/users');
     }
   };
@@ -90,7 +137,7 @@ export default function User() {
   return (
     <div className="user">
       <div className="userTitleContainer">
-        <h1 className="userTitle">User edit</h1>
+        <div className="userTitle">User edit</div>
       </div>
       <div className="userContainer">
         <div className="userShow">
@@ -104,44 +151,43 @@ export default function User() {
               className="userShowImg"
             />
             <div className="userShowTopTitle">
-              <span className="userShowUsername">{user.fullname}</span>
-              <span className="userShowUserTitle">{user.occupation}</span>
+              <span className="userShowUsername">{user?.fullname}</span>
+              <span className="userShowUserTitle">{user?.occupation}</span>
             </div>
           </div>
           <div className="userShowBottom">
             <span className="userShowTitle">Account Details</span>
             <div className="userShowInfo">
               <PermIdentity className="userShowIcon" />
-              <span className="userShowInfoTitle">{user.username} - {user.isAdmin ? "Admin" : "User"}</span>
+              <span className="userShowInfoTitle">{user?.username} - {user?.isAdmin ? "Admin" : "User"}</span>
             </div>
 
             <div className="userShowInfo">
               <span>Joined</span>
               <CalendarToday className="userShowIcon" />
-              <span className="userShowInfoTitle">{format(user.createdAt)}</span>
+              <span className="userShowInfoTitle">{format(user?.createdAt)}</span>
             </div>
             <div className="userShowInfo">
               <span>Seen</span>
               <CalendarToday className="userShowIcon" />
-              <span className="userShowInfoTitle">{format(user.updatedAt)}</span>
+              <span className="userShowInfoTitle">{format(user?.updatedAt)}</span>
             </div>
             <span className="userShowTitle">Contact Details</span>
             <div className="userShowInfo">
               <PhoneAndroid className="userShowIcon" />
-              <span className="userShowInfoTitle">{user.phone}</span>
+              <span className="userShowInfoTitle">{user?.phone}</span>
             </div>
             <div className="userShowInfo">
               <MailOutline className="userShowIcon" />
-              <span className="userShowInfoTitle">{user.email}</span>
+              <span className="userShowInfoTitle">{user?.email}</span>
             </div>
             <div className="userShowInfo">
               <LocationSearching className="userShowIcon" />
-              <span className="userShowInfoTitle">{user.address}</span>
+              <span className="userShowInfoTitle">{user?.address}</span>
             </div>
           </div>
         </div>
         <div className="userUpdate">
-
           <form className="userUpdateForm" onSubmit={handleClick}>
             <div className="userUpdateUpload">
               <img className="userUpdateImg" src={user?.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"}
@@ -153,7 +199,14 @@ export default function User() {
               <label htmlFor="file">
                 <Publish className="userUpdateIcon" />
               </label>
-              <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])} />
+              {/* <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])} /> */}
+              <input 
+                type="file"
+                id="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleChangeImage}
+              />
             </div>
             <div className="userUpdateLeft">
               <div className="userUpdateItem">
@@ -163,7 +216,7 @@ export default function User() {
                   type="text"
                   placeholder="Nickname"
                   className="userUpdateInput"
-                  value={user.username}
+                  value={user?.username}
                   onChange={handleChange}
                 />
               </div>
@@ -174,8 +227,25 @@ export default function User() {
                   type="text"
                   placeholder="User full name"
                   className="userUpdateInput"
-                  value={user.fullname}
+                  value={user?.fullname}
                   onChange={handleChange}
+                />
+              </div>
+              <div className="userSelectItem">
+                <label>birthday</label>
+                <CalendarPicker
+                  selectedDate={user?.birthday || ""} 
+                  setSelectedDate={v => setUser({ ...user, birthday: v })}
+                /> 
+              </div>
+              <div className="userSelectItem">
+                <label>Gender</label>
+                <Select 
+                  options={optionsForGender}
+                  selected={gender || ""}
+                  onChange={handleIsAdminSelectChange}
+                  open={openGender}
+                  setOpen={setOpenGender}
                 />
               </div>
               <div className="userUpdateItem">
@@ -185,24 +255,19 @@ export default function User() {
                   type="text"
                   placeholder="occupation"
                   className="userUpdateInput"
-                  value={user.occupation}
+                  value={user?.occupation}
                   onChange={handleChange}
                 />
               </div>
               <div className="userSelectItem">
                 <label>Role</label>
-                <select className="newUserSelect" value={role} onChange={handleIsAdminSelectChange}>
-                  <option value={true}>Admin</option>
-                  <option value={false}>User</option>
-                </select>
-              </div>
-              <div className="userSelectItem">
-                <label>Gender</label>
-                <select className="newUserSelect" value={gender} onChange={handleGenderSelectChange}>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="Other">Other</option>
-                </select>
+                <Select 
+                  options={optionsIsAdmin}
+                  selected={role || ""}
+                  onChange={handleIsAdminSelectChange}
+                  open={openIsAdmin}
+                  setOpen={setOpenIsAdmin}
+                />
               </div>
               <div className="userUpdateItem">
                 <label>Email</label>
@@ -211,7 +276,7 @@ export default function User() {
                   type="text"
                   placeholder="user@gmail.com"
                   className="userUpdateInput"
-                  value={user.email}
+                  value={user?.email}
                   onChange={handleChange}
                 />
               </div>
@@ -222,7 +287,7 @@ export default function User() {
                   type="text"
                   placeholder="+1 999 999 99 99"
                   className="userUpdateInput"
-                  value={user.phone}
+                  value={user?.phone}
                   onChange={handleChange}
                 />
               </div>
@@ -233,16 +298,19 @@ export default function User() {
                   type="text"
                   placeholder="user addres"
                   className="userUpdateInput"
-                  value={user.address}
+                  value={user?.address}
                   onChange={handleChange}
                 />
               </div>
               <div className="userSelectItem">
                 <label>Active</label>
-                <select className="newUserSelect" value={active} onChange={handleActiveSelectChange}>
-                  <option value={true}>Yes</option>
-                  <option value={false}>No</option>
-                </select>
+                <Select 
+                  options={optionsForActive}
+                  selected={active || ""}
+                  onChange={handleIsAdminSelectChange}
+                  open={openActive}
+                  setOpen={setOpenActive}
+                />
               </div>
             </div>
             <button type="submit" className="userUpdateButton">Update</button>

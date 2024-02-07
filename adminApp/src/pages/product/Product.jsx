@@ -7,19 +7,26 @@ import { useEffect, useMemo, useState } from "react";
 import { userRequest } from "../../requestMethods";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getProducts, updateProduct } from "../../redux/apiCalls";
+import Select from '../../UI/select/Select';
 
 export default function Product() {
   const location = useLocation();
   const productId = location.pathname.split("/")[2];
   const [pStats, setPStats] = useState([]);
   const [file, setFile] = useState(null);
-  const [cat, setCat] = useState([]);
+  // const [cat, setCat] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let currentProduct = useSelector((state) =>
     state.product.products.find((product) => product._id === productId)
   );
   const [product, setProduct] = useState(currentProduct);
+  const [openInStock, setOpenInStock] = useState(false);
+  const [inStock, setInStock] = useState(product?.inStock ? 'Yes' : 'No');
+  const optionsInStock  = [
+    { value: 'Yes'},
+    { value: 'No'},
+  ];
 
   const MONTHS = useMemo(() => ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Agu", "Sep", "Oct", "Nov", "Dec", ], []);
 
@@ -49,6 +56,11 @@ export default function Product() {
     });
   };
 
+  const handleInStockSelectChange = (value) => {
+    setInStock(value);
+    setOpenInStock(false);
+  }
+
   const handleClick = (e) => {
     e.preventDefault();
     let fileName = product.img;
@@ -76,22 +88,24 @@ export default function Product() {
         }, 
         (error) => {
           // Handle unsuccessful uploads
+          console.log(error);
         }, 
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             let newproduct = { ...product, img: downloadURL };
-            updateProduct(productId, newproduct, dispatch).then(
-              getProducts(dispatch)
-            );
             setProduct(newproduct);
+            updateProduct(productId, newproduct, dispatch);
+            getProducts(dispatch);
           });
         }
       );
       
       navigate('/products');
     } else {
-      setProduct(product);
-      updateProduct(productId, product, dispatch);
+      let newproduct = { ...product, inStock: inStock === 'Yes' ? true : false };
+      setProduct(newproduct);
+      updateProduct(productId, newproduct, dispatch);
+      getProducts(dispatch);
       navigate('/products');
     }
   };
@@ -99,7 +113,7 @@ export default function Product() {
   return (
     <div className="product">
       <div className="productTitleContainer">
-        <h1 className="productTitle">Product</h1>
+        <div className="productTitle">Product</div>
       </div>
       <div className="productTop">
         <div className="productTopLeft">
@@ -126,7 +140,7 @@ export default function Product() {
             </div>
             <div className="productInfoItem">
               <span className="productInfoKey">in stock:</span>
-              <span className="productInfoValue">{product.inStock}</span>
+              <span className="productInfoValue">{product.inStock ? "Yes" : "No"}</span>
             </div>
           </div>
         </div>
@@ -134,35 +148,46 @@ export default function Product() {
       <div className="productBottom">
         <form className="productForm" onSubmit={handleClick}>
           <div className="productFormLeft">
-            <label>Product Name</label>
-            <input 
-              name="title"
-              type="text" 
-              placeholder="title"
-              value={product.title} 
-              onChange={handleChange}
-            />
-            <label>Product Description</label>
-            <input 
-              name="desc"
-              type="text"
-              placeholder="description..."
-              value={product.desc}
-              onChange={handleChange}
-            />
-            <label>Price</label>
-            <input 
-              name="price"
-              type="number"
-              placeholder="price"
-              value={product.price}
-              onChange={handleChange}
-            />
-            <label>In Stock</label>
-            <select name="inStock" id="idStock" onChange={handleChange}>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
+            <div className="productUpdateItem">
+              <label>Product Name</label>
+              <input 
+                name="title"
+                type="text" 
+                placeholder="title"
+                value={product.title} 
+                onChange={handleChange}
+              />
+            </div>
+            <div className="productUpdateItem">
+              <label>Product Description</label>
+              <input 
+                name="desc"
+                type="text"
+                placeholder="description..."
+                value={product.desc}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="productUpdateItem">
+              <label>In Stock</label>
+              <Select 
+                options={optionsInStock}
+                selected={inStock || ""}
+                onChange={handleInStockSelectChange}
+                open={openInStock}
+                setOpen={setOpenInStock}
+              />
+            </div>
+            <div className="productUpdateItem">
+              <label>Price</label>
+              <input 
+                name="price"
+                type="number"
+                placeholder="price"
+                value={product.price}
+                onChange={handleChange}
+              />
+            </div>
           </div>
           <div className="productFormRight">
             <div className="productUpload">

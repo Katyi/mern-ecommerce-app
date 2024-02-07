@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation } from "react-router-dom";
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from "styled-components";
 import { Publish } from "@mui/icons-material";
 import { updateUser, getUser } from '../redux/apiCalls';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import InputMask from 'react-input-mask';
+import Select from '../UI/select/Select';
+import DateInput from '../UI/DateInput/DateInput';
+import Xmark from '../assets/circle-xmark-solid.svg';
 
 const Container = styled.div`
   flex: 4;
@@ -35,6 +38,17 @@ const UserImage = styled.div`
   }
 `;
 
+const CloseModalIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  & img {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+  }
+`;
+
 const UserItem = styled.div`
   width: 250px;
   display: flex;
@@ -47,6 +61,11 @@ const UserItem = styled.div`
   }
   & input {
     padding: 10px;
+    border: 2px solid teal;
+    cursor: pointer;
+  }
+  & input:focus {
+    outline: none;
   }
   & select {
     padding: 10px;
@@ -72,14 +91,21 @@ const UpdateUser = ({openModal, setOpenModal}) => {
   const [gender, setGender] = useState(currentUser?.gender);
   const [file, setFile] = useState(null);
   const [user, setUser] = useState(currentUser);
+  const [open, setOpen] = useState(false);
+
+  const options  = [
+    { value: 'Female'},
+    { value: 'Male'},
+  ];
   
   const handleChange = (e) => {
     setUser({ ...user, [e.target?.name]: e.target?.value });
   };
 
-  const handleGenderSelectChange = (e) => {
-    setGender(e.target.value);
-  };
+  const handleGenderSelectChange = (value) => {
+    setGender(value);
+    setOpen(false);
+  }
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -132,7 +158,12 @@ const UpdateUser = ({openModal, setOpenModal}) => {
 
   return (
     <Container>
-      <Title>{user?.username}'s account:</Title>
+      <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
+        <Title>{user?.username}'s account:</Title>
+        <CloseModalIcon onClick={() => setOpenModal(false)}>
+          <img src={Xmark} alt="Xmark" />
+        </CloseModalIcon>
+      </div>
       <UserForm onSubmit={handleSubmit}>
         {/* USER IMAGE PART */}
         <UserImage>
@@ -166,6 +197,23 @@ const UpdateUser = ({openModal, setOpenModal}) => {
             onChange={handleChange}/>
         </UserItem>
         <UserItem>
+          <label>Gender</label>
+          <Select
+            options={options}
+            selected={gender || ""}
+            onChange={handleGenderSelectChange}
+            open={open}
+            setOpen={setOpen}
+          />
+        </UserItem>
+        <UserItem>
+          <label>birthday</label>
+          <DateInput 
+            selectedDate={user?.birthday || ""} 
+            setSelectedDate={v => setUser({ ...user, birthday: v })}
+          />
+        </UserItem>
+        <UserItem>
           <label>Occupation</label>
           <input 
             name="occupation"
@@ -176,21 +224,26 @@ const UpdateUser = ({openModal, setOpenModal}) => {
         </UserItem>
         <UserItem>
           <label>Phone</label>
-          <input 
+          <InputMask
             name="phone"
-            type="text" 
-            placeholder="Phone" 
-            value={user?.phone} 
-            onChange={handleChange}/>
+            className="inputMask" 
+            mask='+9 999 999-999-99' 
+            maskChar="" 
+            placeholder='Phone'	
+            value={user?.phone || ""} 
+            onChange={handleChange}
+          />
         </UserItem>
         <UserItem>
           <label>Email</label>
           <input
             name="email"
-            type="text" 
+            type="email" 
             placeholder="Email" 
             value={user?.email} 
-            onChange={handleChange}/>
+            onChange={handleChange}
+            required
+          />
         </UserItem>
         <UserItem>
           <label>Address</label>
@@ -201,14 +254,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
             value={user?.address} 
             onChange={handleChange}/>
         </UserItem>
-        <UserItem>
-          <label>Gender</label>
-          <select name="gender" value={gender} onChange={handleGenderSelectChange}>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Other">Other</option>
-          </select>
-        </UserItem>
+        
         <UserItem>
           <button type="submit">UPDATE</button>
         </UserItem>

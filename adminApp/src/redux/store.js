@@ -3,6 +3,8 @@ import userReducer from "./userRedux";
 import productReducer from "./productRedux";
 import wishlistReducer from "./wishlistRedux";
 import orderReducer from './orderRedux';
+import imageReducer from './imageRedux';
+import localforage from 'localforage';
 // import usersReduser from "./usersRedux";
 
 import {
@@ -20,7 +22,8 @@ import storage from 'redux-persist/lib/storage';
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage,
+  storage: localforage,
+  // storage,
 };
 
 const appReducer = combineReducers({
@@ -28,6 +31,7 @@ const appReducer = combineReducers({
   product: productReducer,
   wishlist: wishlistReducer,
   order: orderReducer,
+  image: imageReducer,
   // users: usersReduser,
 });
 

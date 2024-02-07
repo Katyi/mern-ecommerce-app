@@ -17,10 +17,13 @@ const styles = {
   thead: {
     backgroundColor: '#f1f1f1',
   },
+  tableRow: {
+    height: "40px",
+  },
   pagination: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '20px',
+    marginTop: '10px',
   },
 };
 
@@ -28,7 +31,7 @@ export default function UserList() {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.user?.users);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = Math.floor((window.innerHeight - 80 - 10 - 20 - 76 - 57 - 32)/ 67);
+  const itemsPerPage = Math.floor((window.innerHeight - 130 - 20 - 46 - 57 - 10 - 32)/ 67);
 
   useEffect(() => {
     getUsers(dispatch);
@@ -49,7 +52,7 @@ export default function UserList() {
   return (
     <div className="userList">
       <div className="user_button_wrapper">
-        <h2 className="userTitle">Users</h2>
+        <div className="usersTitle">Users</div>
         <Link to="/newUser">
           <button className="userAddButton">Create new user</button>
         </Link>

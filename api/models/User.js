@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema(
     phone: {type: String},
     occupation: {type: String},
     gender: {type: String},
+    birthday: {type: String},
     active: {type: Boolean, default: true},
   }, 
   {timestamps: true}

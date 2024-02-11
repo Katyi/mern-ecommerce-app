@@ -40,6 +40,7 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   border-radius: 0px 0px 5px 5px;
   transition: max-height 0.2s ease;
+  z-index: 10;
 }
 .hidden {
   visibility: hidden;

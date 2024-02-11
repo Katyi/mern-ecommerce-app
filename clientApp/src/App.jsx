@@ -1,15 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Home from './pages/Home';
-import ProductList from "./pages/ProductList";
-import Product from "./pages/Product";
-import Cart from "./pages/Cart";
-import Success from "./pages/Success";
-import Thanks from "./pages/Thanks";
-import UserPage from "./pages/UserPage";
-import Wishlist from "./pages/Wishlist";
+import Login from "./pages/login/Login";
+import Register from "./pages/register/Register";
+import Home from './pages/home/Home';
+import ProductList from "./pages/productList/ProductList";
+import Product from "./pages/product/Product";
+import Cart from "./pages/cart/Cart";
+import Success from "./pages/success/Success";
+import Thanks from "./pages/thanks/Thanks";
+import UserPage from "./pages/userPage/UserPage";
+import Wishlist from "./pages/wishlist/Wishlist";
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);

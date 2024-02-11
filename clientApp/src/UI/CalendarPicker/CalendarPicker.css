@@ -62,6 +62,7 @@
 }
 .calendarPickerBtnWrap {
   display: block;
+  margin-top: 5px;
 }
 
 @media (max-width: 450px) {

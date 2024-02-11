@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { categories } from "../data";
-import { mobile } from "../responsive";
-import CategoryItem from "./CategoryItem";
+import { categories } from "../../data";
+import { mobile } from "../../responsive";
+import CategoryItem from "../categoryItem/CategoryItem";
 
 const Container = styled.div`
   width: 100%;

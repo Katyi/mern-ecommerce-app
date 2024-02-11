@@ -117,16 +117,15 @@ const CalendarPicker = ({ onClose, selectedDate, setSelectedDate }) => {
     <div className='calendarPicker'>
       <div className='calendarHeader'>
         <img className='icon' src={navigateBefore} alt="navigateBefore" onClick={(e) => getPrevMonth(e)}/>
-        <span className='calendarPickerTitle'>
+        <div className='calendarPickerTitle'>
           {`${daysOfWeek[currentDay.getDay()]} 
           ${currentDay.getDate()} ${currentDay.toLocaleString('en-US', { month: 'long' })} 
           ${currentDay.getFullYear()}`}
-        </span>
-        <span className='calendarPickerTitle1'>
-          {`
-          ${currentDay.getDate()} ${currentDay.toLocaleString('en-US', { month: 'short' })} 
+        </div>
+        <div className='calendarPickerTitle1'>
+          {`${currentDay.getDate()} ${currentDay.toLocaleString('en-US', { month: 'short' })} 
           ${currentDay.getFullYear()}`}
-        </span>
+        </div>
         <img className='icon' src={navigateNext} alt="navigateBefore" onClick={(e) => getNextMonth(e)}/>
       </div>
       <div className='calendarGrid'>

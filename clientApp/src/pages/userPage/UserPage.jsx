@@ -1,209 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import styled from "styled-components";
-import Navbar from '../components/Navbar';
-import Announcement from '../components/Announcement';
-import { getOrder, getUser } from '../redux/apiCalls';
-import { mobile } from "../responsive";
+import Navbar from '../../components/navbar/Navbar';
+import Announcement from '../../components/announcement/Announcement';
+import { getOrder, getUser } from '../../redux/apiCalls';
 import dayjs from 'dayjs';
-import { publicRequest } from '../requestMethods';
-import Footer from '../components/Footer';
-import ModalTemplate from '../UI/modal/ModalTemplate';
-import UpdateUser from '../components/UpdateUser';
-
-const Container = styled.div`
-`;
-
-const Wrapper = styled.div`
-  padding: 20px;
-  ${mobile({padding:"10px"})}
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: start;
-  justify-content: space-between;
-  border-bottom: 0.5px solid lightgray;
-  padding: 20px 0px 0px 0px;
-`;
-
-const LeftPart = styled.div`
-  width: 70%;
-  height: 15vw;
-  display: flex;
-  flex-direction: column;
-  padding-left: 5%;
-  padding-right: 5%;
-`;
-
-const Title = styled.h1`
-  font-size: 36px;
-  font-weight: 700;
-  width: auto;
-  margin: 0 0 0 40vw;
-`;
-
-const SubTitle = styled.h1`
-  font-size: 30px;
-  font-weight: 700;
-  width: auto;
-  margin: 0 0 0 40vw;
-`;
-
-const TopText = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
-  margin: 0px 10px;
-`;
-
-const InfoPart = styled.div`
-  padding-top: 15px;
-  height: 80%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-`;
-
-const Row = styled.div`
-  width: 40%;
-  display: flex;
-  gap: 10%;
-`;
-
-const Field1 = styled.div`
-  width: 30%;
-  font-size: 16px;
-  font-weight: 700;
-`;
-
-const Field2 = styled.div`
-  width: auto;
-  font-size: 16px;
-  font-weight: 700;
-`;
-
-const RightPart = styled.div`
-  width: 25%;
-  height: 15vw;
-  display: flex;
-  justify-content: center;
-  align-items: start;
-`;
-
-const UserImage = styled.img`
-  width: 14vw;
-  height: 14vw;
-  border-radius: 50%;
-`;
-
-const Orders = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Button = styled.button`
-  /* width: 15vw; */
-  /* height: 40px; */
-  padding: 5px 15px;
-  border: 2px solid teal;
-  background-color: white;
-  cursor: pointer;
-  font-weight: 500;
-  margin: 0 10px;
-  &:hover {
-    background-color: #f8f4f4;
-  }
-`;
-
-const Info = styled.div`
-  padding-top: 20px;
-  padding-left: 20px;
-  padding-right: 20px;
-  border-top: 0.6px solid lightgray;
-  &:last-child {
-    border-bottom: 0.5px solid lightgray;
-  }
-`;
-
-const OrderInfoPart = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-`;
-
-const OrderRow = styled.div`
-  display: flex;
-  gap: 10%;
-`;
-
-const OrderField = styled.span``;
-
-const Order = styled.div`
-  width: 70%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  ${mobile({flexDirection:"column"})}
-`;
-
-const OrderDetail = styled.div`
-  display: flex;
-  // flex-direction: column;
-  gap: 10px;
-`;
-
-const Image = styled.img`
-  width: 200px;
-`;
-
-const Details = styled.div`
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-`;
-
-const ProductField = styled.span``;
-
-const FilterColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: ${props => props.color};
-  margin: 0px 5px;
-  cursor: pointer;
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-const Summary = styled.div`
-  flex: 1;
-  border: 0.5px solid lightgray;
-  border-radius: 10px;
-  padding: 20px;
-  /* height: 50vh; */
-  width: 30%;
-`;
-
-const SummaryTitle = styled.h4`
-  font-weight: 700;
-  margin: 0;
-`;
-
-const SummaryItem = styled.div`
-  margin: 10px 0px;
-  display: flex;
-  justify-content: space-between;
-  font-weight: ${props=>props.type === "total" && "700"};
-  font-size: 16px;
-`;
-
-const SummaryItemText = styled.span``;
-
-const SummaryItemPrice = styled.span``;
+import { publicRequest } from '../../requestMethods';
+import Footer from '../../components/footer/Footer';
+import ModalTemplate from '../../UI/modal/ModalTemplate';
+import UpdateUser from '../../components/UpdateUser/UpdateUser';
+import { Container, Wrapper, Header, LeftPart, Title, SubTitle, TopText, InfoPart, Row, Field1, Field2, 
+  RightPart, UserImage, Orders, Button, Info, OrderInfoPart, OrderRow, OrderField, Order, OrderDetail, Image, Details, 
+  ProductField, FilterColor, Summary, SummaryTitle, SummaryItem, SummaryItemText, SummaryItemPrice } from './styled.js';
 
 const UserPage = () => {
   const dispatch = useDispatch();
@@ -326,8 +134,8 @@ const UserPage = () => {
             <SubTitle>My orders history</SubTitle>
           <br/>
           {/* ORDER INFO */}
-          {orders?.map((order, index)=>
-            <Info key={index}>
+          {orders?.map((order)=>
+            <Info key={order._id}>
               <OrderInfoPart>
                 <OrderField><b>{dayjs(order.createdAt).format('DD.MM.YYYY HH:mm:ss')}</b></OrderField>
                 <OrderField><b>Order ID:</b> {order._id}</OrderField>
@@ -339,8 +147,8 @@ const UserPage = () => {
               <Order >
                 {/* PRODUCT INFO */}
                 {userOrders.filter(item => item.orderId === order._id)
-                .map((product, idx)=>
-                  <OrderDetail key={idx}>
+                .map((product)=>
+                  <OrderDetail key={product?._id}>
                     <Image src={product?.img} 
                       onError={({ currentTarget }) => {
                         currentTarget.onerror = null;

@@ -1,158 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
-import Navbar from "../components/Navbar";
-import Announcement from "../components/Announcement";
-import Footer from "../components/Footer";
-import { mobile } from "../responsive";
+import Navbar from "../../components/navbar/Navbar";
+import Announcement from "../../components/announcement/Announcement";
+import Footer from "../../components/footer/Footer";
 import { useState, useEffect } from "react";
-import { publicRequest, userRequest } from "../requestMethods";
+import { publicRequest, userRequest } from "../../requestMethods";
 import {Link, useNavigate} from 'react-router-dom';
-import { addCart, deleteCart, deleteWishlist, getCart, getWishlist, updateCart, updateWishlist } from "../redux/apiCalls";
+import { addCart, deleteCart, deleteWishlist, getCart, getWishlist, updateCart, updateWishlist } from "../../redux/apiCalls";
+import { Container, Wrapper, Title, Top, TopButton, TopTexts, TopText, Bottom, Info, Product, ProductDetail, ImagePart, 
+  Image, Details, ProductName, ProductId, ProductColor, ProductSize, PriceDetail, ProductAmountContainer, 
+  ProductAmount, ProductPrice, Hr, ButtonsPart, Button } from './styled';
 
 const KEY = import.meta.env.VITE_STRIPE;
-
-const Container = styled.div``;
-
-const Wrapper = styled.div`
-  padding: 20px;
-  ${mobile({padding:"10px"})}
-`;
-
-const Title = styled.h1`
-  font-weight: 300;
-  text-align: center;
-`;
-
-const Top = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-`;
-
-const TopButton = styled.button`
-  padding: 10px;
-  width: ${props=>props.type === "filled" && "132px"};
-  font-weight: 300;
-  cursor: pointer;
-  border: ${props=>props.type === "filled" && "none"};
-  background-color: ${props=>props.type === "filled" ? "black" : "transparent"};
-  color: ${props=>props.type === "filled" && "white"};
-`;
-
-const TopTexts = styled.div`
-  ${mobile({display:"none"})}
-`;
-
-const TopText = styled.span`
-  text-decoration: underline;
-  cursor: pointer;
-  margin: 0px 10px;
-`;
-
-const Bottom = styled.div`
-  display: flex;
-  justify-content: space-between;
-  /* height: 20vw; */
-  ${mobile({flexDirection:"column"})}
-`;
-const Info = styled.div`
-  /* flex: 3; */
-`;
-
-const Product = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  ${mobile({flexDirection:"column"})}
-`;
-
-const ProductDetail = styled.div`
-  /* flex: 2; */
-  display: flex;
-`;
-
-const ImagePart = styled.div`
-  width: 20vw;
-`;
-
-const Image = styled.img`
-  width: 200px;
-`;
-
-const Details = styled.div`
-  padding: 20px;
-  width: 50vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-`;
-
-const ProductName = styled.span``;
-
-const ProductId = styled.span``;
-
-const ProductColor = styled.div`
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background-color: ${props=>props.color};
-`;
-
-const ProductSize = styled.span``;
-
-const PriceDetail = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ProductAmountContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const ProductAmount = styled.div`
-  font-size: 24px;
-  margin: 5px;
-  ${mobile({margin:"5px 15px"})}
-`;
-
-const ProductPrice = styled.div`
-  font-size: 30px;
-  font-weight: 200;
-  ${mobile({marginBottom:"20px"})}
-`;
-
-const Hr = styled.hr`
-  background-color: #eee;
-  border: none;
-  height: 1px;
-`;
-
-const ButtonsPart = styled.div`
-  width: calc(20vw);
-  /* width: auto; */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  /* justify-content: space-between; */
-
-`;
-
-const Button = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: black;
-  color: white;
-  font-weight: 600;
-  cursor: pointer;
-`;
-
 
 const Wishlist = () => {
   const dispatch = useDispatch();
@@ -248,8 +106,8 @@ const Wishlist = () => {
             {productsOfWishlist.length<1 &&
               <Title>Your wishlist is empty</Title>
             }
-            {productsOfWishlist?.map((product, index)=> (
-             <Product key={index}>
+            {productsOfWishlist?.map((product)=> (
+             <Product key={product._id}>
               <ProductDetail>
                 <ImagePart>
                   <Image src={product?.img} 

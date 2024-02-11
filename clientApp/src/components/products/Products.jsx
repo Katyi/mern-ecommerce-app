@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { popularProducts } from '../data';
-import Product from "./Product";
+import { popularProducts } from '../../data';
+import Product from "../product/Product";
 import axios from "axios";
 
 const Container = styled.div`
@@ -16,7 +16,7 @@ const Container = styled.div`
 const Products = ({cat, filters, sort}) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  
+
   useEffect(()=>{
     const getProducts = async()=>{
       try {
@@ -32,26 +32,26 @@ const Products = ({cat, filters, sort}) => {
   },[cat]);
 
   useEffect(()=>{
-    cat &&
-    setFilteredProducts(
-      products?.filter(item => 
-        Object?.entries(filters)?.every(([key, value]) =>
-          item[key]?.includes(value)
-        )
-      )
-    );
+    !filters || (filters?.color === 'All' && filters?.size === 'All') || (filters?.color === 'All' && !filters.size)
+    || (filters?.size === 'All' && !filters.color)
+    ? setFilteredProducts(products)
+    : filters?.color !== 'All' && filters?.size === 'All' 
+      ? setFilteredProducts(products?.filter(item => item?.color?.includes(filters?.color))) 
+    : filters?.color === 'All' && filters?.size !== 'All'
+      ? setFilteredProducts(products?.filter(item => item?.size?.includes(filters?.size)))
+    : setFilteredProducts(products?.filter(item => Object?.entries(filters)?.every(([key, value]) => item[key]?.includes(value))))
   }, [products, filters]);
 
   useEffect(() => {
-    if (sort === 'newest') {
+    if (sort === 'Newest') {
       setFilteredProducts(prev=>
-        [...prev].sort((a,b)=>a.createdAt - b.createdAt)  
+        [...prev].sort((a,b)=>new Date(a.createdAt) - new Date(b.createdAt))  
       );
-    } else if (sort === 'asc') {
+    } else if (sort === 'Price (asc)') {
       setFilteredProducts(prev=>
         [...prev].sort((a,b)=>a.price - b.price)  
       );
-    } else {
+    } else if (sort === 'Price (desc)') {
       setFilteredProducts(prev=>
         [...prev].sort((a,b)=>b.price - a.price)  
       );

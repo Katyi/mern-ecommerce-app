@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import { publicRequest } from '../../requestMethods';
 import Footer from '../../components/footer/Footer';
 import ModalTemplate from '../../UI/modal/ModalTemplate';
-import UpdateUser from '../../components/UpdateUser/UpdateUser';
+import UpdateUser from '../../components/updateUser/UpdateUser';
 import { Container, Wrapper, Header, LeftPart, Title, SubTitle, TopText, InfoPart, Row, Field1, Field2, 
   RightPart, UserImage, Orders, Button, Info, OrderInfoPart, OrderRow, OrderField, Order, OrderDetail, Image, Details, 
   ProductField, FilterColor, Summary, SummaryTitle, SummaryItem, SummaryItemText, SummaryItemPrice } from './styled.js';

@@ -16,7 +16,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* <Route path="/" element={user ? <Navigate to='/home'/> : <Login/>}/> */}
         <Route exact path="/" element={<Login/>}/>
         <Route exact path="/register" element={<Register/>}/>
         <Route exact path="/home" element={<Home/>}/>

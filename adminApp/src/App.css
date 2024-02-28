@@ -1,11 +1,11 @@
 .wrapper {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
 }
 .container{
   display: flex;
   /* margin-top: 10px;
   margin-bottom: 10px; */
-  height: calc(100vh - 160px);
+  min-height: calc(100vh - 160px);
   overflow-y: hidden;
 }

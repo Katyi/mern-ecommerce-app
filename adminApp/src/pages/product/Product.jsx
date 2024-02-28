@@ -33,7 +33,7 @@ export default function Product() {
   useEffect(() => {
     const getStats = async () => {
       try {
-        const res = await userRequest.get("orders/income?pid=" + productId);
+        const res = await userRequest.get(`orders/income?pid=${productId}`);
         const list = res.data.sort((a,b)=>{
             return a._id - b._id
         })
@@ -117,7 +117,7 @@ export default function Product() {
       </div>
       <div className="productTop">
         <div className="productTopLeft">
-          <Chart data={pStats} dataKey="Sales" title="Sales Performance" />
+          <Chart data={pStats} dataKey="Sales" title="Sales Performance" grid={pStats}/>
         </div>
         <div className="productTopRight">
           <div className="productInfoTop">
@@ -136,7 +136,7 @@ export default function Product() {
             </div>
             <div className="productInfoItem">
               <span className="productInfoKey">sales:</span>
-              <span className="productInfoValue">5123</span>
+              <span className="productInfoValue">{pStats[1]?.Sales}</span>
             </div>
             <div className="productInfoItem">
               <span className="productInfoKey">in stock:</span>

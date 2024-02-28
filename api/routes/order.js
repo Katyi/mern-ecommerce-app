@@ -74,8 +74,8 @@ router.get("/income", async (req, res) => {
   const productId = req.query.pid;
   const date = new Date();
   const lastMonth = new Date(date.setMonth(date.getMonth() - 1));
-  const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 1));
-
+  const previousMonth = new Date(new Date().setMonth(lastMonth.getMonth() - 12));
+  
   try {
     const income = await Order.aggregate([
       {
@@ -99,7 +99,7 @@ router.get("/income", async (req, res) => {
         },
       },
     ]);
-    res.status(200).json(income);
+    res.status(200).json(income.sort((a,b)=>new Date(a._id) - new Date(b._id)));
   } catch (err) {
     res.status(500).json(err);
   }

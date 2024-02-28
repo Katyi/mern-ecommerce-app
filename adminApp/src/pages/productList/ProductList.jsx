@@ -20,7 +20,7 @@ const styles = {
   pagination: {
     display: 'flex',
     justifyContent: 'center',
-    marginTop: '20px',
+    marginTop: '10px',
   },
 };
 

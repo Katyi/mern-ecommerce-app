@@ -32,10 +32,10 @@ export default function Home() {
     <div className="home">
       <FeaturedInfo />
       <Chart 
-        data={userStats} 
-        title="User Analytics" 
-        grid 
+        title="User Analytics"
+        data={userStats}  
         dataKey="Active User"
+        grid
       />
       <div className="homeWidgets">
         <WidgetSm/>

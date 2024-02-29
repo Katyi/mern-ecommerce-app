@@ -135,12 +135,14 @@ const Register = () => {
             name="password"
             type="password"
             onChange={(e) => setUser({...user, password: e.target.value})}
+            autoComplete="off"
           />
           <Input
             placeholder="confirm password*"
             name="confirm password"
             type="password"
             onChange={(e) => setConfirmPassword(e.target.value)}
+            autoComplete="off"
           />
           <Agreement>
             By creating an account, I consent to the processing of my personal

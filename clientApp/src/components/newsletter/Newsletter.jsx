@@ -12,7 +12,7 @@ const Newsletter = () => {
     >
       <Title>Contact Us</Title>
       <Desc>Send us an email and we'll get back to you soon.</Desc>
-      <input type="hidden" name="_next" value="http://localhost:5173/thanks"/>
+      <input type="hidden" name="_next" value="http://212.113.120.58:5173/thanks"/>
       <InputContainer>
         <Input placeholder="Name" type="text" name="name" required/>
       </InputContainer>

@@ -37,14 +37,14 @@ const Login = () => {
             placeholder="username" 
             required
             onChange={(e) =>setUsername(e.target.value)}
-            autocomplete="on"
+            autoComplete="on"
           />
           <Input 
             type="password"
             placeholder="password"
             required
             onChange={(e) =>setPassword(e.target.value)}
-            autocomplete="off"
+            autoComplete="off"
           />
           <Button onClick={handleClick} disabled={isFetching}>LOGIN</Button>
             {error && <Error>{error}</Error>}

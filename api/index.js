@@ -12,9 +12,13 @@ const cartRoute = require("./routes/cart");
 const wishlistRoute = require("./routes/wishlist");
 const orderRoute = require("./routes/order");
 const imageRoute = require("./routes/image");
+const fileUploadRoute = require("./routes/fileUpload");
 const stripeRoute = require("./routes/stripe");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 
 mongoose
@@ -37,6 +41,7 @@ app.use("/api/wishlists", wishlistRoute);
 app.use("/api/orders", orderRoute);
 app.use("/api/images", imageRoute);
 app.use("/api/checkout", stripeRoute);
+app.use("/api/upload", fileUploadRoute);
 
 app.listen(process.env.PORT || 5000, ()=>{
   console.log("backend server is running!")

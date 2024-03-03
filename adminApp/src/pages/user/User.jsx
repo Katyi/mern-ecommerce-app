@@ -75,10 +75,10 @@ export default function User() {
   };
 
   const handleChangeImage = (e) => {
-    let forNameOfFile = Date.now().toString();
-    setFileName(`${e.target.files[0].name}`);
+    let forNameOfFile = `${Date.now()}_${e.target.files[0].name}`;
+    setFileName(forNameOfFile);
     const formData = new FormData();
-    formData.append('my-image-file', e.target.files[0], e.target.files[0].name);
+    formData.append('my-image-file', e.target.files[0], forNameOfFile);
     setFile(formData);
   };
 

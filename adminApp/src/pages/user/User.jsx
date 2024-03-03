@@ -19,7 +19,6 @@ export default function User() {
   let currentUser = useSelector((state) =>
     state.user.users.find((user) => user?._id === userId)
   );
-  // let currentImage = useSelector((state) => state.image.images.)
   const currentImage = useSelector((state) => state.image.images);
 
 
@@ -56,7 +55,6 @@ export default function User() {
   };
 
   const handleGenderSelectChange = (value) => {
-    // setGender(e.target.value);
     setUser((prev) => {
       return { ...prev, gender: value };
     });
@@ -77,64 +75,20 @@ export default function User() {
   };
 
   const handleChangeImage = (e) => {
-    console.log('handleFileInput working!')
-    console.log(e.target.files[0])
-    setFileName(new Date().getTime() + e.target.files[0].name);
+    let forNameOfFile = Date.now().toString();
+    setFileName(`${e.target.files[0].name}`);
     const formData = new FormData();
     formData.append('my-image-file', e.target.files[0], e.target.files[0].name);
-    // setFile(e.target.files[0]);
     setFile(formData);
   };
 
   const handleClick = async(e) => {
     e.preventDefault();
-    // let fileName = user.img;
-    console.log(file)
     if (file !== null) {
-      // fileName = new Date().getTime() + file.name;
-      
-      // let fileName = new Date().getTime() + e.target.files[0].name;
-      // const storage = getStorage();
-      // const storageRef = ref(storage, fileName);
-      // const uploadTask = uploadBytesResumable(storageRef, file);
-
-      // uploadTask.on(
-      //   'state_changed',
-      //   (snapshot) => {
-      //     const progress =
-      //       (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      //     console.log('Upload is ' + progress + '% done');
-      //     switch (snapshot.state) {
-      //       case 'paused':
-      //         console.log('Upload is paused');
-      //         break;
-      //       case 'running':
-      //         console.log('Upload is running');
-      //         break;
-      //       default:
-      //     }
-      //   },
-      //   (error) => {
-      //     // Handle unsuccessful uploads
-      //     console.log(error);
-      //   },
-      //   () => {
-      //     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-      //       let newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: downloadURL };
-      //       updateUser(userId, newUser, dispatch).then(
-      //         getUsers(dispatch)
-      //       );
-      //       setUser(newUser);
-      //     });
-      //   }
-      // // );
-      // await axios.post('http://localhost:5000/api/upload/image-upload', file)
-      // .then(res => {
-      //   console.log('Axios responce: ', res)
-      // })
       try {
         await userRequest.post('/upload/image-upload', file);
-        let newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: `http://admin.alexegorova.ru/uploaded_files/${fileName}` };
+        let newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, 
+          isAdmin: role === 'Admin' ? true : false, img: `http://alexegorova.ru/images/${fileName}` };
         setUser(newUser);
         updateUser(userId, newUser, dispatch);
         getUsers(dispatch);
@@ -142,13 +96,6 @@ export default function User() {
       } catch (error) {
         console.log(error.message)
       }
-      
-
-      // console.log(file.img)
-      // await uploadImage(file, dispatch);
-      // console.log(currentImage)
-
-      
     } else {
       let newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false }
       setUser(newUser);
@@ -223,7 +170,6 @@ export default function User() {
               <label htmlFor="file">
                 <Publish className="userUpdateIcon" />
               </label>
-              {/* <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])} /> */}
               <input 
                 type="file"
                 id="file"

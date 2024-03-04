@@ -1,15 +1,13 @@
-import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish } from "@mui/icons-material";
+import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish, DeleteOutline } from "@mui/icons-material";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { publicRequest, userRequest } from "../../requestMethods";
 import "./user.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { format } from "timeago.js";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { getUsers, updateUser, uploadImage } from "../../redux/apiCalls";
+import { getUsers, updateUser } from "../../redux/apiCalls";
 import Select from '../../UI/select/Select';
 import CalendarPicker from '../../UI/CalendarPicker/CalendarPicker';
+import { imageUpload, imageDelete } from '../../services/imageUpload';
 
 export default function User() {
   const location = useLocation();
@@ -24,6 +22,7 @@ export default function User() {
 
   const [user, setUser] = useState(currentUser);
   const [file, setFile] = useState(null);
+  const [fileForDelete, setFileForDelete] = useState(null);
   const [fileName, setFileName] = useState(null);
   const [active, setActive] = useState(user?.active ? 'Yes' : 'No');
   const [gender, setGender] = useState(currentUser?.gender);
@@ -82,27 +81,32 @@ export default function User() {
     setFile(formData);
   };
 
-  const handleClick = async(e) => {
+  const handleDeleteImage = (e) => {
     e.preventDefault();
+    setFileForDelete(user.img.slice(41));
+    console.log(user.img.slice(29));
+  };
+
+  const handleClick = (e) => {
+    e.preventDefault();
+    let newUser;
     if (file !== null) {
-      try {
-        await userRequest.post('/upload/image-upload', file);
-        let newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, 
-          isAdmin: role === 'Admin' ? true : false, img: `http://alexegorova.ru/images/${fileName}` };
-        setUser(newUser);
-        updateUser(userId, newUser, dispatch);
-        getUsers(dispatch);
-        navigate('/users');
-      } catch (error) {
-        console.log(error.message)
-      }
+      imageUpload(file);
+      newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, 
+          isAdmin: role === 'Admin' ? true : false, img: `http://alexegorova.ru/images/${fileName}` }
+      
+    } if (fileForDelete !== null) {
+      imageDelete(fileForDelete);
+      console.log('delete')
+      newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: "" }
     } else {
-      let newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false }
-      setUser(newUser);
-      updateUser(userId, newUser, dispatch);
-      getUsers(dispatch);
-      navigate('/users');
+      newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false }
     }
+    delete newUser.password;
+    setUser(newUser);
+    updateUser(userId, newUser, dispatch);
+    getUsers(dispatch);
+    navigate('/users');
   };
 
   return (
@@ -167,6 +171,7 @@ export default function User() {
                   currentTarget.src = "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif";
                 }}
               />
+              <div className="userUpdateIcons">
               <label htmlFor="file">
                 <Publish className="userUpdateIcon" />
               </label>
@@ -177,6 +182,11 @@ export default function User() {
                 style={{ display: "none" }}
                 onChange={handleChangeImage}
               />
+              <DeleteOutline
+                className="userUpdateIcon"
+                onClick={handleDeleteImage}
+              />
+              </div>
             </div>
             <div className="userUpdateLeft">
               <div className="userUpdateItem">

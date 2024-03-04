@@ -1,19 +1,14 @@
 import { useState } from "react";
 import "./newUser.css";
-import { 
-  getStorage, 
-  ref, 
-  uploadBytesResumable, 
-  getDownloadURL 
-} from "firebase/storage";
-import app from "../../firebase";
 import { addUser } from "../../redux/apiCalls";
 import { useDispatch } from "react-redux";
 import {useNavigate} from 'react-router-dom';
+import { imageUpload } from '../../services/imageUpload';
 
 export default function NewUser() {
   const [inputs, setInputs] = useState({});
   const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
   const [gender, setGender] = useState("male");
   const [selected, setSelected] = useState(false);
   const [role, setRole] = useState(false);
@@ -39,47 +34,25 @@ export default function NewUser() {
     setRole(e.target.value);
   };
 
+  const handleChangeImage = (e) => {
+    let forNameOfFile = `${Date.now()}_${e.target.files[0].name}`;
+    setFileName(forNameOfFile);
+    const formData = new FormData();
+    formData.append('my-image-file', e.target.files[0], forNameOfFile);
+    setFile(formData);
+  };
+
   const handleClick = (e) => {
     e.preventDefault();
-    let fileName = inputs.img;
+    let newUser;
     if (file !== null) {
-      fileName = new Date().getTime() + file.name;
-      const storage = getStorage();
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        'state_changed', 
-        (snapshot) => {
-          const progress = 
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-            default:
-          }
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-        }, 
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const newUser = { ...inputs, gender: gender, active: selected, isAdmin: role, img: downloadURL };
-            addUser(newUser, dispatch);
-          });
-        }
-      );
-      navigate('/users');
+      imageUpload(file); 
+      newUser = { ...inputs, gender: gender, active: selected, isAdmin: role, img: `http://alexegorova.ru/images/${fileName}` };
     } else {
-      const newUser = { ...inputs, gender: gender, active: selected, isAdmin: role };
-      addUser(newUser, dispatch);
-      navigate('/users');
+      newUser = { ...inputs, gender: gender, active: selected, isAdmin: role };
     }
+    addUser(newUser, dispatch);
+    navigate('/users');
   };
 
   return (
@@ -94,8 +67,8 @@ export default function NewUser() {
           <input 
             className="newUserImg"
             type="file" 
-            id="file" 
-            onChange={(e) => setFile(e.target.files[0])}
+            id="file"
+            onChange={handleChangeImage}
           />
         </div>
         <div className="newUserWrapper">

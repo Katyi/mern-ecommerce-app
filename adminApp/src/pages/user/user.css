@@ -132,6 +132,7 @@
 .userUpdateUpload {
   display: flex;
   align-items: center;
+  width: 50%;
 }
 
 .userUpdateImg {
@@ -141,11 +142,17 @@
   object-fit: cover;
   margin-right: 20px;
 }
-
+.userUpdateIcons {
+  display: flex;
+  align-items:baseline;
+  gap: 10px;
+  width: 50%;
+}
 .userUpdateIcon {
   cursor: pointer;
+  width: 24px;
+  height: 24px;
 }
-
 .userSelectItem {
   display: flex;
   flex-direction: column;

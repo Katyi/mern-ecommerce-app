@@ -26,14 +26,14 @@ const Login = () => {
   },[handleClick, user]);
 
   return (
-    <div style={{
+    <form style={{
       height: '100vh',
       width: '100vw',
       display: "flex", 
       flexDirection: 'column',
       alignItems: "center", 
       justifyContent: 'center'
-    }}>
+    }} onSubmit={handleClick}>
       <input 
         style={{ padding: 10, marginBottom: 20 }}
         type='text' 
@@ -45,12 +45,13 @@ const Login = () => {
         type='password' 
         placeholder='password' 
         onChange={e => setPassword(e.target.value)}
+        autoComplete="off"
       />
-      <button onClick={handleClick} style={{ padding: 10, width:100 }}>
+      <button type="submit" style={{ padding: 10, width:100 }}>
         Login
       </button>
       {error && <span className='loginError'>{error}</span>}
-    </div>
+    </form>
   )
 };
 

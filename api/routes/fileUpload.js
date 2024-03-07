@@ -1,4 +1,5 @@
 const multer = require('multer');
+const fs = require('fs');
 const router = require("express").Router();
 const imageUploadPath = '/var/www/mern-ecommerce-app/uploaded_files/images';
 

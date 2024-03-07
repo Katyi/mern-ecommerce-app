@@ -12,6 +12,6 @@ export const imageDelete = async(fileName) => {
   try {
     await userRequest.delete('/upload/image-delete', {data: {fileName: fileName}});
   } catch (error) {
-    console.log(error.message)
+    console.log(error)
   }
 };

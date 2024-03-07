@@ -94,10 +94,9 @@ export default function User() {
       imageUpload(file);
       newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, 
           isAdmin: role === 'Admin' ? true : false, img: `http://alexegorova.ru/images/${fileName}` }
-      
-    } if (fileForDelete !== null) {
+    } else if (fileForDelete !== null) {
       imageDelete(fileForDelete);
-      console.log('delete')
+      console.log(fileForDelete)
       newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: "" }
     } else {
       newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false }

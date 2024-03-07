@@ -15,7 +15,6 @@ const storage = multer.diskStorage({
 const imageUpload = multer({storage: storage})
 
 router.post("/image-upload", imageUpload.array("my-image-file"), (req, res) => {
-  console.log('POST request received to /image-upload.');
   console.log('Axios POST body: ', req.body);
   res.send('POST request recieved on server to /image-upload.');
 })

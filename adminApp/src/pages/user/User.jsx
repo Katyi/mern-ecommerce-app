@@ -83,8 +83,7 @@ export default function User() {
 
   const handleDeleteImage = (e) => {
     e.preventDefault();
-    setFileForDelete(user.img.slice(41));
-    console.log(user.img.slice(29));
+    setFileForDelete(user.img.slice(29));
   };
 
   const handleClick = (e) => {
@@ -96,7 +95,6 @@ export default function User() {
           isAdmin: role === 'Admin' ? true : false, img: `http://alexegorova.ru/images/${fileName}` }
     } else if (fileForDelete !== null) {
       imageDelete(fileForDelete);
-      console.log(fileForDelete)
       newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: "" }
     } else {
       newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false }

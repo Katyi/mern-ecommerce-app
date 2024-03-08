@@ -4,6 +4,8 @@ import { addUser } from "../../redux/apiCalls";
 import { useDispatch } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import { imageUpload } from '../../services/imageUpload';
+import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish, DeleteOutline } from "@mui/icons-material";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
 export default function NewUser() {
   const [inputs, setInputs] = useState({});
@@ -27,7 +29,6 @@ export default function NewUser() {
 
   const handleSelectChange = (e) => {
     setSelected(e.target.value === 'yes' ? true : false);
-    console.log(selected);
   };
 
   const handleIsAdminSelectChange = (e) => {
@@ -35,23 +36,33 @@ export default function NewUser() {
   };
 
   const handleChangeImage = (e) => {
-    let forNameOfFile = `${Date.now()}_${e.target.files[0].name}`;
-    setFileName(forNameOfFile);
+    e.preventDefault();
+    const forNameOfFile = `${Date.now()}_${e.target.files[0].name}`;
     const formData = new FormData();
     formData.append('my-image-file', e.target.files[0], forNameOfFile);
+    setFileName(forNameOfFile);
     setFile(formData);
+  };
+
+  const handleDeleteImage = (e) => {
+    e.preventDefault();
+    setFileName(null);
+    setFile(null);
+    const file = document.getElementById('file1');
+    file.value = '';
   };
 
   const handleClick = (e) => {
     e.preventDefault();
     let newUser;
     if (file !== null) {
-      imageUpload(file); 
+      imageUpload(file);
       newUser = { ...inputs, gender: gender, active: selected, isAdmin: role, img: `http://alexegorova.ru/images/${fileName}` };
-    } else {
+    }  else {
       newUser = { ...inputs, gender: gender, active: selected, isAdmin: role };
     }
     addUser(newUser, dispatch);
+    setFileName(null);
     navigate('/users');
   };
 
@@ -60,16 +71,25 @@ export default function NewUser() {
       <div className="newUserTitle">
         <h1>New User</h1>
       </div>
-      
       <form className="newUserForm">
-        <div className="newUserItem">
-          <label>Image</label>
-          <input 
-            className="newUserImg"
-            type="file" 
-            id="file"
-            onChange={handleChangeImage}
-          />
+        <div className="userUpload">
+          <img className="userUpdateImg" src={"https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"}/>
+          <div className="newUserImage">
+            <label htmlFor="file1" className="userImageLabel">
+              <Publish className="userUpdateIcon" />
+            </label>
+            <input
+              type="file" 
+              id="file1"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleChangeImage}
+            />
+            <button className="userImageBtn" onClick={handleDeleteImage} id="resetbtn" type="button">
+              <HighlightOffIcon className="userUpdateIcon"/>
+            </button>
+            <div>{fileName}</div>
+          </div>
         </div>
         <div className="newUserWrapper">
           <div className="newUserItem">

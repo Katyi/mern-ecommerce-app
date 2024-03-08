@@ -1,4 +1,5 @@
 import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish, DeleteOutline } from "@mui/icons-material";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useLocation, useNavigate } from "react-router-dom";
 import "./user.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +19,6 @@ export default function User() {
     state.user.users.find((user) => user?._id === userId)
   );
   const currentImage = useSelector((state) => state.image.images);
-
 
   const [user, setUser] = useState(currentUser);
   const [file, setFile] = useState(null);
@@ -84,23 +84,37 @@ export default function User() {
   const handleDeleteImage = (e) => {
     e.preventDefault();
     setFileForDelete(user.img.slice(29));
+    setFileName(null);
+    setFile(null);
   };
 
-  const handleClick = (e) => {
+  const handleDeleteInputFile = (e) => {
+    e.preventDefault();
+    setFileName(null);
+    setFile(null);
+    const file = document.getElementById('file');
+    file.value = '';
+  }
+
+  const handleClick = async(e) => {
     e.preventDefault();
     let newUser;
     if (file !== null) {
+      if (user.img) {
+        imageDelete(user.img.slice(29));
+      }
       imageUpload(file);
       newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, 
           isAdmin: role === 'Admin' ? true : false, img: `http://alexegorova.ru/images/${fileName}` }
     } else if (fileForDelete !== null) {
       imageDelete(fileForDelete);
-      newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: "" }
+      newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: null }
     } else {
       newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false }
     }
     delete newUser.password;
     setUser(newUser);
+    setFileName(null);
     updateUser(userId, newUser, dispatch);
     getUsers(dispatch);
     navigate('/users');
@@ -163,26 +177,30 @@ export default function User() {
           <form className="userUpdateForm" onSubmit={handleClick}>
             <div className="userUpdateUpload">
               <img className="userUpdateImg" src={user?.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"}
-                onError={({ currentTarget }) => {
-                  currentTarget.onerror = null; // prevents looping
-                  currentTarget.src = "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif";
-                }}
+                // onError={({ currentTarget }) => {
+                //   currentTarget.onerror = null; // prevents looping
+                //   currentTarget.src = "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif";
+                // }}
               />
-              <div className="userUpdateIcons">
-              <label htmlFor="file">
-                <Publish className="userUpdateIcon" />
-              </label>
-              <input 
-                type="file"
-                id="file"
-                accept="image/*"
-                style={{ display: "none" }}
-                onChange={handleChangeImage}
-              />
-              <DeleteOutline
-                className="userUpdateIcon"
-                onClick={handleDeleteImage}
-              />
+              <div className="userImageUpdate">
+                <label htmlFor="file" className="userImageLabel">
+                  <Publish className="userUpdateIcon" />
+                </label>
+                <input 
+                  type="file"
+                  id="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleChangeImage}
+                />
+
+                {user.img ? <button className="userImageBtn" onClick={handleDeleteImage} id="" type="button">
+                  <DeleteOutline className="userUpdateIcon"/>
+                </button>
+                : <button className="userImageBtn" onClick={handleDeleteInputFile} id="resetbtn" type="button">
+                  <HighlightOffIcon className="userUpdateIcon"/>
+                </button>}
+                <div>{fileName}</div>
               </div>
             </div>
             <div className="userUpdateLeft">

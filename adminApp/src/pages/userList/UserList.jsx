@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, getUsers } from "../../redux/apiCalls";
 import { Table, TableHead, TableBody, TableRow, TableCell, Pagination } from '@mui/material';
+import { imageDelete } from '../../services/imageUpload';
 
 const styles = {
   table: {
@@ -38,6 +39,10 @@ export default function UserList() {
   }, [dispatch]);
 
   const handleDelete = (id) => {
+    let ind = users.findIndex(item => item._id === id);
+    if (users[ind]?.img) {
+      imageDelete(users[ind].img.slice(29));
+    }
     deleteUser(id, dispatch);
   };
 

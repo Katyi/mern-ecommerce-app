@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Publish, DeleteOutline } from "@mui/icons-material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { updateUser, getUser } from '../../redux/apiCalls';
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import InputMask from 'react-input-mask';
 import Select from '../../UI/select/Select';
 import DateInput from '../../UI/DateInput/DateInput';

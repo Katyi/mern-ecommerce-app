@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Publish } from "@mui/icons-material";
+import { Publish, DeleteOutline } from "@mui/icons-material";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { updateUser, getUser } from '../../redux/apiCalls';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import InputMask from 'react-input-mask';
@@ -8,7 +9,8 @@ import Select from '../../UI/select/Select';
 import DateInput from '../../UI/DateInput/DateInput';
 import Xmark from '../../assets/circle-xmark-solid.svg';
 import { handleValidation } from "./handleValidation";
-import {Container, Title, UserForm, UserImage, CloseModalIcon, UserItem } from './styled';
+import {Container, Title, UserForm, UserImage, CloseModalIcon, UserItem, UserImageBtn } from './styled';
+import { imageUpload, imageDelete } from '../../services/imageUpload';
 
 const UpdateUser = ({openModal, setOpenModal}) => {
   const dispatch = useDispatch();
@@ -17,6 +19,8 @@ const UpdateUser = ({openModal, setOpenModal}) => {
   
   const [gender, setGender] = useState(currentUser?.gender);
   const [file, setFile] = useState(null);
+  const [fileForDelete, setFileForDelete] = useState(null);
+  const [fileName, setFileName] = useState(null);
   const [user, setUser] = useState(currentUser);
   const [open, setOpen] = useState(false);
   const [errors, setErrors] = useState({});
@@ -35,54 +39,50 @@ const UpdateUser = ({openModal, setOpenModal}) => {
     setOpen(false);
   }
 
+  const handleChangeImage = (e) => {
+    let forNameOfFile = `${Date.now()}_${e.target.files[0].name}`;
+    setFileName(forNameOfFile);
+    const formData = new FormData();
+    formData.append('my-image-file', e.target.files[0], forNameOfFile);
+    setFile(formData);
+  };
+
+  const handleDeleteImage = (e) => {
+    e.preventDefault();
+    setFileForDelete(user.img.slice(29));
+    setFileName(null);
+    setFile(null);
+  };
+
+  const handleDeleteInputFile = (e) => {
+    e.preventDefault();
+    setFileName(null);
+    setFile(null);
+    const file = document.getElementById('file');
+    file.value = '';
+  };
+
   const handleSubmit = async(e) => {
     e.preventDefault();
-    let fileName = user.img;
+    let newUser;
     if (handleValidation(user, setErrors)) {
       if (file !== null) {
-        fileName = new Date().getTime() + file.name;
-        const storage = getStorage();
-        const storageRef = ref(storage, fileName);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on(
-          'state_changed',
-          (snapshot) => {
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-              case 'paused':
-                console.log('Upload is paused');
-                break;
-              case 'running':
-                console.log('Upload is running');
-                break;
-              default:
-            }
-          },
-          (error) => {
-            // Handle unsuccessful uploads
-          },
-          () => {
-            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-              let newUser = { ...user, gender: gender, img: downloadURL };
-              setUser(newUser);
-              updateUser(userId, newUser, dispatch);
-              getUser(userId, dispatch);
-              console.log(newUser)
-              setOpenModal(false);
-            });
-          }
-        );
+        if (user.img) {
+          imageDelete(user.img.slice(29));
+        }
+        imageUpload(file);
+        newUser = { ...user, gender: gender, img: `http://alexegorova.ru/images/${fileName}` };
+      } else if (fileForDelete !== null) {
+        imageDelete(fileForDelete);
+        newUser = { ...user, gender: gender, img: null };
       } else {
-        let newUser = { ...user, gender: gender };
-        setUser(newUser);
-        await updateUser(userId, newUser, dispatch);
-        await getUser(userId, dispatch);
-        console.log(newUser)
-        setOpenModal(false);
+        newUser = { ...user, gender: gender };
       }
+      delete newUser.password;
+      setUser(newUser);
+      await updateUser(userId, newUser, dispatch);
+      await getUser(userId, dispatch);
+      setOpenModal(false);
     }
   };
 
@@ -97,14 +97,22 @@ const UpdateUser = ({openModal, setOpenModal}) => {
       <UserForm onSubmit={handleSubmit}>
         {/* USER IMAGE PART */}
         <UserImage>
-          <img src={user?.img}
+          <img src={user?.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"}
             onError={({ currentTarget }) => {
               currentTarget.onerror = null; // prevents looping
               currentTarget.src = "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif";
             }}
           />
           <label htmlFor="file"><Publish/></label>
-          <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])}/>
+          <input type="file" id="file" style={{ display: "none" }} accept="image/*" onChange={handleChangeImage}/>
+
+          {user.img ? <UserImageBtn className="userImageBtn" onClick={handleDeleteImage} id="" type="button">
+            <DeleteOutline className="userUpdateIcon"/>
+          </UserImageBtn>
+          : <UserImageBtn className="userImageBtn" onClick={handleDeleteInputFile} id="resetbtn" type="button">
+            <HighlightOffIcon className="userUpdateIcon"/>
+          </UserImageBtn>}
+          <div>{fileName}</div>
         </UserImage>
         {/* USER OTHER INFO */}
         <UserItem>

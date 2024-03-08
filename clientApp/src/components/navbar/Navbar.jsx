@@ -48,7 +48,7 @@ const Navbar = () => {
           {/* <MenuItem>REGISTER</MenuItem>
           <MenuItem>SIGN IN</MenuItem> */}
           <Tooltip title={`Open ${userName}'s account`}>
-            <Avatar src={user?.img} alt="" onClick={()=>navigate("/account")}/>
+            <Avatar src={user?.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt="" onClick={()=>navigate("/account")}/>
           </Tooltip>
           {/* <UserName>{userName}</UserName> */}
           {/* <MenuItem onClick={handleClick}>OUT</MenuItem> */}

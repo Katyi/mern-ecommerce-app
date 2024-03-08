@@ -13,7 +13,7 @@ export const handleValidation = (user, setErrors) => {
     formErrors.fullname = "Required";
   }
   // birthday
-  if (user.birthday.length < 10) {
+  if (user.birthday && user?.birthday.length < 10) {
     formIsValid = false;
     formErrors.birthday = "Date is not valid";
   }

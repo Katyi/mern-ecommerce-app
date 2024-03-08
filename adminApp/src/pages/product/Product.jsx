@@ -1,19 +1,22 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import "./product.css";
 import Chart from "../../components/chart/Chart";
-import { Publish } from "@mui/icons-material";
+import { Publish, DeleteOutline } from "@mui/icons-material";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { userRequest } from "../../requestMethods";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getProducts, updateProduct } from "../../redux/apiCalls";
 import Select from '../../UI/select/Select';
+import { imageUpload, imageDelete } from '../../services/imageUpload';
 
 export default function Product() {
   const location = useLocation();
   const productId = location.pathname.split("/")[2];
   const [pStats, setPStats] = useState([]);
   const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
+  const [fileForDelete, setFileForDelete] = useState(null);
   // const [cat, setCat] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -30,25 +33,22 @@ export default function Product() {
 
   const MONTHS = useMemo(() => ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Agu", "Sep", "Oct", "Nov", "Dec", ], []);
 
-  useEffect(() => {
-    const getStats = async () => {
-      try {
-        const res = await userRequest.get(`orders/income?pid=${productId}`);
-        const list = res.data.sort((a,b)=>{
-            return a._id - b._id
-        })
-        list.map((item) =>
-          setPStats((prev) => [
-            ...prev,
-            { name: MONTHS[item._id - 1], Sales: item.total },
-          ])
-        );
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getStats();
-  }, [productId, MONTHS]);
+  const getStats = async () => {
+    try {
+      const res = await userRequest.get(`orders/income?pid=${productId}`);
+      const list = res.data.sort((a,b)=>{
+          return a._id - b._id
+      })
+      list.map((item) =>
+        setPStats((prev) => [
+          ...prev,
+          { name: MONTHS[item._id - 1], Sales: item.total },
+        ])
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   const handleChange = (e) => {
     setProduct((prev) => {
@@ -59,56 +59,55 @@ export default function Product() {
   const handleInStockSelectChange = (value) => {
     setInStock(value);
     setOpenInStock(false);
+  };
+
+  const handleChangeImage = (e) => {
+    let forNameOfFile = `${Date.now()}_${e.target.files[0].name}`;
+    setFileName(forNameOfFile);
+    const formData = new FormData();
+    formData.append('my-image-file', e.target.files[0], forNameOfFile);
+    setFile(formData);
+  };
+
+  const handleDeleteImage = (e) => {
+    e.preventDefault();
+    setFileForDelete(product.img.slice(29));
+    setFileName(null);
+    setFile(null);
+  };
+
+  const handleDeleteInputFile = (e) => {
+    e.preventDefault();
+    setFileName(null);
+    setFile(null);
+    const file = document.getElementById('file');
+    file.value = '';
   }
 
   const handleClick = (e) => {
     e.preventDefault();
-    let fileName = product.img;
+    let newProduct;
     if (file !== null) {
-      fileName = new Date().getTime() + file.name;
-      const storage = getStorage();
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        'state_changed', 
-        (snapshot) => {
-          const progress = 
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-            default:
-          }
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-          console.log(error);
-        }, 
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            let newproduct = { ...product, img: downloadURL };
-            setProduct(newproduct);
-            updateProduct(productId, newproduct, dispatch);
-            getProducts(dispatch);
-          });
-        }
-      );
-      
-      navigate('/products');
+      if (product.img) {
+        imageDelete(product.img.slice(29));
+      }
+      imageUpload(file);
+      newProduct = { ...product, inStock: inStock === 'Yes' ? true : false, img: `http://alexegorova.ru/images/${fileName}` };
+    } else if (fileForDelete !== null) {
+      imageDelete(fileForDelete);
+      newProduct = { ...product, inStock: inStock === 'Yes' ? true : false, img: null };
     } else {
-      let newproduct = { ...product, inStock: inStock === 'Yes' ? true : false };
-      setProduct(newproduct);
-      updateProduct(productId, newproduct, dispatch);
-      getProducts(dispatch);
-      navigate('/products');
+      newProduct = { ...product, inStock: inStock === 'Yes' ? true : false };
     }
+    setProduct(newProduct);
+    updateProduct(productId, newProduct, dispatch);
+    getProducts(dispatch);
+    navigate('/products');
   };
+
+  useEffect(() => {
+    getStats();
+  }, [productId, MONTHS]);
 
   return (
     <div className="product">
@@ -200,15 +199,20 @@ export default function Product() {
               <label htmlFor="file">
                 <Publish />
               </label>
-              <input type="file" id="file" style={{ display: "none" }} onChange={(e) => setFile(e.target.files[0])}/>
+              <input type="file" id="file" style={{ display: "none" }} onChange={handleChangeImage}/>
+              {product.img 
+                ? <button className="userImageBtn" onClick={handleDeleteImage} id="" type="button">
+                    <DeleteOutline className="userUpdateIcon"/>
+                  </button>
+                : <button className="userImageBtn" onClick={handleDeleteInputFile} id="resetbtn" type="button">
+                    <HighlightOffIcon className="userUpdateIcon"/>
+                  </button>
+              }
+              <span style={{fontSize: "10px", wordBreak: "break-all", width: "150px"}}>{fileName}</span>
             </div>
             <button type="submit" className="productButton">Update</button>
           </div>
         </form>
-        
-        {/* <ModalTemplate active={modalSelectTypeOpen} setActive={setModalSelectTypeOpen}>
-          <UpdateProduct modalSelectTypeOpen={modalSelectTypeOpen} setModalSelectTypeOpen={setModalSelectTypeOpen}/>
-        </ModalTemplate> */}
       </div>
     </div>
   );

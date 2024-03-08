@@ -49,7 +49,7 @@
 .productInfoItem {
   width: 150px;
   display: flex;
-  justify-content: space-between;
+  gap: 5px;
 }
 
 .productInfoValue {
@@ -116,6 +116,7 @@
 .productUpload{
   display: flex;
   align-items: center;
+  gap: 5px;
 }
 
 .productButton{

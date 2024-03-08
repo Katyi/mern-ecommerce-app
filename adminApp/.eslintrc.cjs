@@ -17,7 +17,7 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
-    "no-unused-vars":"warn",
-    "react/prop-types":"ignore"
+    "no-unused-vars": "warn",
+    "react/prop-types": "ignore"
   },
 }

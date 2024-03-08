@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteProduct, getProducts } from "../../redux/apiCalls";
 import { Table, TableHead, TableBody, TableRow, TableCell, Pagination } from '@mui/material';
+import { imageUpload, imageDelete } from '../../services/imageUpload';
 
 const styles = {
   table: {
@@ -38,6 +39,10 @@ export default function ProductList() {
   },[dispatch]);
   
   const handleDelete = (id) => {
+    let ind = products.findIndex(item => item._id === id);
+    if (products[ind]?.img) {
+      imageDelete(products[ind].img.slice(29));
+    }
     deleteProduct(id, dispatch);
   };
 

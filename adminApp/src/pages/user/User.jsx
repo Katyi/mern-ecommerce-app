@@ -94,7 +94,7 @@ export default function User() {
     setFile(null);
     const file = document.getElementById('file');
     file.value = '';
-  }
+  };
 
   const handleClick = async(e) => {
     e.preventDefault();

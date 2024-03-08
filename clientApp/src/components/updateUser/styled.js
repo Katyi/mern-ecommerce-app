@@ -83,3 +83,11 @@ export const UserItem = styled.div`
     cursor: pointer;
   }
 `;
+
+export const UserImageBtn = styled.button`
+  border: none;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+`;

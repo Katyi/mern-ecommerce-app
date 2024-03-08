@@ -2,9 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { register } from "../../redux/apiCalls";
 import { useDispatch, useSelector } from "react-redux";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import app from "../../firebase";
-import { Container, Wrapper, Title, Form, Input, Select, Agreement, Button, Link, ImgDiv, NewUserImg, Label, Error } from './styled';
+import { Publish } from "@mui/icons-material";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import { Container, Wrapper, Title, Form, Input, Select, Agreement, Button, Link, ImgDiv, NewUserImg, Label, Error, UserImage, UserImageBtn } from './styled';
+import { imageUpload } from '../../services/imageUpload';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -15,11 +16,29 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [user, setUser] = useState(null);
   const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
   const [err, setErr] = useState(null);
-  
 
+  const handleChangeImage = (e) => {
+    e.preventDefault();
+    const forNameOfFile = `${Date.now()}_${e.target.files[0].name}`;
+    const formData = new FormData();
+    formData.append('my-image-file', e.target.files[0], forNameOfFile);
+    setFileName(forNameOfFile);
+    setFile(formData);
+  };
+
+  const handleDeleteImage = (e) => {
+    e.preventDefault();
+    setFileName(null);
+    setFile(null);
+    const file = document.getElementById('file1');
+    file.value = '';
+  };
+  
   const handleSubmit = (e) => {
     e.preventDefault();
+    let newUser;
     if (user?.password !== confirmPassword) {
       setErr('Password mismatch!');
       return;
@@ -28,47 +47,13 @@ const Register = () => {
     }
 
     if (file !== null) {
-      let fileName = new Date().getTime() + file.name;
-      const storage = getStorage();
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        'state_changed', 
-        (snapshot) => {
-          const progress = 
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-            default:
-          }
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-        }, 
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const newUser = {...user, fullname: name.concat(" ").concat(lastname), img: downloadURL};
-            register(dispatch, newUser);
-          });
-          
-        }
-      );
+      imageUpload(file);
+      newUser = {...user, fullname: name.concat(" ").concat(lastname), img: `http://alexegorova.ru/images/${fileName}` };            
     } else {
-      const newUser = {...user, fullname: name.concat(" ").concat(lastname)};
-      register(dispatch, newUser);
+      newUser = {...user, fullname: name.concat(" ").concat(lastname)};
     }
+    register(dispatch, newUser);
   };
-
-  // useEffect(() => {
-  //   setErr(null);
-  // },[]);
 
   useEffect(() => {
     if (currentUser) {
@@ -81,15 +66,32 @@ const Register = () => {
       <Wrapper>
         <Title>CREATE AN ACCOUNT</Title>
         <Form onSubmit={handleSubmit}>
-        <ImgDiv>
-          <Label>Image</Label>
-          <NewUserImg 
-            // className="newUserImg"
-            type="file" 
-            id="file" 
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-        </ImgDiv>
+          <UserImage>
+            <img src={user?.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"}
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping
+                currentTarget.src = "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif";
+              }}
+            />  
+            {/* <ImgDiv> */}
+              {/* <Label>Image</Label> */}
+              <label htmlFor="file1" className="userImageLabel">
+                <Publish className="userUpdateIcon" />
+              </label>
+              <NewUserImg 
+                // className="newUserImg"
+                type="file" 
+                id="file1"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleChangeImage}
+              />
+              <UserImageBtn className="userImageBtn" onClick={handleDeleteImage} id="resetbtn" type="button">
+                <HighlightOffIcon className="userUpdateIcon"/>
+              </UserImageBtn>
+              <div>{fileName}</div>
+            {/* </ImgDiv> */}
+          </UserImage>
         {/* <InputWrapper> */}
           {/* <Label>name</Label> */}
           <Input 

@@ -35,6 +35,23 @@ export const Form = styled.form`
   display: flex;
   flex-wrap: wrap;
 `;
+export const UserImage = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 5px;
+  & img {
+    width: 100px;
+    height: 100px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-right: 20px;
+    margin-bottom: 10px;
+  }
+  & label {
+    cursor: pointer;
+  }
+`;
 
 export const Input = styled.input`
   flex: 1;
@@ -100,4 +117,12 @@ export const Error = styled.span`
   color: red;
   font-size: 12px;
   width: 100%;
+`;
+
+export const UserImageBtn = styled.button`
+  border: none;
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
 `;

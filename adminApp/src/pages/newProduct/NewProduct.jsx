@@ -1,14 +1,16 @@
 import { useState } from "react";
 import "./newProduct.css";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import app from "../../firebase";
+import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish, DeleteOutline } from "@mui/icons-material";
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { addProduct } from "../../redux/apiCalls";
 import { useDispatch } from "react-redux";
 import {useNavigate} from 'react-router-dom';
+import { imageUpload, imageDelete } from '../../services/imageUpload';
 
 export default function NewProduct() {
   const [inputs, setInputs] = useState({});
   const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState(null);
   const [cat, setCat] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -19,51 +21,39 @@ export default function NewProduct() {
     });
   };
 
+  const handleChangeImage = (e) => {
+    e.preventDefault();
+    const forNameOfFile = `${Date.now()}_${e.target.files[0].name}`;
+    const formData = new FormData();
+    formData.append('my-image-file', e.target.files[0], forNameOfFile);
+    setFileName(forNameOfFile);
+    setFile(formData);
+  };
+
+  const handleDeleteImage = (e) => {
+    e.preventDefault();
+    setFileName(null);
+    setFile(null);
+    const file = document.getElementById('file1');
+    file.value = '';
+  };
+
   const handleCat = (e) => {
     setCat(e.target.value.split(","));
   };
 
   const handleClick = (e) => {
     e.preventDefault();
-    let fileName = inputs.img;
+    let newProduct;
     if (file !== null) {
-      fileName = new Date().getTime() + file.name;
-      const storage = getStorage();
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-
-      uploadTask.on(
-        'state_changed', 
-        (snapshot) => {
-          const progress = 
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log('Upload is ' + progress + '% done');
-          switch (snapshot.state) {
-            case 'paused':
-              console.log('Upload is paused');
-              break;
-            case 'running':
-              console.log('Upload is running');
-              break;
-            default:
-          }
-        }, 
-        (error) => {
-          // Handle unsuccessful uploads
-        }, 
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            const product = { ...inputs, img: downloadURL, categories: cat };
-            addProduct(product, dispatch);
-          });
-        }
-      );
-      navigate('/products');
+      imageUpload(file);
+      newProduct = { ...inputs, img: `http://alexegorova.ru/images/${fileName}`, categories: cat };
     } else {
-      const product = { ...inputs, categories: cat };
-      addProduct(product, dispatch);
-      navigate('/products');
+      newProduct = { ...inputs, categories: cat };
     }
+    addProduct(newProduct, dispatch);
+    setFileName(null);
+    navigate('/products');
   };
 
   return (
@@ -72,13 +62,24 @@ export default function NewProduct() {
         <h1>New Product</h1>
       </div>
       <form className="addProductForm">
-        <div className="addProductItem">
-          <label>Image</label>
-          <input 
-            type="file" 
-            id="file" 
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+        <div className="userUpload">
+        <img className="userUpdateImg" src={"https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/462666/item/goods_69_462666.jpg"}/>
+          <div className="newUserImage">
+            <label htmlFor="file1" className="userImageLabel">
+              <Publish className="userUpdateIcon" />
+            </label>
+            <input 
+              type="file" 
+              id="file1" 
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handleChangeImage}
+            />
+            <button className="userImageBtn" onClick={handleDeleteImage} id="resetbtn" type="button">
+              <HighlightOffIcon className="userUpdateIcon"/>
+            </button>
+            <div>{fileName}</div>
+          </div>
         </div>
         <div className="addProductItem">
           <label>Title</label>

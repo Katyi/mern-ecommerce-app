@@ -29,7 +29,7 @@ export default function NewProduct() {
   };
 
   const handleChangeCatSizeColor = (e) => {
-    setProduct({ ...product, [e.target.name]: e.target.value.split(', ') })
+    setInputs({ ...inputs, [e.target.name]: e.target.value.split(', ') })
   };
 
   const handleInStockSelectChange = (value) => {

@@ -1,29 +1,42 @@
 .newUser {
   flex: 4;
-  margin-left: 50px;
+  margin: 15px 20px 0px 30px;
 }
 .newUserTitle {
-  height: 80px;
-  margin: 0;
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 36px;
 }
 .newUserForm {
-  
+  margin-top: 5px;
+  padding: 20px;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
 }
 .newUserWrapper {
+  width: fit-content;
   display: flex;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 .newUserItem {
   width: 400px;
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
-  margin-right: 20px;
+  margin-top: 5px;
+  margin-right: 10px;
 }
 .userUpload {
   display: flex;
   align-items: center;
-  width: 80%;
+  width: 100%;
+}
+.newUserUpdateImg {
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-right: 20px;
 }
 .userImageBtn {
   border: none;
@@ -57,16 +70,14 @@
   width: 50%;
 }
 .newUserItem > label {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   font-size: 14px;
   font-weight: 600;
   color: rgb(151, 150, 150);
 }
 .newUserItem > input {
-  height: 20px;
   padding: 10px;
   border: 1px solid gray;
-  border-radius: 5px;
 }
 
 .newUserImg {

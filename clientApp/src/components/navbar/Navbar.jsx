@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
 import { getCart, getUser, getWishlist, logout } from '../../redux/apiCalls.js';
 import { Container, Wrapper, Left, Language, UserName, SearchContainer, Input, Center, Logo, Right, MenuItem, Avatar } from './styled';
+import { languages } from '../../constants/languages';
+import Select from '../../UI/selectLang/SelectLang';
+
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -16,6 +19,19 @@ const Navbar = () => {
   const quantityWishlist = useSelector((state) => state.wishlists?.currentWishlist?.products?.length);
   const userName = useSelector((state) => state.user?.currentUser?.username);
   const navigate = useNavigate();
+
+  const [language, setLanguage] = useState('en');
+  const [open, setOpen] = useState(false);
+
+  const optionsLanguages  = [
+    { value: 'en'},
+    { value: 'ru'},
+  ];
+
+  const handleLanguagesSelectChange = (value) => {
+    setLanguage(value);
+    setOpen(false);
+  }
   
   useEffect(() => {
     getCart(userId, dispatch);
@@ -37,7 +53,14 @@ const Navbar = () => {
     <Container>
       <Wrapper>
         <Left>
-          <Language>EN</Language>
+          {/* <Language>EN</Language> */}
+          <Select
+            options={optionsLanguages}
+            selected={language || ""}
+            onChange={handleLanguagesSelectChange}
+            open={open}
+            setOpen={setOpen}
+          />
           <SearchContainer>
             <Input placeholder='Search'/>
             <Search style={{color:"gray", fontSize:16}}/>

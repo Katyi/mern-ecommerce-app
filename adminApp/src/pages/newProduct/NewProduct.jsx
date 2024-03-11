@@ -6,19 +6,35 @@ import { addProduct } from "../../redux/apiCalls";
 import { useDispatch } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import { imageUpload, imageDelete } from '../../services/imageUpload';
+import Select from '../../UI/select/Select';
 
 export default function NewProduct() {
   const [inputs, setInputs] = useState({});
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(null);
   const [cat, setCat] = useState([]);
+  const [inStock, setInStock] = useState('Choose in stock or not');
+  const [openInStock, setOpenInStock] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const optionsInStock  = [
+    { value: 'Yes'},
+    { value: 'No'},
+  ];
 
   const handleChange = (e) => {
     setInputs((prev) => {
       return { ...prev, [e.target.name]: e.target.value };
     });
+  };
+
+  const handleChangeCatSizeColor = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value.split(', ') })
+  };
+
+  const handleInStockSelectChange = (value) => {
+    setInStock(value);
+    setOpenInStock(false);
   };
 
   const handleChangeImage = (e) => {
@@ -58,12 +74,10 @@ export default function NewProduct() {
 
   return (
     <div className="newProduct">
-      <div className="addProductTitle">
-        <h1>New Product</h1>
-      </div>
+      <div className="addProductTitle">New Product</div>
       <form className="addProductForm">
         <div className="userUpload">
-        <img className="userUpdateImg" src={"https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/462666/item/goods_69_462666.jpg"}/>
+        <img className="productUpdateImg" src={"https://image.uniqlo.com/UQ/ST3/WesternCommon/imagesgoods/462666/item/goods_69_462666.jpg"}/>
           <div className="newUserImage">
             <label htmlFor="file1" className="userImageLabel">
               <Publish className="userUpdateIcon" />
@@ -81,43 +95,71 @@ export default function NewProduct() {
             <div>{fileName}</div>
           </div>
         </div>
-        <div className="addProductItem">
-          <label>Title</label>
-          <input 
-            name="title"
-            type="text"
-            placeholder="Apple Airpods" 
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>Description</label>
-          <input
-            name="desc"
-            type="text"
-            placeholder="description..."
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>Price</label>
-          <input
-            name="price"
-            type="number"
-            placeholder="100"
-            onChange={handleChange}
-          />
-        </div>
-        <div className="addProductItem">
-          <label>Categories</label>
-          <input type="text" placeholder="jeans,skirts" onChange={handleCat}/>
-        </div>
-        <div className="addProductItem">
-          <label>Stock</label>
-          <select name="inStock" onChange={handleChange}>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
+        <div className="newProductWrapper">
+          <div className="addProductItem">
+            <label>Title</label>
+            <input 
+              name="title"
+              type="text"
+              placeholder="Apple Airpods" 
+              onChange={handleChange}
+            />
+          </div>
+          <div className="addProductItem">
+            <label>Description</label>
+            <input
+              name="desc"
+              type="text"
+              placeholder="description..."
+              onChange={handleChange}
+            />
+          </div>
+          <div className="addProductItem">
+            <label>Product categories</label>
+            <input 
+              name="categories"
+              type="text"
+              placeholder="categories..."
+              onChange={handleChangeCatSizeColor}
+            />
+          </div>
+          <div className="addProductItem">
+            <label>Product sizes</label>
+            <input 
+              name="size"
+              type="text"
+              placeholder="sizes..."
+              onChange={handleChangeCatSizeColor}
+            />
+          </div>
+          <div className="addProductItem">
+            <label>Product colors</label>
+            <input 
+              name="color"
+              type="text"
+              placeholder="colors..."
+              onChange={handleChangeCatSizeColor}
+            />
+          </div>
+          <div className="addProductItem">
+            <label>Price</label>
+            <input
+              name="price"
+              type="number"
+              placeholder="100"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="addProductItem">
+            <label>In Stock</label>
+            <Select 
+              options={optionsInStock}
+              selected={inStock || ""}
+              onChange={handleInStockSelectChange}
+              open={openInStock}
+              setOpen={setOpenInStock}
+            />
+          </div>
         </div>
         <button onClick={handleClick} className="addProductButton">
           Create

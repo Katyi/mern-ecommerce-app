@@ -51,9 +51,14 @@ export default function Product() {
   };
 
   const handleChange = (e) => {
-    setProduct((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
-    });
+    // setProduct((prev) => {
+    //   return { ...prev, [e.target.name]: e.target.value };
+    // });
+    setProduct({ ...product, [e.target.name]: e.target.value })
+  };
+
+  const handleChangeCatSizeColor = (e) => {
+    setProduct({ ...product, [e.target.name]: e.target.value.split(', ') })
   };
 
   const handleInStockSelectChange = (value) => {
@@ -82,7 +87,7 @@ export default function Product() {
     setFile(null);
     const file = document.getElementById('file');
     file.value = '';
-  }
+  };
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -146,49 +151,7 @@ export default function Product() {
       </div>
       <div className="productBottom">
         <form className="productForm" onSubmit={handleClick}>
-          <div className="productFormLeft">
-            <div className="productUpdateItem">
-              <label>Product Name</label>
-              <input 
-                name="title"
-                type="text" 
-                placeholder="title"
-                value={product.title} 
-                onChange={handleChange}
-              />
-            </div>
-            <div className="productUpdateItem">
-              <label>Product Description</label>
-              <input 
-                name="desc"
-                type="text"
-                placeholder="description..."
-                value={product.desc}
-                onChange={handleChange}
-              />
-            </div>
-            <div className="productUpdateItem">
-              <label>In Stock</label>
-              <Select 
-                options={optionsInStock}
-                selected={inStock || ""}
-                onChange={handleInStockSelectChange}
-                open={openInStock}
-                setOpen={setOpenInStock}
-              />
-            </div>
-            <div className="productUpdateItem">
-              <label>Price</label>
-              <input 
-                name="price"
-                type="number"
-                placeholder="price"
-                value={product.price}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
-          <div className="productFormRight">
+          <div className="productUpdateUpload">
             <div className="productUpload">
               <img src={product.img} className="productUploadImg"
                 onError={({ currentTarget }) => {
@@ -210,8 +173,83 @@ export default function Product() {
               }
               <span style={{fontSize: "10px", wordBreak: "break-all", width: "150px"}}>{fileName}</span>
             </div>
-            <button type="submit" className="productButton">Update</button>
           </div>
+          <div className="productFormBottom">
+            <div className="productUpdateItem">
+              <label>Product Name</label>
+              <input 
+                name="title"
+                type="text" 
+                placeholder="title"
+                value={product.title} 
+                onChange={handleChange}
+              />
+            </div>
+            <div className="productUpdateItem">
+              <label>Product Description</label>
+              <input 
+                name="desc"
+                type="text"
+                placeholder="description..."
+                value={product.desc}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="productUpdateItem">
+              <label>Product categories</label>
+              <input 
+                name="categories"
+                type="text"
+                placeholder="categories..."
+                value={product?.categories.join(', ') || ""}
+                onChange={handleChangeCatSizeColor}
+              />
+            </div>
+            <div className="productUpdateItem">
+              <label>Product sizes</label>
+              <input 
+                name="size"
+                type="text"
+                placeholder="sizes..."
+                value={product.size.join(", ")}
+                onChange={handleChangeCatSizeColor}
+              />
+            </div>
+            <div className="productUpdateItem">
+              <label>Product colors</label>
+              <input 
+                name="color"
+                type="text"
+                placeholder="colors..."
+                value={product.color.join(", ")}
+                onChange={handleChangeCatSizeColor}
+              />
+            </div>
+            <div className="productUpdateItem">
+              <label>Price</label>
+              <input 
+                name="price"
+                type="number"
+                placeholder="price"
+                value={product.price}
+                onChange={handleChange}
+              />
+            </div>
+            <div className="productUpdateItem">
+              <label>In Stock</label>
+              <Select 
+                options={optionsInStock}
+                selected={inStock || ""}
+                onChange={handleInStockSelectChange}
+                open={openInStock}
+                setOpen={setOpenInStock}
+              />
+            </div>
+            {/* <div className="productUpdateItem forButton">
+              
+            </div> */}
+          </div>
+          <button type="submit" className="productButton">Update</button>
         </form>
       </div>
     </div>

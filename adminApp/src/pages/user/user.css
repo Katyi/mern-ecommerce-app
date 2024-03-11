@@ -154,6 +154,7 @@
   height: 24px;
 }
 .userSelectItem {
+  width: 250px;
   display: flex;
   flex-direction: column;
   margin-top: 10px;

@@ -21,7 +21,7 @@
 }
 .productTopRight {
   padding: 20px;
-  margin: 20px;
+  margin: 10px 20px;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
 }
@@ -32,95 +32,87 @@
   object-fit: cover;
   margin-right: 20px;
 }
-
 .productInfoTop {
   display: flex;
   align-items: center;
 }
-
 .productName {
   font-weight: 600;
 }
-
 .productInfoBottom {
   margin-top: 10px;
 }
-
 .productInfoItem {
   width: 150px;
   display: flex;
   gap: 5px;
 }
-
 .productInfoValue {
   font-weight: 300;
 }
-
 .productBottom {
   padding: 20px;
-  margin: 20px;
+  margin: 0 20px;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
 }
-
 .productForm {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
 }
-
-.productFormLeft {
+.productUpdateUpload {
   display: flex;
-  flex-direction: column;
-  width: 40%;
+  align-items: center;
+  width: 50%;
+}
+.productFormBottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
 }
 .productUpdateItem {
+  width: 300px;
   display: flex;
   flex-direction: column;
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-right: 5px;
 }
-
+.forButton {
+  align-items: start;
+  justify-content: end;
+}
 .productUpdateItem > label {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   color: gray;
 }
-
 .productUpdateItem > input {
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   border: none;
   padding: 5px;
   border-bottom: 1px solid gray;
 }
-
-
-
-.productFormLeft >select{
-  margin-bottom: 10px;
+.productFormBottom >select{
+  margin-bottom: 5px;
 }
 
 .productUploadImg{
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 10px;
   object-fit: cover;
   margin-right: 20px;
 }
-
-.productFormRight{
-  width: 40%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-}
-
 .productUpload{
   display: flex;
   align-items: center;
   gap: 5px;
 }
-
 .productButton{
   width: 134px;
+  height: 35.5px;
+  margin-top: 15px;
   border: none;
   padding: 5px;
   border-radius: 5px;

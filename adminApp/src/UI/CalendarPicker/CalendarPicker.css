@@ -3,7 +3,6 @@
 }
 .dateInput {
   display: flex;
-  width: calc(254px - 22px);
   height: 25.5px;
   align-items: center;
   border: 1px solid gray;

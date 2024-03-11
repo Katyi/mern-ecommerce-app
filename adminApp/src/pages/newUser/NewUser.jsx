@@ -6,6 +6,8 @@ import {useNavigate} from 'react-router-dom';
 import { imageUpload } from '../../services/imageUpload';
 import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish, DeleteOutline } from "@mui/icons-material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import Select from '../../UI/select/Select';
+import CalendarPicker from '../../UI/CalendarPicker/CalendarPicker';
 
 export default function NewUser() {
   const [inputs, setInputs] = useState({});
@@ -13,9 +15,22 @@ export default function NewUser() {
   const [fileName, setFileName] = useState(null);
   const [gender, setGender] = useState("male");
   const [selected, setSelected] = useState(false);
-  const [role, setRole] = useState(false);
+  const [role, setRole] = useState("Choose role");
+  const [active, setActive] = useState("Choose active or not");
+  const [openIsAdmin, setOpenIsAdmin] = useState(false);
+  const [openActive, setOpenActive] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const optionsIsAdmin  = [
+    { value: 'Admin'},
+    { value: 'User'},
+  ];
+
+  const optionsForActive  = [
+    { value: 'Yes'},
+    { value: 'No'},
+  ];
 
   const handleChange = (e) => {
     setInputs((prev) => {
@@ -31,8 +46,14 @@ export default function NewUser() {
     setSelected(e.target.value === 'yes' ? true : false);
   };
 
-  const handleIsAdminSelectChange = (e) => {
-    setRole(e.target.value);
+  const handleIsAdminSelectChange = (value) => {
+    if (openIsAdmin) {
+      setRole(value);
+      setOpenIsAdmin(false);
+    } else if (openActive) {
+      setActive(value);
+      setOpenActive(false);
+    }
   };
 
   const handleChangeImage = (e) => {
@@ -52,7 +73,7 @@ export default function NewUser() {
     file.value = '';
   };
 
-  const handleClick = (e) => {
+  const handleClick = async(e) => {
     e.preventDefault();
     let newUser;
     if (file !== null) {
@@ -61,19 +82,17 @@ export default function NewUser() {
     }  else {
       newUser = { ...inputs, gender: gender, active: selected, isAdmin: role };
     }
-    addUser(newUser, dispatch);
+    await addUser(newUser, dispatch);
     setFileName(null);
     navigate('/users');
   };
 
   return (
     <div className="newUser">
-      <div className="newUserTitle">
-        <h1>New User</h1>
-      </div>
-      <form className="newUserForm">
+      <div className="newUserTitle">New User</div>
+      <form className="newUserForm" onSubmit={handleClick}>
         <div className="userUpload">
-          <img className="userUpdateImg" src={"https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"}/>
+          <img className="newUserUpdateImg" src={"https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"}/>
           <div className="newUserImage">
             <label htmlFor="file1" className="userImageLabel">
               <Publish className="userUpdateIcon" />
@@ -111,55 +130,10 @@ export default function NewUser() {
             />
           </div>
           <div className="newUserItem">
-            <label>Occupation</label>
-            <input 
-              name="occupation"
-              type="text" 
-              placeholder="occupation" 
-              onChange={handleChange}
-            />
-          </div>
-          <div className="newUserItem">
-            <label>Role</label>
-            <select className="newUserSelect" value={role} onChange={handleIsAdminSelectChange}>
-              <option value={true}>Admin</option>
-              <option value={false}>User</option>
-            </select>
-          </div>
-          <div className="newUserItem">
-            <label>Email</label>
-            <input 
-              name="email"
-              type="email" 
-              placeholder="john@gmail.com"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="newUserItem">
-            <label>Password</label>
-            <input 
-              name="password"
-              type="text" 
-              placeholder="password"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="newUserItem">
-            <label>Phone</label>
-            <input 
-              name="phone"
-              type="text" 
-              placeholder="+1 123 456 78" 
-              onChange={handleChange}
-            />
-          </div>
-          <div className="newUserItem">
-            <label>Address</label>
-            <input 
-              name="address"
-              type="text"
-              placeholder="New York | USA"
-              onChange={handleChange}
+            <label>birthday</label>
+            <CalendarPicker
+              selectedDate={inputs.birthday} 
+              setSelectedDate={v => setInputs({ ...inputs, birthday: v })}
             />
           </div>
           <div className="newUserItem">
@@ -174,14 +148,72 @@ export default function NewUser() {
             </div>
           </div>
           <div className="newUserItem">
+            <label>Occupation</label>
+            <input 
+              name="occupation"
+              type="text" 
+              placeholder="occupation" 
+              onChange={handleChange}
+            />
+          </div>
+          <div className="newUserItem">
+            <label>Address</label>
+            <input 
+              name="address"
+              type="text"
+              placeholder="New York | USA"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="newUserItem">
+            <label>Email</label>
+            <input 
+              name="email"
+              type="email" 
+              placeholder="john@gmail.com"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="newUserItem">
+            <label>Phone</label>
+            <input 
+              name="phone"
+              type="text" 
+              placeholder="+1 123 456 78" 
+              onChange={handleChange}
+            />
+          </div>
+          <div className="newUserItem">
+            <label>Role</label>
+            <Select 
+              options={optionsIsAdmin}
+              selected={role || ""}
+              onChange={handleIsAdminSelectChange}
+              open={openIsAdmin}
+              setOpen={setOpenIsAdmin}
+            />
+          </div>
+          <div className="newUserItem">
+            <label>Password</label>
+            <input 
+              name="password"
+              type="text" 
+              placeholder="password"
+              onChange={handleChange}
+            />
+          </div>
+          <div className="newUserItem">
             <label>Active</label>
-            <select className="newUserSelect" name="active" id="active" onChange={handleSelectChange}>
-              <option value="yes">Yes</option>
-              <option value="no">No</option>
-            </select>
+            <Select 
+              options={optionsForActive}
+              selected={active || ""}
+              onChange={handleIsAdminSelectChange}
+              open={openActive}
+              setOpen={setOpenActive}
+            />
           </div>
         </div>
-        <button onClick={handleClick} className="newUserButton">Create</button>
+        <button type="submit" className="newUserButton">Create</button>
       </form>
     </div>
   );

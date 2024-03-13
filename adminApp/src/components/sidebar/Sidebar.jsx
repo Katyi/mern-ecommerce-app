@@ -54,7 +54,7 @@ export default function Sidebar() {
                 Products
               </li>
             </Link>
-            {/* <Link to="/orders" className="link">
+            <Link to="/orders" className="link">
               <li className="sidebarListItem">
                 <AttachMoney className="sidebarIcon" />
                 Orders
@@ -65,7 +65,7 @@ export default function Sidebar() {
                 <BarChart className="sidebarIcon" />
                 Wishlists
               </li>
-            </Link> */}
+            </Link>
           </ul>
         </div>
         <div className="sidebarMenu">

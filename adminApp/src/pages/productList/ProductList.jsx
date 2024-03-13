@@ -2,10 +2,9 @@ import "./productList.css";
 import { DeleteOutline } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteProduct, getProducts } from "../../redux/apiCalls";
 import { Table, TableHead, TableBody, TableRow, TableCell, Pagination } from '@mui/material';
-import { imageUpload, imageDelete } from '../../services/imageUpload';
+import { imageDelete } from '../../services/imageUpload';
+import { useGetProductsQuery, useDeleteProductMutation } from "../../redux/productsApi";
 
 const styles = {
   table: {
@@ -26,24 +25,23 @@ const styles = {
 };
 
 export default function ProductList() {
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.product?.products);
+  const {  data: products = [], isLoading,
+    isFetching,
+    isError,
+    error, } = useGetProductsQuery();
+  const [deleteProduct] = useDeleteProductMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = Math.floor((window.innerHeight - 130 - 20 - 46 - 57 - 10 - 32)/ 67);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const getPaginatedData = products.slice(startIndex, endIndex);
   
-  useEffect(() => {
-    getProducts(dispatch);
-  },[dispatch]);
-  
   const handleDelete = (id) => {
     let ind = products.findIndex(item => item._id === id);
     if (products[ind]?.img) {
       imageDelete(products[ind].img.slice(29));
     }
-    deleteProduct(id, dispatch);
+    deleteProduct(id);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -54,7 +52,7 @@ export default function ProductList() {
     <div className="productList">
       <div className="product_button_wrapper">
         <div className="productsTitle">Products</div>
-        <Link to="/newproduct">
+        <Link to="/newProduct">
           <button className="productAddButton">Create new product</button>
         </Link>
       </div>
@@ -87,7 +85,7 @@ export default function ProductList() {
                 <TableCell style={{width:"25%"}}>{item.price}</TableCell>
                 <TableCell style={{width:"20"}}>
                 <div style={{display:"flex", alignItems:"center"}}>
-                  <Link to={"/product/" + item._id}>
+                  <Link to={"/product/" + item._id} state={{currentProduct: products.find((product) => product?._id === item._id)}}>
                     <button className="productListEdit">Edit</button>
                   </Link>
                   <DeleteOutline

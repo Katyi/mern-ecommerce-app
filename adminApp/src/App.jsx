@@ -32,11 +32,10 @@ function App() {
               <Route path="/newUser" element={<NewUser />}/>
               <Route path="/products" element={<ProductList />}/>
               <Route path="/product/:productId" element={<Product/>}/>
-              <Route path="/newproduct" element={<NewProduct />}/>
-              {/* <Route path="/wishlists" element={<WishList />}/>
-              <Route path="/orders" element={<OrderList />}/> */}
+              <Route path="/newProduct" element={<NewProduct />}/>
+              <Route path="/wishlists" element={<WishList />}/>
+              <Route path="/orders" element={<OrderList />}/>
             </Routes>
-            
           </div>
           {user ? <Footer/> : ""}
         </div>

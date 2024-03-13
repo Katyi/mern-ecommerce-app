@@ -1,11 +1,10 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { setupListeners } from '@reduxjs/toolkit/query'
-import productReducer from "./productRedux";
-import wishlistReducer from "./wishlistRedux";
-import orderReducer from './orderRedux';
-import imageReducer from './imageRedux';
 import localforage from 'localforage';
 import { usersApi } from './usersApi';
+import { productsApi } from './productsApi';
+import { ordersApi } from './ordersApi';
+import { wishlistsApi } from './wishlistsApi';
 import userReducer from './userSlice';
 
 import {
@@ -23,17 +22,15 @@ import storage from 'redux-persist/lib/storage';
 const persistConfig = {
   key: 'root',
   version: 1,
-  storage: localforage,
-  // storage,
+  storage: localforage
 };
 
 const appReducer = combineReducers({
-  user: userReducer, 
-  product: productReducer,
-  wishlist: wishlistReducer,
-  order: orderReducer,
-  image: imageReducer,
+  user: userReducer,
   [usersApi.reducerPath]: usersApi.reducer,
+  [productsApi.reducerPath]: productsApi.reducer,
+  [ordersApi.reducerPath]: ordersApi.reducer,
+  [wishlistsApi.reducerPath]: wishlistsApi.reducer,
 });
 
 const rootReducer = (state, action) => {
@@ -50,7 +47,7 @@ export const store = configureStore ({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }).concat(usersApi.middleware),
+    }).concat([usersApi.middleware, productsApi.middleware, ordersApi.middleware, wishlistsApi.middleware]),
 });
 
 export let persistor = persistStore(store);

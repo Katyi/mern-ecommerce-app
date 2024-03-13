@@ -1,12 +1,11 @@
 import { useState } from "react";
 import "./newProduct.css";
 import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish, DeleteOutline } from "@mui/icons-material";
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { addProduct } from "../../redux/apiCalls";
-import { useDispatch } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import { imageUpload, imageDelete } from '../../services/imageUpload';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Select from '../../UI/select/Select';
+import { useAddProductMutation } from '../../redux/productsApi';
 
 export default function NewProduct() {
   const [inputs, setInputs] = useState({});
@@ -15,8 +14,9 @@ export default function NewProduct() {
   const [cat, setCat] = useState([]);
   const [inStock, setInStock] = useState('Choose in stock or not');
   const [openInStock, setOpenInStock] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [addProduct] = useAddProductMutation();
+
   const optionsInStock  = [
     { value: 'Yes'},
     { value: 'No'},
@@ -54,10 +54,6 @@ export default function NewProduct() {
     file.value = '';
   };
 
-  const handleCat = (e) => {
-    setCat(e.target.value.split(","));
-  };
-
   const handleClick = (e) => {
     e.preventDefault();
     let newProduct;
@@ -67,7 +63,7 @@ export default function NewProduct() {
     } else {
       newProduct = { ...inputs, categories: cat };
     }
-    addProduct(newProduct, dispatch);
+    addProduct(newProduct);
     setFileName(null);
     navigate('/products');
   };

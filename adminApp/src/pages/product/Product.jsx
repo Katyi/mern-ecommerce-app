@@ -3,26 +3,22 @@ import "./product.css";
 import Chart from "../../components/chart/Chart";
 import { Publish, DeleteOutline } from "@mui/icons-material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useMemo, useState } from "react";
 import { userRequest } from "../../requestMethods";
-import { getProducts, updateProduct } from "../../redux/apiCalls";
 import Select from '../../UI/select/Select';
 import { imageUpload, imageDelete } from '../../services/imageUpload';
+import { useUpdateProductMutation } from '../../redux/productsApi';
 
 export default function Product() {
   const location = useLocation();
-  const productId = location.pathname.split("/")[2];
+  const {currentProduct} = location.state;
+  const productId = currentProduct._id;
+  const navigate = useNavigate();
+  const [updateProduct] = useUpdateProductMutation();
   const [pStats, setPStats] = useState([]);
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(null);
   const [fileForDelete, setFileForDelete] = useState(null);
-  // const [cat, setCat] = useState([]);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  let currentProduct = useSelector((state) =>
-    state.product.products.find((product) => product._id === productId)
-  );
   const [product, setProduct] = useState(currentProduct);
   const [openInStock, setOpenInStock] = useState(false);
   const [inStock, setInStock] = useState(product?.inStock ? 'Yes' : 'No');
@@ -51,9 +47,6 @@ export default function Product() {
   };
 
   const handleChange = (e) => {
-    // setProduct((prev) => {
-    //   return { ...prev, [e.target.name]: e.target.value };
-    // });
     setProduct({ ...product, [e.target.name]: e.target.value })
   };
 
@@ -104,9 +97,8 @@ export default function Product() {
     } else {
       newProduct = { ...product, inStock: inStock === 'Yes' ? true : false };
     }
-    setProduct(newProduct);
-    updateProduct(productId, newProduct, dispatch);
-    getProducts(dispatch);
+    setFileName(null);
+    updateProduct({id: productId, body: newProduct});
     navigate('/products');
   };
 

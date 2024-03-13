@@ -1,9 +1,8 @@
 import { useState } from "react";
 import "./newUser.css";
-import { useDispatch } from "react-redux";
+import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish, DeleteOutline } from "@mui/icons-material";
 import {useNavigate} from 'react-router-dom';
 import { imageUpload } from '../../services/imageUpload';
-import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndroid, Publish, DeleteOutline } from "@mui/icons-material";
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Select from '../../UI/select/Select';
 import CalendarPicker from '../../UI/CalendarPicker/CalendarPicker';
@@ -18,7 +17,6 @@ export default function NewUser() {
   const [active, setActive] = useState("Choose active or not");
   const [openIsAdmin, setOpenIsAdmin] = useState(false);
   const [openActive, setOpenActive] = useState(false);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [addUser] = useAddUserMutation();
 

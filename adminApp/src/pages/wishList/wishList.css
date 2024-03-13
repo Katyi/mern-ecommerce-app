@@ -1,7 +1,6 @@
 .wishList {
   flex: 4;
-  /* height: calc(80vh - 80px - 100px); */
-  margin: 20px;
+  margin: 10px 20px;
 }
 .wishList_button_wrapper {
   width: 100%;
@@ -10,7 +9,10 @@
   align-items: center;
 }
 .WishlistsTitle {
-  margin-left: 20px;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  line-height: 36px;
 }
 .wishlistAddButton {
   width: auto;
@@ -21,7 +23,6 @@
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  margin-right: 20px;
 }
 .wishlistListItem {
   display: flex;

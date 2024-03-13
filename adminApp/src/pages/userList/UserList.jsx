@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Table, TableHead, TableBody, TableRow, TableCell, Pagination } from '@mui/material';
 import { imageDelete } from '../../services/imageUpload';
-import { useGetUsersQuery,   useDeleteUserMutation } from "../../redux/usersApi";
+import { useGetUsersQuery, useDeleteUserMutation } from "../../redux/usersApi";
 
 const styles = {
   table: {

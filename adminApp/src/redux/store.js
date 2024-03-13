@@ -1,11 +1,12 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import userReducer from "./userRedux";
+import { setupListeners } from '@reduxjs/toolkit/query'
 import productReducer from "./productRedux";
 import wishlistReducer from "./wishlistRedux";
 import orderReducer from './orderRedux';
 import imageReducer from './imageRedux';
 import localforage from 'localforage';
-// import usersReduser from "./usersRedux";
+import { usersApi } from './usersApi';
+import userReducer from './userSlice';
 
 import {
   persistStore,
@@ -32,7 +33,7 @@ const appReducer = combineReducers({
   wishlist: wishlistReducer,
   order: orderReducer,
   image: imageReducer,
-  // users: usersReduser,
+  [usersApi.reducerPath]: usersApi.reducer,
 });
 
 const rootReducer = (state, action) => {
@@ -49,7 +50,7 @@ export const store = configureStore ({
       serializableCheck: {
         ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
       },
-    }),
+    }).concat(usersApi.middleware),
 });
 
 export let persistor = persistStore(store);

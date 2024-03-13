@@ -2,10 +2,9 @@ import "./userList.css";
 import { DeleteOutline } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, getUsers } from "../../redux/apiCalls";
 import { Table, TableHead, TableBody, TableRow, TableCell, Pagination } from '@mui/material';
 import { imageDelete } from '../../services/imageUpload';
+import { useGetUsersQuery,   useDeleteUserMutation } from "../../redux/usersApi";
 
 const styles = {
   table: {
@@ -29,21 +28,20 @@ const styles = {
 };
 
 export default function UserList() {
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.user?.users);
+  const {  data: users = [], isLoading,
+    isFetching,
+    isError,
+    error, } = useGetUsersQuery();
+  const [deleteUser] = useDeleteUserMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = Math.floor((window.innerHeight - 130 - 20 - 46 - 57 - 10 - 32)/ 67);
-
-  useEffect(() => {
-    getUsers(dispatch);
-  }, [dispatch]);
 
   const handleDelete = (id) => {
     let ind = users.findIndex(item => item._id === id);
     if (users[ind]?.img) {
       imageDelete(users[ind].img.slice(29));
     }
-    deleteUser(id, dispatch);
+    deleteUser(id);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -91,7 +89,7 @@ export default function UserList() {
                 <TableCell style={{width:"30%"}}>{item.email}</TableCell>
                 <TableCell style={{width:"15%"}}>
                 <div style={{display:"flex", alignItems:"center"}}>
-                  <Link to={"/user/" + item._id}>
+                  <Link to={"/user/" + item._id} state={{currentUser: users.find((user) => user?._id === item._id)}}>
                     <button className="userListEdit">Edit</button>
                   </Link>
                   <DeleteOutline
@@ -112,4 +110,4 @@ export default function UserList() {
       />
     </div>
   );
-}
+};

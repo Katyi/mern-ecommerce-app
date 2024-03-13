@@ -1,6 +1,5 @@
 import { useState } from "react";
 import "./newUser.css";
-import { addUser } from "../../redux/apiCalls";
 import { useDispatch } from "react-redux";
 import {useNavigate} from 'react-router-dom';
 import { imageUpload } from '../../services/imageUpload';
@@ -8,19 +7,20 @@ import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndro
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import Select from '../../UI/select/Select';
 import CalendarPicker from '../../UI/CalendarPicker/CalendarPicker';
+import { useAddUserMutation } from '../../redux/usersApi';
 
 export default function NewUser() {
   const [inputs, setInputs] = useState({});
   const [file, setFile] = useState(null);
   const [fileName, setFileName] = useState(null);
-  const [gender, setGender] = useState("male");
-  const [selected, setSelected] = useState(false);
+  const [gender, setGender] = useState("Choose gender");
   const [role, setRole] = useState("Choose role");
   const [active, setActive] = useState("Choose active or not");
   const [openIsAdmin, setOpenIsAdmin] = useState(false);
   const [openActive, setOpenActive] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [addUser] = useAddUserMutation();
 
   const optionsIsAdmin  = [
     { value: 'Admin'},
@@ -40,10 +40,6 @@ export default function NewUser() {
 
   const onOptionChange = (e) => {
     setGender(e.target.value)
-  };
-
-  const handleSelectChange = (e) => {
-    setSelected(e.target.value === 'yes' ? true : false);
   };
 
   const handleIsAdminSelectChange = (value) => {
@@ -78,11 +74,11 @@ export default function NewUser() {
     let newUser;
     if (file !== null) {
       imageUpload(file);
-      newUser = { ...inputs, gender: gender, active: selected, isAdmin: role, img: `http://alexegorova.ru/images/${fileName}` };
+      newUser = { ...inputs, gender: gender ? gender : "Choose gender", active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false, img: `http://alexegorova.ru/images/${fileName}` };
     }  else {
-      newUser = { ...inputs, gender: gender, active: selected, isAdmin: role };
+      newUser = { ...inputs, gender: gender ? gender : "Choose gender", active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false };
     }
-    await addUser(newUser, dispatch);
+    addUser(newUser);
     setFileName(null);
     navigate('/users');
   };

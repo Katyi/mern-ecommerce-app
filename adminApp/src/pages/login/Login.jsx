@@ -1,29 +1,25 @@
 import React, { useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../redux/apiCalls";
 import { useNavigate} from 'react-router-dom';
 import { useEffect } from 'react';
 import './login.css';
+import { useLoginMutation } from '../../redux/usersApi';
 
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user.currentUser);
-  let { isFetching, error } = useSelector((state) => state.user);
+  const [login, { isLoading, data, error }] = useLoginMutation();
 
   const handleClick = async(e) => {
     e.preventDefault();
-    await login(dispatch, { username: username, password: password });
+    login({username, password})
   };
 
   useEffect(() => {
-    if (user) {
+    if (data) {
       navigate("/home");
     }
-
-  },[handleClick, user]);
+  },[handleClick, data]);
 
   return (
     <form style={{
@@ -47,10 +43,12 @@ const Login = () => {
         onChange={e => setPassword(e.target.value)}
         autoComplete="off"
       />
-      <button type="submit" style={{ padding: 10, width:100 }}>
+      <button type="submit" className="loginButton" disabled={isLoading}>
         Login
       </button>
-      {error && <span className='loginError'>{error}</span>}
+      <div style={{height: 20}}>
+        {error && <span className='loginError'>{error.data}</span>}
+      </div>
     </form>
   )
 };

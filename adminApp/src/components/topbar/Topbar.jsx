@@ -1,14 +1,14 @@
 import "./topbar.css";
-// import { NotificationsNone, Language, Settings } from "@material-ui/icons";
 import { NotificationsNone, Language, Settings } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../../redux/apiCalls";
+import { selectUser } from '../../redux/userSlice';
 
 export default function Topbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector((state) => state.user?.currentUser);
+  const user = useSelector(selectUser);
 
   const handleOut = async(e) => {
     e.preventDefault();

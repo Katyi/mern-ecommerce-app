@@ -5,9 +5,9 @@ import navigateNext from '../../../assets/navigate-next.svg';
 
 const Calendar = ({ onClose, selectedDate, setSelectedDate }) => {
   const [currentDay, setCurrentDay] = useState(
-    selectedDate.length === 10 ? new Date(selectedDate.slice(6), selectedDate.slice(3, 5) - 1, selectedDate.slice(0, 2))
-      : selectedDate.length === 6 ? new Date(new Date().getFullYear(), selectedDate.slice(3, 5) - 1, selectedDate.slice(0, 2))
-        : selectedDate.length === 3 ? new Date(new Date().getFullYear(), new Date().getMonth(), selectedDate.slice(0, 2)) : new Date());
+    selectedDate?.length === 10 ? new Date(selectedDate.slice(6), selectedDate.slice(3, 5) - 1, selectedDate.slice(0, 2))
+      : selectedDate?.length === 6 ? new Date(new Date().getFullYear(), selectedDate.slice(3, 5) - 1, selectedDate.slice(0, 2))
+        : selectedDate?.length === 3 ? new Date(new Date().getFullYear(), new Date().getMonth(), selectedDate.slice(0, 2)) : new Date());
   const [currentYear, setCurrentYear] = useState(currentDay.getFullYear());
   const [currentMonth, setCurrentMonth] = useState(currentDay.getMonth());
   const [days, setDays] = useState([]);
@@ -16,9 +16,9 @@ const Calendar = ({ onClose, selectedDate, setSelectedDate }) => {
 
   const getMonthDays = () => {
     setCurrentDay(
-      selectedDate.length === 10 ? new Date(selectedDate.slice(6), selectedDate.slice(3, 5) - 1, selectedDate.slice(0, 2))
-        : selectedDate.length === 6 ? new Date(currentYear, selectedDate.slice(3, 5) - 1, selectedDate.slice(0, 2))
-          : selectedDate.length === 3 ? new Date(currentYear, currentMonth, selectedDate.slice(0, 2)) : currentDay);
+      selectedDate?.length === 10 ? new Date(selectedDate.slice(6), selectedDate.slice(3, 5) - 1, selectedDate.slice(0, 2))
+        : selectedDate?.length === 6 ? new Date(currentYear, selectedDate.slice(3, 5) - 1, selectedDate.slice(0, 2))
+          : selectedDate?.length === 3 ? new Date(currentYear, currentMonth, selectedDate.slice(0, 2)) : currentDay);
     setCurrentMonth(currentDay.getMonth())
     setCurrentYear(currentDay.getFullYear())
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
@@ -138,7 +138,7 @@ const Calendar = ({ onClose, selectedDate, setSelectedDate }) => {
           row.map((i, index) => (
             <div
               key={index}
-              className={`calendarDay ${selectedDate !== "" && i === Number(selectedDate.slice(0, 2)) ? 'active' : ''}`}
+              className={`calendarDay ${selectedDate !== "" && i === Number(selectedDate?.slice(0, 2)) ? 'active' : ''}`}
               onClick={() => handleDayClick(new Date(currentYear, currentMonth, i))}
             >
               {i}

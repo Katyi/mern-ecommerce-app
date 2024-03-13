@@ -14,9 +14,10 @@ import NewProduct from './pages/newProduct/NewProduct';
 import WishList from './pages/wishList/WishList';
 import { useSelector } from 'react-redux';
 import OrderList from './pages/orderList/OrderList';
+import { selectUser } from './redux/userSlice';
 
 function App() {
-  const user = useSelector((state) => state.user?.currentUser);
+  const user = useSelector(selectUser);
   return (
     <Router>
         <div className='wrapper'>

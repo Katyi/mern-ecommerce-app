@@ -2,24 +2,19 @@ import { CalendarToday, LocationSearching, MailOutline, PermIdentity, PhoneAndro
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { useLocation, useNavigate } from "react-router-dom";
 import "./user.css";
-import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { format } from "timeago.js";
-import { getUsers, updateUser } from "../../redux/apiCalls";
 import Select from '../../UI/select/Select';
 import CalendarPicker from '../../UI/CalendarPicker/CalendarPicker';
 import { imageUpload, imageDelete } from '../../services/imageUpload';
+import { useUpdateUserMutation } from '../../redux/usersApi';
 
 export default function User() {
   const location = useLocation();
-  const userId = location.pathname.split("/")[2];
-  const dispatch = useDispatch();
+  const {currentUser} = location.state;
+  const userId = currentUser._id;
   const navigate = useNavigate();
-  let currentUser = useSelector((state) =>
-    state.user.users.find((user) => user?._id === userId)
-  );
-  const currentImage = useSelector((state) => state.image.images);
-
+  const [updateUser] = useUpdateUserMutation();
   const [user, setUser] = useState(currentUser);
   const [file, setFile] = useState(null);
   const [fileForDelete, setFileForDelete] = useState(null);
@@ -113,10 +108,8 @@ export default function User() {
       newUser = { ...user, gender: gender, active: active === 'Yes' ? true : false, isAdmin: role === 'Admin' ? true : false }
     }
     delete newUser.password;
-    setUser(newUser);
     setFileName(null);
-    updateUser(userId, newUser, dispatch);
-    getUsers(dispatch);
+    updateUser({id: userId, body: newUser});
     navigate('/users');
   };
 
@@ -194,7 +187,7 @@ export default function User() {
                   onChange={handleChangeImage}
                 />
 
-                {user.img ? <button className="userImageBtn" onClick={handleDeleteImage} id="" type="button">
+                {user?.img ? <button className="userImageBtn" onClick={handleDeleteImage} id="" type="button">
                   <DeleteOutline className="userUpdateIcon"/>
                 </button>
                 : <button className="userImageBtn" onClick={handleDeleteInputFile} id="resetbtn" type="button">
@@ -314,4 +307,4 @@ export default function User() {
       </div>
     </div>
   );
-}
+};

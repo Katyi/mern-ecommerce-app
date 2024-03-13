@@ -2,32 +2,29 @@ import { useEffect, useState } from "react";
 import { userRequest } from "../../requestMethods";
 import "./widgetLg.css";
 import {format} from "timeago.js"
-import { getUsers } from "../../redux/apiCalls";
-import { useDispatch, useSelector } from "react-redux";
+import { useGetUsersQuery } from "../../redux/usersApi";
 
 export default function WidgetLg() {
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.user?.users);
+  const {  data: users = [], isLoading,
+    isFetching,
+    isError,
+    error, } = useGetUsersQuery();
   const [orders, setOrders] = useState([]);
 
   const getUserNamefromOrder = (userId) => {
     return users?.find(elem => elem._id === userId)?.username;
   };
+
+  const getOrders = async () => {
+    try {
+      const res = await userRequest.get("orders/?new=true");
+      setOrders(res.data);
+    } catch {}
+  };
   
   useEffect(() => {
-    const getOrders = async () => {
-      try {
-        const res = await userRequest.get("orders/?new=true");
-        setOrders(res.data);
-      } catch {}
-    };
     getOrders();
   }, []);
-
-  useEffect(() => {
-    getUsers(dispatch);
-  },[dispatch])
-
 
   const Button = ({ type }) => {
     return <button className={"widgetLgButton " + type}>{type}</button>;

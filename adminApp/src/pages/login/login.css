@@ -1,8 +1,24 @@
 
 
+.loginButton {
+  padding: 10px;
+  width: 100px;
+  background: rgb(246, 242, 242);
+  /* color: #fff; */
+  font-weight: 700;
+}
+.loginButton:focus {
+  /* border-color: none; */
+  background: lightgray;
+}
+.loginButton:hover {
+  /* border-color: none; */
+  background: lightgray;
+}
 .loginError {
   margin-top: 5px;
   font-size: 12px;
   font-weight: 700;
   color: red;
+  height: 20px;
 }

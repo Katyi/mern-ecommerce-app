@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import "./widgetSm.css";
-// import { Visibility } from "@material-ui/icons";
 import { Visibility } from "@mui/icons-material";
 import { userRequest } from "../../requestMethods";
 
 export default function WidgetSm() {
   const [users, setUsers] = useState([]);
 
+  const getUsers = async () => {
+    try {
+      const res = await userRequest.get("users/?new=true");
+      setUsers(res.data);
+    } catch {}
+  };
+
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const res = await userRequest.get("users/?new=true");
-        setUsers(res.data);
-      } catch {}
-    };
     getUsers();
   }, []);
 

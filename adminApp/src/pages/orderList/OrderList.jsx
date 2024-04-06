@@ -31,7 +31,7 @@ const OrderList = () => {
   const {  data: users = [] } = useGetUsersQuery();
   const [deleteOrder] = useDeleteOrderMutation();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = Math.floor((window.innerHeight - 130 - 20 - 46 - 57 - 10 - 32)/ 60);
+  const itemsPerPage = Math.floor((window.innerHeight - 130 - 20 - 46 - 57 - 10 - 32)/ 73);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const getPaginatedData = orders.slice(startIndex, endIndex);

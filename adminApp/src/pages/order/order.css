@@ -92,7 +92,7 @@
   cursor: pointer;
 }
 .orderButtonPart {
-  min-height: calc(100vh - 160px - 20px - 36px - 20px - 40px - 24px - 5px - 67px - 10px - 24px - 10px - 304px);
+  min-height: calc(100vh - 160px - 20px - 36px - 20px - 40px - 58px - 5px - 67px - 10px - 24px - 10px - 304px);
   display: flex;
   align-items: flex-end;
 }

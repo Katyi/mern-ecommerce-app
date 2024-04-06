@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import dayjs from 'dayjs';
 import { useGetOrdersQuery, useDeleteOrderMutation } from "../../redux/ordersApi";
 import { useGetUsersQuery } from "../../redux/usersApi";
+import dot from "../../assets/dot.svg";
 
 const styles = {
   table: {
@@ -30,7 +31,7 @@ const OrderList = () => {
   const {  data: users = [] } = useGetUsersQuery();
   const [deleteOrder] = useDeleteOrderMutation();
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = Math.floor((window.innerHeight - 130 - 20 - 46 - 57 - 10 - 32)/ 59);
+  const itemsPerPage = Math.floor((window.innerHeight - 130 - 20 - 46 - 57 - 10 - 32)/ 60);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const getPaginatedData = orders.slice(startIndex, endIndex);
@@ -47,13 +48,28 @@ const OrderList = () => {
     setCurrentPage(newPage);
   };
 
+  if (isLoading || isFetching) {
+    return <div className="loadingPage">
+      <img src={dot} alt="dot" className="dot"/>
+      <img src={dot} alt="dot" className="dot"/>
+      <img src={dot} alt="dot" className="dot"/>
+    </div>;
+  }
+
+  if (isError) {
+    console.log({ error });
+    return <div className="loadingPage">
+      <h2>{error.status}</h2>
+    </div>;
+  }
+  
   return (
     <div className="orderList">
       <div className="order_button_wrapper">
         <div className="OrdersTitle">Orders</div>
-        <Link to="/newOrder">
+        {/* <Link to="/newOrder">
           <button className="orderAddButton">Create new order</button>
-        </Link>
+        </Link> */}
       </div>
       <Table style={styles.table}>
         <TableHead style={styles.thead}>
@@ -80,7 +96,7 @@ const OrderList = () => {
             <TableCell style={{width:"5%"}}>{item.status}</TableCell>
             <TableCell style={{width:"20"}}>
               <div style={{display:"flex", alignItems:"center"}}>
-                <Link to={"/order/" + item._id} state={{currentOrder: orders.find((order) => order?._id === item._id)}}>
+                <Link to={"/orders/" + item._id} state={{currentOrder: orders.find((order) => order?._id === item._id)}}>
                   <button className="productListEdit">Edit</button>
                 </Link>
                 <DeleteOutline

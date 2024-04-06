@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Table, TableHead, TableBody, TableRow, TableCell, Pagination } from '@mui/material';
 import { imageDelete } from '../../services/imageUpload';
 import { useGetProductsQuery, useDeleteProductMutation } from "../../redux/productsApi";
+import dot from "../../assets/dot.svg";
 
 const styles = {
   table: {
@@ -47,7 +48,22 @@ export default function ProductList() {
   const handleChangePage = (event, newPage) => {
     setCurrentPage(newPage);
   };
-  
+
+  if (isLoading || isFetching) {
+    return <div className="loadingPage">
+      <img src={dot} alt="dot" className="dot"/>
+      <img src={dot} alt="dot" className="dot"/>
+      <img src={dot} alt="dot" className="dot"/>
+    </div>;
+  }
+
+  if (isError) {
+    console.log({ error });
+    return <div className="loadingPage">
+      <h2>{error.status}</h2>
+    </div>;
+  }
+
   return (
     <div className="productList">
       <div className="product_button_wrapper">

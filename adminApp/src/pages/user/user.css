@@ -32,6 +32,7 @@
   padding: 20px;
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  height: calc(100vh - 160px - 20px - 20px - 36px - 40px);
 }
 
 .userUpdate {
@@ -40,6 +41,7 @@
   -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
   margin-left: 20px;
+  height: calc(100vh - 160px - 20px - 20px - 36px - 40px);
 }
 
 .userShowTop {
@@ -102,7 +104,7 @@
 .userUpdateForm {
   /* display: flex; */
   /* justify-content: space-between; */
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 
 .userUpdateLeft {
@@ -154,7 +156,7 @@
   height: 24px;
 }
 .userSelectItem {
-  width: 250px;
+  /* width: 250px; */
   display: flex;
   flex-direction: column;
   margin-top: 10px;

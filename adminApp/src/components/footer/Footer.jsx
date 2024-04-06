@@ -8,7 +8,7 @@ const Footer = () => {
     <div className='footer'>
       <div className='leftPart'>
       <div className='copyright' >Copyright © A. EGOROVA 2022 - {new Date().getFullYear()}</div>
-      <Link to={'https://github.com/Katyi/spa-todo'}>
+      <Link to={'https://github.com/Katyi/mern-ecommerce-app'} target="_blank" tabIndex={-1}>
         <img src={githubIcon} alt="githubIcon" className='githubIcon' />
       </Link>
       </div>

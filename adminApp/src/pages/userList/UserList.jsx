@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Table, TableHead, TableBody, TableRow, TableCell, Pagination } from '@mui/material';
 import { imageDelete } from '../../services/imageUpload';
 import { useGetUsersQuery, useDeleteUserMutation } from "../../redux/usersApi";
+import dot from "../../assets/dot.svg";
 
 const styles = {
   table: {
@@ -28,14 +29,15 @@ const styles = {
 };
 
 export default function UserList() {
-  const {  data: users = [], isLoading,
+  const {  data: users = [], 
+    isLoading,
     isFetching,
     isError,
     error, } = useGetUsersQuery();
   const [deleteUser] = useDeleteUserMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = Math.floor((window.innerHeight - 130 - 20 - 46 - 57 - 10 - 32)/ 67);
-
+  
   const handleDelete = (id) => {
     let ind = users.findIndex(item => item._id === id);
     if (users[ind]?.img) {
@@ -51,9 +53,27 @@ export default function UserList() {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const getPaginatedData = users.slice(startIndex, endIndex);
+
+  if (isLoading || isFetching) {
+    return <div className="loadingPage">
+      <img src={dot} alt="dot" className="dot"/>
+      <img src={dot} alt="dot" className="dot"/>
+      <img src={dot} alt="dot" className="dot"/>
+    </div>;
+  }
+
+  if (isError) {
+    console.log({ error });
+    return <div className="loadingPage">
+      <h2>{error.status}</h2>
+    </div>;
+  }
   
   return (
     <div className="userList">
+      {/* {isLoading && <div className="wrapper" style={{display:'flex', alignItems:'center', justifyContent:'center'}}>
+        <h2>Loading<span className="dot">.</span><span className="dot">.</span><span className="dot">.</span></h2>
+      </div>} */}
       <div className="user_button_wrapper">
         <div className="usersTitle">Users</div>
         <Link to="/newUser">

@@ -1,0 +1,64 @@
+.selectContainer {
+  position: relative; /* Allow for calendar picker positioning */
+  background: rgb(255, 255, 255);
+}
+.productsSelectButton {
+  min-width: 234px;
+  /* margin-left: -5px; */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  border: 1px solid gray;
+  padding: 0px 10px;
+  height: 35.5px;
+}
+.productsSelectTitle {
+  border: none;
+  margin-right: 15px;
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+  flex-grow: 1; /* Allow input to fill remaining space */
+}
+.productsSelectTitle:focus {
+  outline: none;
+}
+.optionTitle {
+  font-size: 15px;
+  font-weight: 500;
+  color: #1c1f22;
+}
+.downArrow {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+.productsDropdownStyle {
+  position: absolute; /* Position relative to input element */
+  width: calc(100% - 32px);
+  height: 250px;
+  padding: 5px 15px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 0px 0px 5px 5px;
+  transition: max-height 0.2s ease;
+  overflow-y: scroll;
+  z-index: 3;
+}
+.hidden1 {
+  visibility: hidden;
+}
+.show1 {
+  visibility: visible;
+}
+.dropdownItem {
+  height: 25px;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  cursor: pointer;
+}
+.rotate {
+  transform: rotate(180deg);
+}

@@ -8,6 +8,7 @@
   border: 1px solid gray;
   padding: 5px 5px 5px 15px;
   background: rgb(255, 255, 255);
+  width: 232px;
 }
 .dateInput:focus-within {
   border: 1px solid gray;

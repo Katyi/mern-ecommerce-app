@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import dayjs from 'dayjs';
 import { useGetWishlistsQuery, useDeleteWishlistMutation } from "../../redux/wishlistsApi";
 import { useGetUsersQuery } from "../../redux/usersApi";
+import dot from "../../assets/dot.svg";
 
 const styles = {
   table: {
@@ -47,42 +48,50 @@ const WishList = () => {
     setCurrentPage(newPage);
   };
 
+  if (isLoading || isFetching) {
+    return <div className="loadingPage">
+      <img src={dot} alt="dot" className="dot"/>
+      <img src={dot} alt="dot" className="dot"/>
+      <img src={dot} alt="dot" className="dot"/>
+    </div>;
+  }
+
+  if (isError) {
+    console.log({ error });
+    return <div className="loadingPage">
+      <h2>{error.status}</h2>
+    </div>;
+  }
+  
   return (
     <div className="wishList">
       <div className="wishList_button_wrapper">
         <div className="WishlistsTitle">Wishlists</div>
-        <Link to="/newWishlist">
-          <button className="wishlistAddButton">Create new wishlist</button>
-        </Link>
       </div>
       <Table style={styles.table}>
         <TableHead style={styles.thead}>
           <TableRow>
             <TableCell style={{width:"10%", fontWeight: "700", paddingLeft: "5%"}} >No.</TableCell>
-            <TableCell style={{width:"10%", fontWeight: "700"}}>Order ID</TableCell>
-            <TableCell style={{width:"10%", fontWeight: "700"}}>User</TableCell>
-            <TableCell style={{width:"20%", fontWeight: "700"}}>Created date</TableCell>
-            <TableCell style={{width:"20%", fontWeight: "700"}}>Updated date</TableCell>
-            <TableCell style={{width:"20%", fontWeight: "700"}}>Action</TableCell>
+            <TableCell style={{width:"12%", fontWeight: "700"}}>Order ID</TableCell>
+            <TableCell style={{width:"12%", fontWeight: "700"}}>User</TableCell>
+            <TableCell style={{width:"22%", fontWeight: "700"}}>Created date</TableCell>
+            <TableCell style={{width:"22%", fontWeight: "700"}}>Updated date</TableCell>
+            <TableCell style={{width:"10%", fontWeight: "700"}}>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
         {getPaginatedData.map((item, index) => (
           <TableRow key={item._id}>
             <TableCell style={{width:"10%", paddingLeft: "5%"}}>{startIndex + index+1}</TableCell>
-            <TableCell style={{width:"10%"}}>{item._id}</TableCell>
-            <TableCell style={{width:"10%"}}>{getUserNamefromOrder(item.userId)}</TableCell>
-            <TableCell style={{width:"20%"}}>{dayjs(item.createdAt).format('DD.MM.YYYY HH:mm:ss')}</TableCell>
-            <TableCell style={{width:"20%"}}>{dayjs(item.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</TableCell>
-            <TableCell style={{width:"20"}}>
+            <TableCell style={{width:"12%"}}>{item._id}</TableCell>
+            <TableCell style={{width:"12%"}}>{getUserNamefromOrder(item.userId)}</TableCell>
+            <TableCell style={{width:"22%"}}>{dayjs(item.createdAt).format('DD.MM.YYYY HH:mm:ss')}</TableCell>
+            <TableCell style={{width:"22%"}}>{dayjs(item.updatedAt).format('DD.MM.YYYY HH:mm:ss')}</TableCell>
+            <TableCell style={{width:"10"}}>
               <div style={{display:"flex", alignItems:"center"}}>
-                <Link to={"/order/" + item._id} state={{currentWishlist: wishlists.find((wishlist) => wishlist?._id === item._id)}}>
-                  <button className="productListEdit">Edit</button>
+                <Link to={"/wishlists/" + item._id} state={{currentWishlist: wishlists.find((wishlist) => wishlist?._id === item._id)}}>
+                  <button className="productListEdit">View</button>
                 </Link>
-                <DeleteOutline
-                  className="orderListDelete"
-                  onClick={() => handleDelete(item._id)}
-                />
               </div>
             </TableCell>
           </TableRow>

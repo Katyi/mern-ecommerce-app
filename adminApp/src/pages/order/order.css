@@ -1,0 +1,107 @@
+.order {
+  flex: 4;
+  padding: 10px 20px;
+}
+.orderTitleContainer {
+  display: flex;
+  /* justify-content: space-between; */
+}
+.orderTitle {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 36px;
+}
+.orderContainer {
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  padding: 20px;
+  -webkit-box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px 0px 15px -10px rgba(0, 0, 0, 0.75);
+  min-height: calc(100vh - 160px - 20px - 36px - 20px - 40px);
+}
+.orderTop {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-left: 5px;
+}
+.orderInfoItem {
+  display: flex;
+  gap: 5px;
+}
+.orderInfoKey, .orderInfoValue {
+  font-weight: 300;
+}
+.orderInfoKey {
+  font-weight: 500;
+}
+.orderUpdateForm {
+  margin-top: 5px;
+}
+.OrderUpdateFormTopPart {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-left: 5px;
+}
+.OrderProductsPartTitle {
+  margin-top: 10px;
+  font-weight: 500;
+  margin-left: 5px;
+}
+.OrderProductsPart {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 32% 32% 32%;
+  gap: 0 2%;
+}
+.OrderProductPart {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 0.1px solid lightgray;
+  border-radius: 5px;
+  padding: 10px;
+}
+.OrderProductPart:nth-child(1), .OrderProductPart:nth-child(2), .OrderProductPart:nth-child(3) {
+  margin-top: 0;
+}
+.orderUpdateItem {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+}
+.orderUpdateSecondItem {
+  display: flex;
+  padding: 0px 5px;
+  align-items: center;
+  justify-content: space-between;
+}
+.orderUpdateInput {
+  border: none;
+  width: 250px;
+  height: 30px;
+  border-bottom: 1px solid gray;
+}
+.orderProductDelete {
+  margin-top: 10px;
+  color: red;
+  cursor: pointer;
+}
+.orderButtonPart {
+  min-height: calc(100vh - 160px - 20px - 36px - 20px - 40px - 24px - 5px - 67px - 10px - 24px - 10px - 304px);
+  display: flex;
+  align-items: flex-end;
+}
+.orderUpdateButton {
+  border-radius: 5px;
+  border: none;
+  padding: 5px 15px;
+  cursor: pointer;
+  background-color: darkblue;
+  color: white;
+  font-weight: 600;
+}

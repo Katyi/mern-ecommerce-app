@@ -82,7 +82,6 @@ const Cart = () => {
           tokenId: stripeToken.id,
           amount: getTotal()*100,
         });
-        console.log(res.data)
         handleCheckout();
         navigate('/success', { state: {data: res.data}});
       } catch {}

@@ -58,7 +58,6 @@ export default function ProductList() {
   }
 
   if (isError) {
-    console.log({ error });
     return <div className="loadingPage">
       <h2>{error.status}</h2>
     </div>;

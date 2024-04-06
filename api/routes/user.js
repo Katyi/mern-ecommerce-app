@@ -19,8 +19,7 @@ router.post("/", async(req, res)=>{
     ).toString();
   }
   const newUser = new User(req.body);
-  // console.log(newUser)
-
+  
   try {
     const savedUser = await newUser.save();
     res.status(200).json(savedUser);

@@ -37,8 +37,8 @@ const SelectLang = ({options, selected, onChange, open, setOpen}) => {
       </div>
       <div className={`dropdownStyle ${open ? "show" : "hidden"}`}>
         {options?.map((opt) => (
-          <div className="dropdownItem" key={opt.value} onClick={()=> onChange(opt.value)}>
-            <div className="optionTitle">{opt.value.toLocaleUpperCase()}</div>
+          <div className="dropdownItem" key={opt.code} onClick={()=> onChange(opt.code)}>
+            <div className="optionTitle">{opt.code.toLocaleUpperCase()}</div>
           </div>
         ))}
       </div>

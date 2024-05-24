@@ -1,12 +1,14 @@
 import { ArrowLeftOutlined, ArrowRightOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { sliderItems } from "../../data.js";
 import { useNavigate } from "react-router-dom";
 import { Container, Wrapper, Arrow, Slide, ImgContainer, Image, InfoContainer, Title, Desc, Button } from './styled';
+import { useTranslation } from 'react-i18next';
 
 const Slider = () => {
+  const { t } = useTranslation();
   const [slideIndex, setSlideIndex] = useState(0);
   const navigate = useNavigate();
+  const sliderItems = t('sliderItems', { returnObjects: true });
   
   const handleClick = (direction) => {
     if (direction === 'left') {
@@ -30,7 +32,7 @@ const Slider = () => {
             <InfoContainer>
               <Title>{item.title}</Title>
               <Desc>{item.desc}</Desc>
-              <Button onClick={()=> navigate(`/products/all`)}>SHOP NOW</Button>
+              <Button onClick={()=> navigate(`/products/all`)}>{t("ShopNowButton")}</Button>
             </InfoContainer>
           </Slide>
         ))}

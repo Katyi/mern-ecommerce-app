@@ -12,8 +12,10 @@ import UpdateUser from '../../components/updateUser/UpdateUser';
 import { Container, Wrapper, Header, LeftPart, Title, SubTitle, TopText, InfoPart, Row, Field1, Field2, 
   RightPart, UserImage, Orders, Button, Info, OrderInfoPart, OrderRow, OrderField, Order, OrderDetail, Image, Details, 
   ProductField, FilterColor, Summary, SummaryTitle, SummaryItem, SummaryItemText, SummaryItemPrice } from './styled.js';
+import { useTranslation } from 'react-i18next';
 
 const UserPage = () => {
+  const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.currentUser);
@@ -82,11 +84,11 @@ const UserPage = () => {
       <Announcement/>
       <Wrapper>
         {/* BUTTON AND LINKS */}
-        <TopText onClick={()=>navigate('/cart')}>Shopping Bag ({cart?.length})</TopText>
-        <TopText onClick={()=>navigate('/wishlist')}>Your Wishlist ({wishlist?.length})</TopText>
-        <Button onClick={()=> navigate('/products/all')}>CONTINUE SHOPPING</Button>
-        <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
-        <Button onClick={handleModal}>UPDATE ACCOUNT</Button>
+        <TopText onClick={()=>navigate('/cart')}>{t("shoppingBag")} ({cart?.length})</TopText>
+        <TopText onClick={()=>navigate('/wishlist')}>{t("yourWishlist")} ({wishlist?.length})</TopText>
+        <Button onClick={()=> navigate('/products/all')}>{t("toContinueShoppingLink")}</Button>
+        <Button onClick={()=> navigate('/home')}>{t("toHomePage")}</Button>
+        <Button onClick={handleModal}>{t("userPageUpdateAccount")}</Button>
         {/* HEADER */}
         <Header>
           {/* USERNAME INFO */}
@@ -94,31 +96,31 @@ const UserPage = () => {
             <Title>{user?.username}</Title>
             <InfoPart>
             <Row>
-              <Field1>Full name:</Field1>
+              <Field1>{t("userPageFullName")}:</Field1>
               <Field2>{user?.fullname}</Field2>
             </Row>
             <Row>
-              <Field1>Gender:</Field1>
+              <Field1>{t("userPageGender")}:</Field1>
               <Field2>{user?.gender}</Field2>
             </Row>
             <Row>
-              <Field1>Birthday:</Field1>
+              <Field1>{t("userPageBirthday")}:</Field1>
               <Field2>{user?.birthday}</Field2>
             </Row>
             <Row>
-              <Field1>Occupation:</Field1>
+              <Field1>{t("userPageOccupation")}:</Field1>
               <Field2>{user?.occupation}</Field2>
             </Row>
             <Row>
-              <Field1>Address:</Field1>
+              <Field1>{t("userPageAddress")}:</Field1>
               <Field2>{user?.address}</Field2>
             </Row>
             <Row>
-              <Field1>Phone:</Field1>
+              <Field1>{t("userPagePhone")}:</Field1>
               <Field2>{user?.phone}</Field2>
             </Row>
             <Row>
-              <Field1>Email:</Field1>
+              <Field1>{t("userPageEmail")}:</Field1>
               <Field2>{user?.email}</Field2>
             </Row>
           </InfoPart>
@@ -131,17 +133,17 @@ const UserPage = () => {
         {/* ORDER HISTORY */}
         <Orders>
           <br/>
-            <SubTitle>My orders history</SubTitle>
+            <SubTitle>{t("userPageMyOrdersHistory")}</SubTitle>
           <br/>
           {/* ORDER INFO */}
           {orders?.map((order)=>
             <Info key={order._id}>
               <OrderInfoPart>
                 <OrderField><b>{dayjs(order.createdAt).format('DD.MM.YYYY HH:mm:ss')}</b></OrderField>
-                <OrderField><b>Order ID:</b> {order._id}</OrderField>
-                <OrderField><b>Order amount:</b> ${order.amount}</OrderField>
-                <OrderField><b>Order address:</b> {order.address}</OrderField>
-                <OrderField><b>Order status:</b> {order.status}</OrderField>
+                <OrderField><b>{t("userPageMyOrderID")}:</b> {order._id}</OrderField>
+                <OrderField><b>{t("userPageMyOrderAmount")}:</b> ${order.amount}</OrderField>
+                <OrderField><b>{t("userPageMyOrderAddress")}:</b> {order.address}</OrderField>
+                <OrderField><b>{t("userPageMyOrderStatus")}:</b> {order.status}</OrderField>
               </OrderInfoPart>
               <div style={{display:'flex', width:'100%', alignItems:'start'}}>
               <Order >
@@ -156,34 +158,34 @@ const UserPage = () => {
                       }}
                     />
                     <Details>
-                      <ProductField><b>Product ID:</b> {product?.productId}</ProductField>
-                      <ProductField><b>Product:</b> {product?.title}</ProductField>
-                      <ProductField><b>Description:</b> {product?.desc}</ProductField>
+                      <ProductField><b>ID:</b> {product?.productId}</ProductField>
+                      <ProductField><b>{t("product")}:</b> {product?.title}</ProductField>
+                      <ProductField><b>{t("description")}:</b> {product?.desc}</ProductField>
                        <FilterColor color={product?.color}/> 
-                      <ProductField><b>Size:</b> {product?.size}</ProductField>
-                      <ProductField><b>Price:</b> {product?.price}</ProductField>
-                      <ProductField><b>Quantity:</b> {product?.quantity}</ProductField>
+                      <ProductField><b>{t("size")}:</b> {product?.size}</ProductField>
+                      <ProductField><b>{t("userPagePrice")} :</b> {product?.price}</ProductField>
+                      <ProductField><b>{t("userPageQuantity")}:</b> {product?.quantity}</ProductField>
                     </Details>
                     
                   </OrderDetail>
                 )}
               </Order>
               <Summary>
-                <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+                <SummaryTitle>{t("orderSummary")}</SummaryTitle>
                 <SummaryItem>
-                  <SummaryItemText>Subtotal</SummaryItemText>
+                  <SummaryItemText>{t("subtotal")}</SummaryItemText>
                   <SummaryItemPrice>$ {getTotal(userOrders.filter(item => item.orderId === order._id))}</SummaryItemPrice>
                 </SummaryItem>
                 <SummaryItem>
-                  <SummaryItemText>Estimated Shipping</SummaryItemText>
+                  <SummaryItemText>{t("estimatedShipping")}</SummaryItemText>
                   <SummaryItemPrice>$ 5.90</SummaryItemPrice>
                 </SummaryItem>
                 <SummaryItem>
-                  <SummaryItemText>Shipping Discount</SummaryItemText>
+                  <SummaryItemText>{t("shippingDiscount")}</SummaryItemText>
                   <SummaryItemPrice>$ -5.90</SummaryItemPrice>
                 </SummaryItem>
                 <SummaryItem type="total">
-                  <SummaryItemText>Total</SummaryItemText>
+                  <SummaryItemText>{t("total")}</SummaryItemText>
                   <SummaryItemPrice>$ {getTotal(userOrders.filter(item => item.orderId === order._id))}</SummaryItemPrice>
                 </SummaryItem>
               </Summary>

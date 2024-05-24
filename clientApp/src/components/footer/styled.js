@@ -17,7 +17,8 @@ export const Left = styled.div`
 export const Logo = styled.h1``;
 
 export const Desc = styled.p`
-  margin: 20px 0px;
+  margin: 20px 0px 30px;
+  line-height: 24px;
 `;
 
 export const SocialContainer = styled.div`

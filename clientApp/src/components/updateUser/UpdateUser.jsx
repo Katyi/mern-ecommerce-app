@@ -10,8 +10,10 @@ import Xmark from '../../assets/circle-xmark-solid.svg';
 import { handleValidation } from "./handleValidation";
 import {Container, Title, UserForm, UserImage, CloseModalIcon, UserItem, UserImageBtn } from './styled';
 import { imageUpload, imageDelete } from '../../services/imageUpload';
+import { useTranslation } from 'react-i18next';
 
 const UpdateUser = ({openModal, setOpenModal}) => {
+  const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
   let currentUser = useSelector((state) => state.user.currentUser);
   let userId = useSelector((state) => state.user.currentUser._id);
@@ -88,7 +90,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
   return (
     <Container>
       <div style={{display:"flex", alignItems:"center", justifyContent:"space-between"}}>
-        <Title>{user?.username}'s account:</Title>
+        <Title>{user?.username}{t("UpdateUserTitle")}</Title>
         <CloseModalIcon onClick={() => setOpenModal(false)}>
           <img src={Xmark} alt="Xmark" />
         </CloseModalIcon>
@@ -115,7 +117,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
         </UserImage>
         {/* USER OTHER INFO */}
         <UserItem>
-          <label>Username*</label>
+          <label>{t("UpdateUserUsername")}</label>
           <input
             name="username"
             type="text"
@@ -126,7 +128,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
           <span className="error">{errors.username}</span>
         </UserItem>
         <UserItem>
-          <label>Fullname*</label>
+          <label>{t("UpdateUserFullname")}</label>
           <input 
             name="fullname" 
             type="text" 
@@ -137,7 +139,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
           <span>{errors.fullname}</span>
         </UserItem>
         <UserItem>
-          <label>Gender</label>
+          <label>{t("UpdateUserGender")}</label>
           <Select
             options={options}
             selected={gender || ""}
@@ -147,7 +149,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
           />
         </UserItem>
         <UserItem>
-          <label>birthday</label>
+          <label>{t("UpdateUserBirthday")}</label>
           <DateInput 
             selectedDate={user?.birthday || ""} 
             setSelectedDate={v => setUser({ ...user, birthday: v })}
@@ -155,7 +157,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
           <span className="error">{errors.birthday}</span>
         </UserItem>
         <UserItem>
-          <label>Occupation</label>
+          <label>{t("UpdateUserOccupation")}</label>
           <input 
             name="occupation"
             type="text" 
@@ -165,7 +167,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
           />
         </UserItem>
         <UserItem>
-          <label>Phone</label>
+          <label>{t("UpdateUserPhone")}</label>
           <InputMask
             name="phone"
             className="inputMask" 
@@ -178,7 +180,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
           <span className="error">{errors.phone}</span>
         </UserItem>
         <UserItem>
-          <label>Email*</label>
+          <label>{t("UpdateUserEmail")}</label>
           <input
             name="email"
             type="text" 
@@ -189,7 +191,7 @@ const UpdateUser = ({openModal, setOpenModal}) => {
           <span>{errors.email}</span>
         </UserItem>
         <UserItem>
-          <label>Address</label>
+          <label>{t("UpdateUserAddress")}</label>
           <input 
             name="address"
             type="text" 
@@ -199,10 +201,10 @@ const UpdateUser = ({openModal, setOpenModal}) => {
           />
         </UserItem>
         <UserItem style={{marginTop: "22px"}}>
-          <button type="submit">UPDATE</button>
+          <button type="submit">{t("UpdateUserUpdate")}</button>
         </UserItem>
       </UserForm>
-      <span>* - required</span>
+      <span>* - {t("UpdateUserRequired")}</span>
     </Container>
   )
 }

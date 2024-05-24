@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { categories } from "../../data";
 import { mobile } from "../../responsive";
 import CategoryItem from "../categoryItem/CategoryItem";
+import { useTranslation } from 'react-i18next';
 
 const Container = styled.div`
   width: 100%;
@@ -13,6 +13,9 @@ const Container = styled.div`
 `;
 
 const Categories = () => {
+  const { t } = useTranslation();
+  const categories = t('categories', { returnObjects: true });
+
   return <Container>
     {categories.map(item => (
       <CategoryItem item={item} key={item.id}/>

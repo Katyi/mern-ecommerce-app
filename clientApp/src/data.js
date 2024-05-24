@@ -13,8 +13,7 @@ import product_photo_6 from "../src/img/productPhoto_6.png";
 import product_photo_7 from "../src/img/productPhoto_7.png";
 import product_photo_8 from "../src/img/productPhoto_8.png";
 
-
-export const sliderItems = [
+const sliderItems = [
   {
     id: 1,
     img: image_0,
@@ -38,7 +37,7 @@ export const sliderItems = [
   },
 ];
 
-export const categories = [
+const categories = [
   {
     id: 1,
     img: category_photo_1,

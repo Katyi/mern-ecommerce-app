@@ -11,10 +11,12 @@ import { addOrder, deleteCart, getCart, updateCart } from "../../redux/apiCalls"
 import { Container, Wrapper, Title, Top, TopButton, TopTexts, TopText, Bottom, Info, Product, ProductDetail, Image, 
   Details, ProductName, ProductId, ProductColor, ProductSize, PriceDetail, ProductAmountContainer, 
   ProductAmount, ProductPrice, Hr, Summary, SummaryTitle, SummaryItem, SummaryItemText, SummaryItemPrice, Button } from './styled';
+import { useTranslation } from 'react-i18next';
 
 const KEY = import.meta.env.VITE_STRIPE;
 
 const Cart = () => {
+  const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
   const [productIdArr, setProductIdArr] = useState([]);
   const [productsOfCart, setProductsOfCart] = useState([]);
@@ -121,16 +123,16 @@ const Cart = () => {
       <Navbar/>
       <Announcement />
       <Wrapper>
-        <Title>YOUR BAG</Title>
+        <Title>{t("cartTitle")}</Title>
         <Top>
           <div style={{display:'flex', gap:'20px'}}>
-            <TopButton onClick={()=> navigate('/products/all')}>CONTINUE SHOPPING</TopButton>
-            <TopButton onClick={()=> navigate('/home')}>TO HOME PAGE</TopButton>
-            <TopButton type="filled" onClick={() => deleteUserCart()}>CLEAR CART</TopButton>
+            <TopButton onClick={()=> navigate('/products/all')}>{t("toContinueShoppingLink")}</TopButton>
+            <TopButton onClick={()=> navigate('/home')}>{t("toHomePage")}</TopButton>
+            <TopButton type="filled" onClick={() => deleteUserCart()}>{t("cartClearCart")}</TopButton>
           </div>
           <TopTexts>
-            <TopText>Shopping Bag ({cart?.length})</TopText>
-            <TopText onClick={()=>navigate('/wishlist')}>Your Wishlist ({wishlist?.length})</TopText>
+            <TopText>{t("shoppingBag")} ({cart?.length})</TopText>
+            <TopText onClick={()=>navigate('/wishlist')}>{t("yourWishlist")} ({wishlist?.length})</TopText>
           </TopTexts>
           <StripeCheckout
             name="clientapp"
@@ -142,7 +144,7 @@ const Cart = () => {
             token={onToken}
             stripeKey={KEY}
           >
-            <TopButton type="filled">CHECKOUT NOW</TopButton>
+            <TopButton type="filled">{t("cartCheckOutNow")}</TopButton>
           </StripeCheckout>
         </Top>
         <Bottom>
@@ -157,11 +159,11 @@ const Cart = () => {
                   }}
                 />
                 <Details>
-                  <ProductName><b>Product:</b> {product?.title}</ProductName>
-                  <ProductName><b>Description:</b> {product?.desc}</ProductName>
+                  <ProductName><b>{t("product")}:</b> {product?.title}</ProductName>
+                  <ProductName><b>{t("description")}:</b> {product?.desc}</ProductName>
                   <ProductId><b>ID:</b> {product?._id}</ProductId>
                   <ProductColor color={product?.color}/>
-                  <ProductSize><b>Size:</b> {product?.size}</ProductSize>
+                  <ProductSize><b>{t("size")}:</b> {product?.size}</ProductSize>
                 </Details>
               </ProductDetail>
               <PriceDetail>
@@ -176,21 +178,21 @@ const Cart = () => {
           ))}
           </Info>
           <Summary>
-            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+            <SummaryTitle>{t("orderSummary")}</SummaryTitle>
             <SummaryItem>
-              <SummaryItemText>Subtotal</SummaryItemText>
+              <SummaryItemText>{t("subtotal")}</SummaryItemText>
               <SummaryItemPrice>$ {getTotal()}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
+              <SummaryItemText>{t("estimatedShipping")}</SummaryItemText>
               <SummaryItemPrice>$ 5.90</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
-              <SummaryItemText>Shipping Discount</SummaryItemText>
+              <SummaryItemText>{t("shippingDiscount")}</SummaryItemText>
               <SummaryItemPrice>$ -5.90</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type="total">
-              <SummaryItemText>Total</SummaryItemText>
+              <SummaryItemText>{t("total")}</SummaryItemText>
               <SummaryItemPrice>$ {getTotal()}</SummaryItemPrice>
             </SummaryItem>
             <StripeCheckout
@@ -203,7 +205,7 @@ const Cart = () => {
               token={onToken}
               stripeKey={KEY}
             >
-              <Button>CHECKOUT NOW</Button>
+              <Button>{t("cartCheckOutNow")}</Button>
             </StripeCheckout>
           </Summary>
         </Bottom>

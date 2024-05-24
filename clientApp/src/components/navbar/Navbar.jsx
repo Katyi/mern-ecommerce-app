@@ -6,32 +6,35 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from 'react-router-dom';
 import { getCart, getUser, getWishlist, logout } from '../../redux/apiCalls.js';
 import { Container, Wrapper, Left, Language, UserName, SearchContainer, Input, Center, Logo, Right, MenuItem, Avatar } from './styled';
-import { languages } from '../../constants/languages';
+import { LANGUAGES } from '../../constants/languages';
 import Select from '../../UI/selectLang/SelectLang';
-
+import { useTranslation } from "react-i18next";
 
 const Navbar = () => {
+  const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.currentUser?._id);
   const user = useSelector((state) => state.user.currentUser);
+  const navigate = useNavigate();
   
   const quantity = useSelector((state) => state.carts?.currentCart?.products?.length);
   const quantityWishlist = useSelector((state) => state.wishlists?.currentWishlist?.products?.length);
   const userName = useSelector((state) => state.user?.currentUser?.username);
-  const navigate = useNavigate();
-
-  const [language, setLanguage] = useState('en');
   const [open, setOpen] = useState(false);
 
-  const optionsLanguages  = [
-    { value: 'en'},
-    { value: 'ru'},
-  ];
-
-  const handleLanguagesSelectChange = (value) => {
-    setLanguage(value);
+  const onChangeLang = (value) => {
+    const lang_code = value;
+    i18n.changeLanguage(lang_code);
+    console.log(i18n.language);
     setOpen(false);
-  }
+  };
+
+  const handleClick = async(e) => {
+    e.preventDefault();
+    await logout(dispatch, user);
+    localStorage.removeItem("persist:root");
+    navigate('/');
+  };
   
   useEffect(() => {
     getCart(userId, dispatch);
@@ -41,55 +44,44 @@ const Navbar = () => {
     getWishlist(userId, dispatch);
   },[userId, quantityWishlist]);
 
-  const handleClick = async(e) => {
-    e.preventDefault();
-    // navigate('/');
-    await logout(dispatch, user);
-    localStorage.removeItem("persist:root");
-    navigate('/');
-  };
-
   return (
     <Container>
       <Wrapper>
         <Left>
-          {/* <Language>EN</Language> */}
+          {/* LANGUAGE SELECT */}
           <Select
-            options={optionsLanguages}
-            selected={language || ""}
-            onChange={handleLanguagesSelectChange}
+            options={LANGUAGES}
+            selected={i18n.language}
+            onChange={onChangeLang}
             open={open}
             setOpen={setOpen}
           />
+
           <SearchContainer>
-            <Input placeholder='Search'/>
+            <Input placeholder={t("navbarSearchPlaceholder")}/>
             <Search style={{color:"gray", fontSize:16}}/>
           </SearchContainer>
         </Left>
-        <Center><Logo>SHOP</Logo></Center>
+        <Center><Logo>{t("shopTitle")}</Logo></Center>
         <Right>
-          {/* <MenuItem>REGISTER</MenuItem>
-          <MenuItem>SIGN IN</MenuItem> */}
-          <Tooltip title={`Open ${userName}'s account`}>
+          <Tooltip title={t("navbarAccount")}>
             <Avatar src={user?.img || "https://crowd-literature.eu/wp-content/uploads/2015/01/no-avatar.gif"} alt="" onClick={()=>navigate("/account")}/>
           </Tooltip>
-          {/* <UserName>{userName}</UserName> */}
-          {/* <MenuItem onClick={handleClick}>OUT</MenuItem> */}
           <MenuItem >
-            <Tooltip title="Out">
+            <Tooltip title={t("navbarOut")}>
               <Badge style={{marginRight:"20px"}} onClick={handleClick}>
                 <ExitToAppOutlined color="action"/>
               </Badge>
             </Tooltip>
             <Link to={'/wishlist'}>
-              <Tooltip title="Open wislist">
+              <Tooltip title={t("navbarOpenWishList")}>
                 <Badge badgeContent={quantityWishlist} color="primary" style={{marginRight:"20px"}}>
                   <FavoriteBorderOutlined color='action'/>
                 </Badge>
               </Tooltip>
             </Link>
             <Link to={'/cart'}>
-              <Tooltip title="Open Cart">
+              <Tooltip title={t("navbarOpenCart")}>
                 <Badge badgeContent={quantity} color="primary">
                   <ShoppingCartOutlined color="action" />
                 </Badge>

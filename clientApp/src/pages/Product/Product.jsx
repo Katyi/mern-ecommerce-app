@@ -11,8 +11,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Container, Wrapper, ImgContainer, Image, InfoContainer, TitleContainer, Title, Icon, Desc, 
   Price, FilterContainer, Filter, FilterTitle, FilterColor, FilterSize, FilterSizeOption, AddContainer, 
   AmountContainer, Amount, Button } from './styled';
+import { useTranslation } from 'react-i18next';
 
 const Product = () => {
+  const { i18n, t } = useTranslation();
   const location = useLocation();
   const id = location.pathname.split('/')[2];
   const [product, setProduct] = useState({});
@@ -103,8 +105,8 @@ const Product = () => {
           />
         </ImgContainer>
         <InfoContainer>
-          <Button onClick={()=> navigate('/home')}>TO HOME PAGE</Button>
-          <Button onClick={()=> navigate('/products/all')} style={{marginLeft:"10px"}}>CONTINUE SHOPPING</Button>
+          <Button onClick={()=> navigate('/home')}>{t("toHomePage")} </Button>
+          <Button onClick={()=> navigate('/products/all')} style={{marginLeft:"10px"}}>{t("toContinueShoppingLink")} </Button>
           <TitleContainer>
             <Title>{product.title}</Title>
             {wishlistProducts?.findIndex((elem) => elem.productId === product._id && elem.color === color && elem.size === size) > -1 &&
@@ -117,7 +119,7 @@ const Product = () => {
           <Price>$ {product.price}</Price>
           <FilterContainer>
             <Filter>
-              <FilterTitle>Color</FilterTitle>
+              <FilterTitle>{t("color")}</FilterTitle>
               {product.color?.map((c) => (
                 <FilterColor color={c} key={c} onClick={() => {
                   setColor(c);
@@ -125,7 +127,7 @@ const Product = () => {
               ))}
             </Filter>
             <Filter>
-              <FilterTitle>Size</FilterTitle>
+              <FilterTitle>{t("size")}</FilterTitle>
               <FilterSize
                 value={size}
                 onChange={(e)=>setSize(e.target.value)}>
@@ -141,9 +143,9 @@ const Product = () => {
               <Amount>{quantity}</Amount>
               <Add onClick={() => handleQuantity("inc")} style={{cursor:'pointer'}}/>
             </AmountContainer>
-            <Button onClick={addToCart}>ADD TO CART</Button>
+            <Button onClick={addToCart}>{t("ProductAddToCart")}</Button>
             {wishlistProducts?.findIndex((elem) => elem.productId === product._id && elem.color === color && elem.size === size) === -1 &&
-              <Button onClick={addToWishlist}>ADD TO WISHLIST</Button>
+              <Button onClick={addToWishlist}>{t("ProductAddToWishList")}</Button>
             }
           </AddContainer>
         </InfoContainer>

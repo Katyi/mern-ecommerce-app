@@ -5,8 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { addCart, addWishlist, getCart, getWishlist, updateCart, updateWishlist } from "../../redux/apiCalls";
 import { useState } from "react";
 import { Info, Container, Circle, Image, Icon } from './styled';
+import { useTranslation } from 'react-i18next';
 
 const Product = ({item}) => {
+  const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.user.currentUser?._id);
   const cart = useSelector((state) => state.carts.currentCart);
@@ -17,6 +19,7 @@ const Product = ({item}) => {
   const [size, setSize] = useState(item.size[0]);
 
   const addToCart = async(product) => {
+
     if (!cart) {
       let newProdArr = {productId: product._id, quantity: 1, color: color, size: size};
       const newCart = { userId: userId, products: newProdArr};
@@ -68,12 +71,12 @@ const Product = ({item}) => {
         }}
       />
       <Info>
-        <Tooltip title="Add to Cart">
+        <Tooltip title={t("ProductListAddToCart")}>
           <Icon onClick={()=>addToCart(item)}>
             <ShoppingCartOutlined/>
           </Icon>
         </Tooltip>
-        <Tooltip title="Open product page">
+        <Tooltip title={t("ProductListOpenProductPage")}>
           <Icon>
             <Link to={`/product/${item._id}`}>
               <SearchOutlined/>
@@ -82,7 +85,7 @@ const Product = ({item}) => {
         </Tooltip>
         
         {!wishlist &&
-        <Tooltip title="Add to wishlist">
+        <Tooltip title={t("ProductListAddToWishlist")}>
           <Icon onClick={()=>addToWishlist(item)}>
             <FavoriteBorderOutlined />
           </Icon>
@@ -90,14 +93,14 @@ const Product = ({item}) => {
         }
 
         {wishlistProducts?.findIndex((elem) => elem.productId === item._id && elem.color === color && elem.size === size) === -1 &&
-        <Tooltip title="Add to wishlist">
+        <Tooltip title={t("ProductListAddToWishlist")}>
           <Icon onClick={()=>addToWishlist(item)}>
             <FavoriteBorderOutlined />
           </Icon>
         </Tooltip>
         }
         {wishlistProducts?.findIndex((elem) => elem.productId === item._id && elem.color === color && elem.size === size) > -1 &&
-        <Tooltip title="Already in wishlist">
+        <Tooltip title={t("ProductListAlreadyInWishlist")}>
           <Icon>
             <Favorite style={{fill: "red"}}/>
           </Icon>

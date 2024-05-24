@@ -9,10 +9,12 @@ import { addCart, deleteCart, deleteWishlist, getCart, getWishlist, updateCart, 
 import { Container, Wrapper, Title, Top, TopButton, TopTexts, TopText, Bottom, Info, Product, ProductDetail, ImagePart, 
   Image, Details, ProductName, ProductId, ProductColor, ProductSize, PriceDetail, ProductAmountContainer, 
   ProductAmount, ProductPrice, Hr, ButtonsPart, Button } from './styled';
+import { useTranslation } from 'react-i18next';
 
 const KEY = import.meta.env.VITE_STRIPE;
 
 const Wishlist = () => {
+  const { i18n, t } = useTranslation();
   const dispatch = useDispatch();
   const [productsOfWishlist, setProductsOfWishlist] = useState([]);
   const navigate = useNavigate();
@@ -89,16 +91,16 @@ const Wishlist = () => {
       <Navbar/>
       <Announcement />
       <Wrapper>
-        <Title>YOUR WISHLIST</Title>
+        <Title>{t("wishListTitle")}</Title>
         <Top>
           <div style={{display:'flex', gap:'20px'}}>
-            <TopButton onClick={()=> navigate('/products/all')}>CONTINUE SHOPPING</TopButton>
-            <TopButton onClick={()=> navigate('/home')}>TO HOME PAGE</TopButton>
-            <TopButton type="filled" onClick={() => deleteUserWishList()}>CLEAR WISHLIST</TopButton>
+            <TopButton onClick={()=> navigate('/products/all')}>{t("toContinueShoppingLink")}</TopButton>
+            <TopButton onClick={()=> navigate('/home')}>{t("toHomePage")}</TopButton>
+            <TopButton type="filled" onClick={() => deleteUserWishList()}>{t("wishListClear")}</TopButton>
           </div>
           <TopTexts>
-            <TopText onClick={()=>navigate('/cart')}>Shopping Bag ({cartProducts?.length})</TopText>
-            <TopText>Your Wishlist ({wishlist?.length})</TopText>
+            <TopText onClick={()=>navigate('/cart')}>{t("shoppingBag")} ({cartProducts?.length})</TopText>
+            <TopText>{t("yourWishlist")} ({wishlist?.length})</TopText>
           </TopTexts>
         </Top>
         <Bottom>
@@ -118,19 +120,18 @@ const Wishlist = () => {
                   />
                 </ImagePart>
                 <Details>
-                  <ProductName><b>Product:</b> {product?.title}</ProductName>
-                  <ProductName><b>Description:</b> {product?.desc}</ProductName>
+                  <ProductName><b>{t("product")}:</b> {product?.title}</ProductName>
+                  <ProductName><b>{t("description")}:</b> {product?.desc}</ProductName>
                   <ProductId><b>ID:</b> {product?._id}</ProductId>
                   <ProductColor color={product?.color}/>
-                  <ProductSize><b>Size:</b> {product?.size}</ProductSize>
+                  <ProductSize><b>{t("size")}:</b> {product?.size}</ProductSize>
                 </Details>
                 <ButtonsPart>
-                  <TopButton onClick={()=>addToCart(product.productId, product.color, product.size)} type="filled">ADD TO CART</TopButton>
-                  <TopButton type="filled" onClick={()=>deleteProduct(product._id)}>DELETE</TopButton>
+                  <TopButton onClick={()=>addToCart(product.productId, product.color, product.size)} type="filled">{t("ProductAddToCart")}</TopButton>
+                  <TopButton type="filled" onClick={()=>deleteProduct(product._id)}>{t("wishListDelete")}</TopButton>
                 </ButtonsPart>
               </ProductDetail>
             </Product>
-            
           ))}
             <Hr/>
           </Info>

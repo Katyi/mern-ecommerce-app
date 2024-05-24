@@ -7,12 +7,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Container, TitleWrapper, Title, TopButton, FilterContainer, Filter, FilterText } from './styled';
 import Select from '../../UI/select/Select';
+import { useTranslation } from 'react-i18next';
 
 const ProductList = () => {
+  const { i18n, t } = useTranslation();
   const location = useLocation();
   const cat = location.pathname.split('/')[2];
   const [filters, setFilters] = useState({});
-  const [sort, setSort] = useState('newest');
+  const [sort, setSort] = useState('');
   const [colorOpen, setColorOpen] = useState(false);
   const [sizeOpen, setSizeOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
@@ -60,32 +62,32 @@ const ProductList = () => {
       <Navbar />
       <Announcement />
       <TitleWrapper>
-        {cat !== 'all' ? <Title>Category: {cat}</Title> : <Title>All products</Title>}
-      <TopButton onClick={()=> navigate('/home')}>TO HOME PAGE</TopButton>
+        {cat !== 'all' ? <Title>{t("ProductListCategory")}: {cat}</Title> : <Title>{t("ProductListAllProducts")}</Title>}
+      <TopButton onClick={()=> navigate('/home')}>{t("toHomePage")}</TopButton>
       </TitleWrapper>
       <FilterContainer>
         <Filter>
-          <FilterText>Filter Products:</FilterText>
+          <FilterText>{t("ProductListFilterProducts")}:</FilterText>
           <Select
             options={colorOptions}
-            selected={filters.color || "Color"}
+            selected={filters.color || `${t("color")}`}
             onChange={handleFilters}
             open={colorOpen}
             setOpen={setColorOpen}
           />
           <Select
             options={sizeOptions}
-            selected={filters.size || "Size"}
+            selected={filters.size || `${t("size")}`}
             onChange={handleFilters}
             open={sizeOpen}
             setOpen={setSizeOpen}
           />
         </Filter>
         <Filter>
-          <FilterText>Sort Products:</FilterText>
+          <FilterText>{t("ProductListSortProducts")}:</FilterText>
           <Select
             options={sortOptions}
-            selected={sort || ""}
+            selected={sort || `${t("ProductListSortNewest")}`}
             onChange={handleFilters}
             open={sortOpen}
             setOpen={setSortOpen}

@@ -1,8 +1,10 @@
 import { Send } from "@mui/icons-material"
 import { useState } from "react";
 import { Container, Title, Desc, InputContainer, Input, Textarea, Button } from './styled';
+import { useTranslation } from 'react-i18next';
 
 const Newsletter = () => {
+  const { t } = useTranslation();
 
   return (
     <Container
@@ -10,21 +12,21 @@ const Newsletter = () => {
       action="https://formsubmit.co/5d13c2bc82b9e52b4d8ba632e529897c"
       method="POST"
     >
-      <Title>Contact Us</Title>
-      <Desc>Send us an email and we'll get back to you soon.</Desc>
+      <Title>{t("newsletterTitle")}</Title>
+      <Desc>{t("newsletterSubTitle")}</Desc>
       <input type="hidden" name="_next" value="http://212.113.120.58:5173/thanks"/>
       <InputContainer>
-        <Input placeholder="Name" type="text" name="name" required/>
+        <Input placeholder={t("newsletterNamePlaceholder")} type="text" name="name" required/>
       </InputContainer>
       <InputContainer>
         <Textarea 
-          placeholder="Message" 
+          placeholder={t("newsletterMessagePlaceholder")} 
           type="text" 
           name="message" 
           required/>
       </InputContainer>
       <InputContainer>
-        <Input placeholder="Your email" type="email" name="email" required/>
+        <Input placeholder={t("newsletterEmailPlaceholder")} type="email" name="email" required/>
         <Button type="submit"><Send/></Button>
       </InputContainer>
     </Container>

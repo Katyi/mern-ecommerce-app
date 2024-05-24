@@ -7,7 +7,6 @@ import ProductList from "./pages/productList/ProductList";
 import Product from "./pages/product/Product";
 import Cart from "./pages/cart/Cart";
 import Success from "./pages/success/Success";
-import Thanks from "./pages/thanks/Thanks";
 import UserPage from "./pages/userPage/UserPage";
 import Wishlist from "./pages/wishlist/Wishlist";
 
@@ -24,7 +23,6 @@ function App() {
         <Route exact path="/cart" element={<Cart/>}/>
         <Route exact path="/wishlist" element={<Wishlist/>}/>
         <Route exact path="/success" element={<Success/>}/>
-        <Route exact path="/thanks" element={<Thanks/>}/>
         <Route exact path="/account" element={<UserPage/>}/>
       </Routes>
     </Router>

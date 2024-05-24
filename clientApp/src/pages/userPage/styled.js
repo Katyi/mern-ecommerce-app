@@ -18,7 +18,7 @@ export const Header = styled.div`
 `;
 
 export const LeftPart = styled.div`
-  width: 70%;
+  width: auto;
   height: 15vw;
   display: flex;
   flex-direction: column;
@@ -34,7 +34,7 @@ export const Title = styled.h1`
 `;
 
 export const SubTitle = styled.h1`
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 700;
   width: auto;
   margin: 0 0 0 40vw;
@@ -55,13 +55,13 @@ export const InfoPart = styled.div`
 `;
 
 export const Row = styled.div`
-  width: 40%;
+  width: 50%;
   display: flex;
   gap: 10%;
 `;
 
 export const Field1 = styled.div`
-  width: 30%;
+  width: 40%;
   font-size: 16px;
   font-weight: 700;
 `;

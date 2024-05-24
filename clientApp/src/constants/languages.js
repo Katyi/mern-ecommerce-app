@@ -1,5 +1,4 @@
-export const languages = [
-  { label: 'Spanish', code: 'es' },
+export const LANGUAGES = [
   { label: 'English', code: 'en' },
-  { label: 'Italian', code: 'it' },
+  { label: 'Russian', code: 'ru' },
 ]
